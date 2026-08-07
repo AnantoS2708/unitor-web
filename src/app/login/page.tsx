@@ -22,7 +22,7 @@ export default function LoginPage() {
 
         try {
             await signInWithEmailAndPassword(auth, email.trim(), password);
-            router.push("/dashboard");
+            router.push("/role-selection");
         } catch (error: unknown) {
             console.error(error);
             setError("Email or password is incorrect.");

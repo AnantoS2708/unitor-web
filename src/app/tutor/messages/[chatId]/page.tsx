@@ -21,7 +21,7 @@ import {
 } from "firebase/firestore";
 import { auth, firestore } from "@/lib/firebase";
 
-interface StudentChat {
+interface TutorChat {
   studentId: string;
   studentName: string;
   tutorId: string;
@@ -38,7 +38,7 @@ interface ChatMessage {
   sentAt?: Timestamp;
 }
 
-export default function StudentChatPage() {
+export default function TutorChatPage() {
   const router = useRouter();
   const params = useParams<{ chatId: string }>();
   const chatId = params.chatId;
@@ -46,11 +46,11 @@ export default function StudentChatPage() {
   const messagesEndRef =
     useRef<HTMLDivElement | null>(null);
 
-  const [currentStudentId, setCurrentStudentId] =
+  const [currentTutorId, setCurrentTutorId] =
     useState("");
 
   const [chat, setChat] =
-    useState<StudentChat | null>(null);
+    useState<TutorChat | null>(null);
 
   const [messages, setMessages] = useState<
     ChatMessage[]
@@ -78,7 +78,7 @@ export default function StudentChatPage() {
           return;
         }
 
-        setCurrentStudentId(user.uid);
+        setCurrentTutorId(user.uid);
 
         const chatRef = doc(
           firestore,
@@ -99,9 +99,9 @@ export default function StudentChatPage() {
 
             const data = snapshot.data();
 
-            if (data.studentId !== user.uid) {
+            if (data.tutorId !== user.uid) {
               setError(
-                "You cannot access this student conversation."
+                "You cannot access this tutor conversation."
               );
               setLoading(false);
               return;
@@ -124,7 +124,7 @@ export default function StudentChatPage() {
           },
           (error) => {
             console.error(
-              "Student chat loading error:",
+              "Tutor chat loading error:",
               error
             );
 
@@ -168,7 +168,7 @@ export default function StudentChatPage() {
           },
           (error) => {
             console.error(
-              "Student message loading error:",
+              "Tutor message loading error:",
               error
             );
 
@@ -226,7 +226,7 @@ export default function StudentChatPage() {
 
     if (
       !cleanMessage ||
-      !currentStudentId ||
+      !currentTutorId ||
       !chat ||
       !canSend
     ) {
@@ -255,7 +255,7 @@ export default function StudentChatPage() {
       const batch = writeBatch(firestore);
 
       batch.set(messageRef, {
-        senderId: currentStudentId,
+        senderId: currentTutorId,
         text: cleanMessage,
         sentAt: serverTimestamp(),
       });
@@ -269,7 +269,7 @@ export default function StudentChatPage() {
       setMessageText("");
     } catch (error) {
       console.error(
-        "Student message sending error:",
+        "Tutor message sending error:",
         error
       );
 
@@ -302,7 +302,7 @@ export default function StudentChatPage() {
           </p>
 
           <Link
-            href="/student/messages"
+            href="/tutor/messages"
             className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white"
           >
             Return to messages
@@ -317,21 +317,21 @@ export default function StudentChatPage() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center gap-4 px-5 py-4">
           <Link
-            href="/student/messages"
+            href="/tutor/messages"
             className="text-2xl text-slate-600 hover:text-emerald-600"
           >
             ←
           </Link>
 
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-600">
-            {chat?.tutorName
+            {chat?.studentName
               .charAt(0)
-              .toUpperCase() || "T"}
+              .toUpperCase() || "S"}
           </div>
 
           <div className="min-w-0 flex-1">
             <h1 className="truncate font-bold text-slate-900">
-              {chat?.tutorName}
+              {chat?.studentName}
             </h1>
 
             <p
@@ -351,7 +351,7 @@ export default function StudentChatPage() {
 
           {chat?.proposalId && (
             <Link
-              href={`/student/proposals/${chat.proposalId}`}
+              href={`/tutor/proposals/${chat.proposalId}`}
               className="hidden rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 sm:block"
             >
               Proposal
@@ -377,7 +377,7 @@ export default function StudentChatPage() {
               </h2>
 
               <p className="mt-2 text-slate-500">
-                Send a message to your tutor.
+                Send a message to the student.
               </p>
             </div>
           </div>
@@ -389,7 +389,7 @@ export default function StudentChatPage() {
                 message={message}
                 sentByCurrentUser={
                   message.senderId ===
-                  currentStudentId
+                  currentTutorId
                 }
               />
             ))}

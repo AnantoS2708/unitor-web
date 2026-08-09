@@ -397,7 +397,7 @@ export default function CreateProposalPage() {
                             rows={6}
                             required
                             placeholder="Explain the topics and type of academic guidance you need."
-                            className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                         />
                     </div>
 
@@ -455,7 +455,7 @@ function FormInput({
                 required={required}
                 placeholder={placeholder}
                 onChange={(event) => onChange(event.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
             />
         </div>
     );

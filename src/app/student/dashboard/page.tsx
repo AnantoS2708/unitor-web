@@ -112,6 +112,13 @@ export default function StudentDashboardPage() {
                         >
                             Notifications
                         </Link>
+
+                        <Link 
+                            href="/student/payments"
+                            className="text-slate-600 hover:text-emerald-600">
+                        Payments
+                        </Link>
+
                     </nav>
 
                     <div className="hidden items-center gap-3 md:flex">

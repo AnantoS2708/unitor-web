@@ -196,6 +196,7 @@ export default function StudentProposalsPage() {
               <ProposalCard
                 key={proposal.id}
                 proposal={proposal}
+                
               />
             ))}
           </div>
@@ -310,6 +311,12 @@ function ProposalCard({
           )}
         </p>
       )}
+      <Link
+      href={`/student/proposals/${proposal.id}`}
+      className="mt-6 block w-full rounded-lg border border-emerald-600 px-4 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
+      >
+      View details
+      </Link>
     </article>
   );
 }

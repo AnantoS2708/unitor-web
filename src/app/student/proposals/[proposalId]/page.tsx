@@ -1,0 +1,415 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  doc,
+  onSnapshot,
+  Timestamp,
+} from "firebase/firestore";
+import { auth, firestore } from "@/lib/firebase";
+
+interface Proposal {
+  id: string;
+  studentId: string;
+  studentName: string;
+  title: string;
+  courseCode: string;
+  facultyInitial: string;
+  problemTopics: string;
+  description: string;
+  budget: number;
+  estimatedHours: number;
+  dateFrom: string;
+  dateTo: string;
+  timeFrom: string;
+  timeTo: string;
+  university: string;
+  status: string;
+  paymentStatus: string;
+  willingToTeach: number;
+  selectedTutorId: string;
+  selectedJobProposalId: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+}
+
+export default function ProposalDetailsPage() {
+  const router = useRouter();
+  const params = useParams<{ proposalId: string }>();
+  const proposalId = params.proposalId;
+
+  const [proposal, setProposal] =
+    useState<Proposal | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let unsubscribeProposal: (() => void) | undefined;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      const proposalReference = doc(
+        firestore,
+        "proposals",
+        proposalId
+      );
+
+      unsubscribeProposal = onSnapshot(
+        proposalReference,
+        (snapshot) => {
+          if (!snapshot.exists()) {
+            setError("This proposal could not be found.");
+            setLoading(false);
+            return;
+          }
+
+          const data = snapshot.data();
+
+          if (data.studentId !== user.uid) {
+            setError(
+              "You do not have permission to view this proposal."
+            );
+            setLoading(false);
+            return;
+          }
+
+          setProposal({
+            id: snapshot.id,
+            studentId: data.studentId ?? "",
+            studentName: data.studentName ?? "",
+            title: data.title ?? "",
+            courseCode: data.courseCode ?? "",
+            facultyInitial: data.facultyInitial ?? "",
+            problemTopics: data.problemTopics ?? "",
+            description: data.description ?? "",
+            budget: data.budget ?? 0,
+            estimatedHours: data.estimatedHours ?? 0,
+            dateFrom: data.dateFrom ?? "",
+            dateTo: data.dateTo ?? "",
+            timeFrom: data.timeFrom ?? "",
+            timeTo: data.timeTo ?? "",
+            university: data.university ?? "",
+            status: data.status ?? "unknown",
+            paymentStatus: data.paymentStatus ?? "pending",
+            willingToTeach: data.willingToTeach ?? 0,
+            selectedTutorId: data.selectedTutorId ?? "",
+            selectedJobProposalId:
+              data.selectedJobProposalId ?? "",
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+          });
+
+          setError("");
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Proposal loading error:", error);
+          setError("Unable to load the proposal.");
+          setLoading(false);
+        }
+      );
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeProposal?.();
+    };
+  }, [proposalId, router]);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-slate-600">
+          Loading proposal...
+        </p>
+      </main>
+    );
+  }
+
+  if (error || !proposal) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
+          <h1 className="text-2xl font-bold text-red-600">
+            Proposal unavailable
+          </h1>
+
+          <p className="mt-3 text-slate-600">
+            {error}
+          </p>
+
+          <Link
+            href="/student/proposals"
+            className="mt-6 inline-block rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white"
+          >
+            Return to proposals
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-slate-50">
+      <header className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <Link
+            href="/student/dashboard"
+            className="text-2xl font-bold text-emerald-600"
+          >
+            Unitor
+          </Link>
+
+          <Link
+            href="/student/proposals"
+            className="font-medium text-slate-600 hover:text-emerald-600"
+          >
+            ← My Proposals
+          </Link>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-5xl px-6 py-10">
+        <section className="rounded-2xl bg-white p-8 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-5">
+            <div>
+              <p className="font-semibold text-emerald-600">
+                {proposal.courseCode}
+              </p>
+
+              <h1 className="mt-2 text-3xl font-bold text-slate-900">
+                {proposal.title || "Untitled proposal"}
+              </h1>
+
+              <p className="mt-3 text-slate-500">
+                Created by {proposal.studentName}
+              </p>
+            </div>
+
+            <StatusBadge status={proposal.status} />
+          </div>
+
+          <div className="mt-8 border-t border-slate-100 pt-8">
+            <h2 className="text-xl font-bold text-slate-900">
+              Description
+            </h2>
+
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+              {proposal.description ||
+                "No description was provided."}
+            </p>
+          </div>
+
+          <div className="mt-8 rounded-xl bg-slate-50 p-6">
+            <h2 className="text-lg font-bold text-slate-900">
+              Problem topics
+            </h2>
+
+            <p className="mt-2 text-slate-600">
+              {proposal.problemTopics || "Not provided"}
+            </p>
+          </div>
+        </section>
+
+        <section className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl bg-white p-7 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900">
+              Academic information
+            </h2>
+
+            <div className="mt-6 space-y-4">
+              <InformationRow
+                label="Course code"
+                value={proposal.courseCode}
+              />
+
+              <InformationRow
+                label="Faculty initial"
+                value={proposal.facultyInitial}
+              />
+
+              <InformationRow
+                label="University"
+                value={proposal.university}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-7 shadow-sm">
+            <h2 className="text-xl font-bold text-slate-900">
+              Schedule and budget
+            </h2>
+
+            <div className="mt-6 space-y-4">
+              <InformationRow
+                label="Budget"
+                value={`৳${proposal.budget}`}
+              />
+
+              <InformationRow
+                label="Estimated hours"
+                value={`${proposal.estimatedHours}`}
+              />
+
+              <InformationRow
+                label="Date"
+                value={
+                  proposal.dateFrom === proposal.dateTo
+                    ? proposal.dateFrom
+                    : `${proposal.dateFrom} – ${proposal.dateTo}`
+                }
+              />
+
+              <InformationRow
+                label="Time"
+                value={`${proposal.timeFrom} – ${proposal.timeTo}`}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-2xl bg-white p-7 shadow-sm">
+          <h2 className="text-xl font-bold text-slate-900">
+            Proposal progress
+          </h2>
+
+          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+            <ProgressItem
+              label="Tutor interest"
+              value={`${proposal.willingToTeach} tutor${
+                proposal.willingToTeach === 1 ? "" : "s"
+              }`}
+            />
+
+            <ProgressItem
+              label="Payment status"
+              value={proposal.paymentStatus}
+            />
+
+            <ProgressItem
+              label="Tutor selected"
+              value={
+                proposal.selectedTutorId ? "Yes" : "Not yet"
+              }
+            />
+          </div>
+        </section>
+
+        <Link
+        href={`/student/proposals/${proposal.id}/applications`}
+        className="mt-8 block w-full rounded-lg bg-emerald-600 px-6 py-3 text-center font-semibold text-white hover:bg-emerald-700">
+        View Tutor Applications ({proposal.willingToTeach})
+        </Link>
+
+        {(proposal.createdAt || proposal.updatedAt) && (
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
+            {proposal.createdAt && (
+              <p>
+                Created:{" "}
+                {formatTimestamp(proposal.createdAt)}
+              </p>
+            )}
+
+            {proposal.updatedAt && (
+              <p className="mt-2">
+                Last updated:{" "}
+                {formatTimestamp(proposal.updatedAt)}
+              </p>
+            )}
+          </section>
+        )}
+      </div>
+    </main>
+  );
+}
+
+function InformationRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-5 border-b border-slate-100 pb-3">
+      <span className="text-slate-500">{label}</span>
+
+      <span className="text-right font-semibold text-slate-900">
+        {value || "Not provided"}
+      </span>
+    </div>
+  );
+}
+
+function ProgressItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl bg-slate-50 p-5">
+      <p className="text-sm text-slate-500">{label}</p>
+
+      <p className="mt-2 font-bold capitalize text-slate-900">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function StatusBadge({
+  status,
+}: {
+  status: string;
+}) {
+  const normalizedStatus = status.toLowerCase();
+
+  let classes = "bg-slate-100 text-slate-700";
+
+  if (
+    normalizedStatus === "open" ||
+    normalizedStatus === "active"
+  ) {
+    classes = "bg-emerald-50 text-emerald-700";
+  } else if (
+    normalizedStatus === "pending" ||
+    normalizedStatus === "in progress"
+  ) {
+    classes = "bg-amber-50 text-amber-700";
+  } else if (normalizedStatus === "completed") {
+    classes = "bg-blue-50 text-blue-700";
+  } else if (
+    normalizedStatus === "cancelled" ||
+    normalizedStatus === "rejected"
+  ) {
+    classes = "bg-red-50 text-red-700";
+  }
+
+  return (
+    <span
+      className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${classes}`}
+    >
+      {status}
+    </span>
+  );
+}
+
+function formatTimestamp(timestamp: Timestamp) {
+  return timestamp.toDate().toLocaleString("en-BD", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}

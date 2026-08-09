@@ -122,10 +122,10 @@ export default function StudentChatPage() {
             setError("");
             setLoading(false);
           },
-          (error) => {
+          (chatError) => {
             console.error(
               "Student chat loading error:",
-              error
+              chatError
             );
 
             setError(
@@ -166,10 +166,10 @@ export default function StudentChatPage() {
 
             setMessages(messageList);
           },
-          (error) => {
+          (messageError) => {
             console.error(
               "Student message loading error:",
-              error
+              messageError
             );
 
             setError("Unable to load messages.");
@@ -267,10 +267,10 @@ export default function StudentChatPage() {
 
       await batch.commit();
       setMessageText("");
-    } catch (error) {
+    } catch (sendError) {
       console.error(
         "Student message sending error:",
-        error
+        sendError
       );
 
       setError("Unable to send the message.");
@@ -399,6 +399,29 @@ export default function StudentChatPage() {
         )}
       </section>
 
+      {chat && !canSend && (
+        <div className="border-t border-slate-200 bg-amber-50 px-5 py-4">
+          <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
+            <div>
+              <h3 className="font-bold text-slate-900">
+                Tutoring session completed
+              </h3>
+
+              <p className="mt-1 text-sm text-slate-600">
+                Rate your experience with {chat.tutorName}.
+              </p>
+            </div>
+
+            <Link
+              href={`/student/reviews/${chatId}`}
+              className="whitespace-nowrap rounded-lg bg-amber-500 px-5 py-3 font-semibold text-white hover:bg-amber-600"
+            >
+              ⭐ Rate tutor
+            </Link>
+          </div>
+        </div>
+      )}
+
       <MessageComposer
         canSend={canSend}
         sessionExpired={sessionExpired}
@@ -519,13 +542,12 @@ function MessageComposer({
 }
 
 function formatMessageTime(timestamp?: Timestamp) {
-  if (!timestamp) return "Sending...";
+  if (!timestamp) {
+    return "";
+  }
 
-  return timestamp.toDate().toLocaleTimeString(
-    "en-BD",
-    {
-      hour: "numeric",
-      minute: "2-digit",
-    }
-  );
+  return timestamp.toDate().toLocaleTimeString("en-BD", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }

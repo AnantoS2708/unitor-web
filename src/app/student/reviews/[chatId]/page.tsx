@@ -1,39 +1,69 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { onAuthStateChanged, User } from "firebase/auth";
 import {
+    FormEvent,
+    useEffect,
+    useState,
+} from "react";
+
+import Link from "next/link";
+import {
+    useParams,
+    useRouter,
+} from "next/navigation";
+
+import {
+    onAuthStateChanged,
+    User,
+} from "firebase/auth";
+
+import {
+    collection,
     doc,
+    DocumentData,
     getDoc,
+    getDocs,
+    limit,
+    query,
     serverTimestamp,
     setDoc,
     Timestamp,
+    where,
 } from "firebase/firestore";
 
-import { auth, firestore } from "@/lib/firebase";
+import {
+    auth,
+    firestore,
+} from "@/lib/firebase";
 
 type ReviewContext = {
     chatId: string;
     jobProposalId: string;
     proposalId: string;
+
     studentId: string;
     studentName: string;
+
     tutorId: string;
     tutorName: string;
 };
 
-function toDate(value: unknown): Date | null {
+function toDate(
+    value: unknown
+): Date | null {
     if (!value) {
         return null;
     }
 
-    if (value instanceof Date) {
+    if (
+        value instanceof Date
+    ) {
         return value;
     }
 
-    if (value instanceof Timestamp) {
+    if (
+        value instanceof Timestamp
+    ) {
         return value.toDate();
     }
 
@@ -41,223 +71,484 @@ function toDate(value: unknown): Date | null {
         typeof value === "object" &&
         value !== null &&
         "toDate" in value &&
-        typeof (value as { toDate?: unknown }).toDate === "function"
+        typeof (
+            value as {
+                toDate?: unknown;
+            }
+        ).toDate ===
+            "function"
     ) {
-        return (value as { toDate: () => Date }).toDate();
+        return (
+            value as {
+                toDate: () => Date;
+            }
+        ).toDate();
     }
 
     return null;
 }
 
 export default function StudentReviewPage() {
-    const params = useParams();
-    const router = useRouter();
+    const params =
+        useParams();
 
-    const rawChatId = params?.chatId;
+    const router =
+        useRouter();
 
-    const chatId =
-        typeof rawChatId === "string"
-            ? rawChatId
-            : Array.isArray(rawChatId)
-              ? rawChatId[0]
+    /*
+     * The URL can contain either:
+     *
+     * 1. chatId
+     *
+     * OR
+     *
+     * 2. jobProposalId
+     *
+     * We support both.
+     */
+    const rawId =
+        params?.chatId;
+
+    const routeId =
+        typeof rawId ===
+        "string"
+            ? rawId
+            : Array.isArray(
+                  rawId
+              )
+              ? rawId[0]
               : "";
 
-    const [user, setUser] = useState<User | null>(null);
-    const [context, setContext] = useState<ReviewContext | null>(null);
+    const [
+        user,
+        setUser,
+    ] =
+        useState<User | null>(
+            null
+        );
 
-    const [rating, setRating] = useState(0);
-    const [hoveredRating, setHoveredRating] = useState(0);
-    const [feedback, setFeedback] = useState("");
+    const [
+        context,
+        setContext,
+    ] =
+        useState<ReviewContext | null>(
+            null
+        );
 
-    const [authLoading, setAuthLoading] = useState(true);
-    const [loading, setLoading] = useState(true);
-    const [submitting, setSubmitting] = useState(false);
+    const [
+        rating,
+        setRating,
+    ] =
+        useState(0);
 
-    const [alreadyReviewed, setAlreadyReviewed] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [
+        hoveredRating,
+        setHoveredRating,
+    ] =
+        useState(0);
 
-    const [error, setError] = useState("");
+    const [
+        feedback,
+        setFeedback,
+    ] =
+        useState("");
 
+    const [
+        authLoading,
+        setAuthLoading,
+    ] =
+        useState(true);
+
+    const [
+        loading,
+        setLoading,
+    ] =
+        useState(true);
+
+    const [
+        submitting,
+        setSubmitting,
+    ] =
+        useState(false);
+
+    const [
+        alreadyReviewed,
+        setAlreadyReviewed,
+    ] =
+        useState(false);
+
+    const [
+        success,
+        setSuccess,
+    ] =
+        useState(false);
+
+    const [
+        error,
+        setError,
+    ] =
+        useState("");
+
+    /*
+     * ==========================================
+     * AUTHENTICATION
+     * ==========================================
+     */
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            if (!currentUser) {
-                router.replace("/login");
-                return;
-            }
+        const unsubscribe =
+            onAuthStateChanged(
+                auth,
+                (
+                    currentUser
+                ) => {
+                    if (
+                        !currentUser
+                    ) {
+                        router.replace(
+                            "/login"
+                        );
 
-            setUser(currentUser);
-            setAuthLoading(false);
-        });
+                        return;
+                    }
+
+                    setUser(
+                        currentUser
+                    );
+
+                    setAuthLoading(
+                        false
+                    );
+                }
+            );
 
         return unsubscribe;
     }, [router]);
 
+    /*
+     * ==========================================
+     * LOAD REVIEW SESSION
+     * ==========================================
+     */
     useEffect(() => {
-        if (authLoading) {
+        if (
+            authLoading
+        ) {
             return;
         }
 
-        if (!user || !chatId) {
+        if (
+            !user ||
+            !routeId
+        ) {
             return;
         }
 
-        const currentUser = user;
-        const currentChatId = chatId;
+        const currentUser =
+            user;
+
+        const currentRouteId =
+            routeId;
 
         async function loadReviewPage() {
             try {
-                setLoading(true);
-                setError("");
-
-                const chatRef = doc(
-                    firestore,
-                    "chats",
-                    currentChatId
+                setLoading(
+                    true
                 );
 
-                const chatSnapshot = await getDoc(chatRef);
+                setError(
+                    ""
+                );
 
-                if (!chatSnapshot.exists()) {
-                    setContext(null);
-                    setError(
-                        "This tutoring session could not be found."
+                /*
+                 * ======================================
+                 * STEP 1
+                 *
+                 * First try the URL value as a chat ID.
+                 * ======================================
+                 */
+                let chatSnapshot =
+                    await getDoc(
+                        doc(
+                            firestore,
+                            "chats",
+                            currentRouteId
+                        )
                     );
-                    return;
+
+                /*
+                 * ======================================
+                 * STEP 2
+                 *
+                 * If there is no chat with that ID,
+                 * treat the URL value as jobProposalId.
+                 *
+                 * Find:
+                 *
+                 * chats where
+                 * jobProposalId == routeId
+                 * ======================================
+                 */
+                if (
+                    !chatSnapshot.exists()
+                ) {
+                    const chatQuery =
+                        query(
+                            collection(
+                                firestore,
+                                "chats"
+                            ),
+                            where(
+                                "jobProposalId",
+                                "==",
+                                currentRouteId
+                            ),
+                            limit(1)
+                        );
+
+                    const querySnapshot =
+                        await getDocs(
+                            chatQuery
+                        );
+
+                    if (
+                        querySnapshot.empty
+                    ) {
+                        setContext(
+                            null
+                        );
+
+                        setError(
+                            "This tutoring session could not be found."
+                        );
+
+                        return;
+                    }
+
+                    chatSnapshot =
+                        querySnapshot.docs[0];
                 }
 
-                const chat = chatSnapshot.data();
+                const chat =
+                        chatSnapshot.data() as DocumentData;
 
-                if (chat.studentId !== currentUser.uid) {
-                    setContext(null);
+                /*
+                 * ======================================
+                 * STUDENT SECURITY CHECK
+                 * ======================================
+                 */
+                if (
+                    chat.studentId !==
+                    currentUser.uid
+                ) {
+                    setContext(
+                        null
+                    );
+
                     setError(
                         "You do not have permission to review this session."
                     );
+
                     return;
                 }
 
+                /*
+                 * ======================================
+                 * JOB PROPOSAL ID
+                 * ======================================
+                 */
                 const jobProposalId =
-                    typeof chat.jobProposalId === "string"
+                    typeof chat.jobProposalId ===
+                    "string"
                         ? chat.jobProposalId
                         : "";
 
-                if (!jobProposalId) {
-                    setContext(null);
+                if (
+                    !jobProposalId
+                ) {
+                    setContext(
+                        null
+                    );
+
                     setError(
                         "Review is unavailable because this session does not have a job proposal ID."
                     );
+
                     return;
                 }
 
-                const expiresAt = toDate(
-                    chat.expiresAt ?? null
-                );
+                /*
+                 * ======================================
+                 * SESSION MUST BE ENDED
+                 * ======================================
+                 */
+                const expiresAt =
+                    toDate(
+                        chat.expiresAt ??
+                            null
+                    );
 
                 const expired =
-                    expiresAt !== null &&
-                    expiresAt.getTime() <= Date.now();
+                    expiresAt !==
+                        null &&
+                    expiresAt.getTime() <=
+                        Date.now();
 
                 const sessionEnded =
-                    chat.isActive !== true ||
+                    chat.isActive !==
+                        true ||
                     expired;
 
-                if (!sessionEnded) {
-                    setContext(null);
+                if (
+                    !sessionEnded
+                ) {
+                    setContext(
+                        null
+                    );
+
                     setError(
                         "You can rate the tutor after the tutoring session ends."
                     );
+
                     return;
                 }
 
-                const reviewContext: ReviewContext = {
-                    chatId: chatSnapshot.id,
+                /*
+                 * ======================================
+                 * CREATE REVIEW CONTEXT
+                 * ======================================
+                 */
+                const reviewContext: ReviewContext =
+                    {
+                        chatId:
+                            chatSnapshot.id,
 
-                    jobProposalId,
+                        jobProposalId,
 
-                    proposalId:
-                        typeof chat.proposalId === "string"
-                            ? chat.proposalId
-                            : "",
+                        proposalId:
+                            typeof chat.proposalId ===
+                            "string"
+                                ? chat.proposalId
+                                : "",
 
-                    studentId:
-                        typeof chat.studentId === "string"
-                            ? chat.studentId
-                            : currentUser.uid,
+                        studentId:
+                            typeof chat.studentId ===
+                            "string"
+                                ? chat.studentId
+                                : currentUser.uid,
 
-                    studentName:
-                        typeof chat.studentName === "string" &&
-                        chat.studentName.trim()
-                            ? chat.studentName
-                            : currentUser.displayName ?? "Student",
+                        studentName:
+                            typeof chat.studentName ===
+                                "string" &&
+                            chat.studentName.trim()
+                                ? chat.studentName
+                                : currentUser.displayName ??
+                                  "Student",
 
-                    tutorId:
-                        typeof chat.tutorId === "string"
-                            ? chat.tutorId
-                            : "",
+                        tutorId:
+                            typeof chat.tutorId ===
+                            "string"
+                                ? chat.tutorId
+                                : "",
 
-                    tutorName:
-                        typeof chat.tutorName === "string" &&
-                        chat.tutorName.trim()
-                            ? chat.tutorName
-                            : "Tutor",
-                };
+                        tutorName:
+                            typeof chat.tutorName ===
+                                "string" &&
+                            chat.tutorName.trim()
+                                ? chat.tutorName
+                                : "Tutor",
+                    };
 
-                setContext(reviewContext);
-
-                const reviewRef = doc(
-                    firestore,
-                    "reviews",
-                    jobProposalId
+                setContext(
+                    reviewContext
                 );
 
-                const reviewSnapshot = await getDoc(
-                    reviewRef
-                );
-
-                if (reviewSnapshot.exists()) {
-                    const review = reviewSnapshot.data();
-
-                    const savedRating = Number(
-                        review.rating
+                /*
+                 * ======================================
+                 * CHECK EXISTING REVIEW
+                 *
+                 * Review ID = jobProposalId
+                 * ======================================
+                 */
+                const reviewReference =
+                    doc(
+                        firestore,
+                        "reviews",
+                        jobProposalId
                     );
 
+                const reviewSnapshot =
+                    await getDoc(
+                        reviewReference
+                    );
+
+                if (
+                    reviewSnapshot.exists()
+                ) {
+                    const review =
+                        reviewSnapshot.data();
+
+                    const savedRating =
+                        Number(
+                            review.rating
+                        );
+
                     setRating(
-                        Number.isFinite(savedRating)
+                        Number.isFinite(
+                            savedRating
+                        )
                             ? savedRating
                             : 0
                     );
 
                     setFeedback(
-                        typeof review.feedback === "string"
+                        typeof review.feedback ===
+                        "string"
                             ? review.feedback
                             : ""
                     );
 
-                    setAlreadyReviewed(true);
+                    setAlreadyReviewed(
+                        true
+                    );
                 }
-            } catch (loadError) {
+            } catch (
+                loadError
+            ) {
                 console.error(
                     "Review page load error:",
                     loadError
                 );
 
-                setContext(null);
+                setContext(
+                    null
+                );
+
                 setError(
                     "Unable to load the review page. Please try again."
                 );
             } finally {
-                setLoading(false);
+                setLoading(
+                    false
+                );
             }
         }
 
         void loadReviewPage();
+
     }, [
         authLoading,
-        chatId,
+        routeId,
         user,
     ]);
 
+    /*
+     * ==========================================
+     * SUBMIT REVIEW
+     * ==========================================
+     */
     async function handleSubmit(
-        event: FormEvent<HTMLFormElement>
+        event:
+            FormEvent<HTMLFormElement>
     ) {
         event.preventDefault();
 
@@ -277,36 +568,64 @@ export default function StudentReviewPage() {
             setError(
                 "Please choose a rating from 1 to 5 stars."
             );
+
             return;
         }
 
         try {
-            setSubmitting(true);
-            setError("");
-
-            const reviewRef = doc(
-                firestore,
-                "reviews",
-                context.jobProposalId
+            setSubmitting(
+                true
             );
 
-            const existingReview =
-                await getDoc(reviewRef);
+            setError(
+                ""
+            );
 
-            if (existingReview.exists()) {
-                setAlreadyReviewed(true);
+            /*
+             * One review per tutoring job.
+             */
+            const reviewReference =
+                doc(
+                    firestore,
+                    "reviews",
+                    context.jobProposalId
+                );
+
+            const existingReview =
+                await getDoc(
+                    reviewReference
+                );
+
+            if (
+                existingReview.exists()
+            ) {
+                setAlreadyReviewed(
+                    true
+                );
+
                 setError(
                     "A review has already been submitted for this tutoring session."
                 );
+
                 return;
             }
 
+            /*
+             * ======================================
+             * SAVE REVIEW
+             * ======================================
+             */
             await setDoc(
-                reviewRef,
+                reviewReference,
                 {
-                    createdAt: serverTimestamp(),
+                    chatId:
+                        context.chatId,
 
-                    feedback: feedback.trim(),
+                    createdAt:
+                        serverTimestamp(),
+
+                    feedback:
+                        feedback.trim(),
 
                     jobProposalId:
                         context.jobProposalId,
@@ -330,9 +649,17 @@ export default function StudentReviewPage() {
                 }
             );
 
-            setAlreadyReviewed(true);
-            setSuccess(true);
-        } catch (submitError) {
+            setAlreadyReviewed(
+                true
+            );
+
+            setSuccess(
+                true
+            );
+
+        } catch (
+            submitError
+        ) {
             console.error(
                 "Review submit error:",
                 submitError
@@ -342,26 +669,41 @@ export default function StudentReviewPage() {
                 "Your review could not be submitted. Please try again."
             );
         } finally {
-            setSubmitting(false);
+            setSubmitting(
+                false
+            );
         }
     }
 
+    /*
+     * ==========================================
+     * LOADING
+     * ==========================================
+     */
     if (
         authLoading ||
         loading
     ) {
         return (
             <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+
                 <p className="text-slate-600">
                     Loading review...
                 </p>
+
             </main>
         );
     }
 
+    /*
+     * ==========================================
+     * REVIEW UNAVAILABLE
+     * ==========================================
+     */
     if (!context) {
         return (
             <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+
                 <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm">
 
                     <h1 className="text-2xl font-bold text-slate-900">
@@ -374,30 +716,37 @@ export default function StudentReviewPage() {
                     </p>
 
                     <Link
-                        href={`/student/messages/${chatId}`}
+                        href="/student/messages"
                         className="mt-6 inline-block font-semibold text-emerald-600 hover:underline"
                     >
-                        ← Back to session
+                        ← Back to messages
                     </Link>
 
                 </div>
+
             </main>
         );
     }
 
+    /*
+     * ==========================================
+     * REVIEW PAGE
+     * ==========================================
+     */
     return (
         <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
 
             <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm sm:p-8">
 
                 <Link
-                    href={`/student/messages/${chatId}`}
+                    href={`/student/messages/${context.chatId}`}
                     className="text-sm font-semibold text-emerald-600 hover:underline"
                 >
                     ← Back to session
                 </Link>
 
                 {success ? (
+
                     <div className="py-8 text-center">
 
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
@@ -409,26 +758,42 @@ export default function StudentReviewPage() {
                         </h1>
 
                         <div className="mt-4 flex justify-center gap-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <span
-                                    key={star}
-                                    className={`text-3xl ${
-                                        star <= rating
-                                            ? "text-amber-400"
-                                            : "text-slate-300"
-                                    }`}
-                                >
-                                    ★
-                                </span>
-                            ))}
+
+                            {[1, 2, 3, 4, 5].map(
+                                (
+                                    star
+                                ) => (
+                                    <span
+                                        key={
+                                            star
+                                        }
+                                        className={`text-3xl ${
+                                            star <=
+                                            rating
+                                                ? "text-amber-400"
+                                                : "text-slate-300"
+                                        }`}
+                                    >
+                                        ★
+                                    </span>
+                                )
+                            )}
+
                         </div>
 
                         <p className="mt-3 text-slate-600">
+
                             You rated{" "}
+
                             <span className="font-semibold">
-                                {context.tutorName}
+                                {
+                                    context.tutorName
+                                }
                             </span>{" "}
-                            {rating} out of 5 stars.
+
+                            {rating} out of
+                            5 stars.
+
                         </p>
 
                         <Link
@@ -439,8 +804,10 @@ export default function StudentReviewPage() {
                         </Link>
 
                     </div>
+
                 ) : (
                     <>
+
                         <p className="mt-7 text-sm font-semibold text-emerald-600">
                             Session ended
                         </p>
@@ -450,17 +817,27 @@ export default function StudentReviewPage() {
                         </h1>
 
                         <p className="mt-2 text-slate-600">
+
                             How was your tutoring session with{" "}
+
                             <span className="font-semibold text-slate-800">
-                                {context.tutorName}
+                                {
+                                    context.tutorName
+                                }
                             </span>
+
                             ?
+
                         </p>
 
                         <form
-                            onSubmit={handleSubmit}
+                            onSubmit={
+                                handleSubmit
+                            }
                             className="mt-8 space-y-6"
                         >
+
+                            {/* RATING */}
 
                             <fieldset
                                 disabled={
@@ -476,12 +853,16 @@ export default function StudentReviewPage() {
                                 <div
                                     className="mt-3 flex gap-2"
                                     onMouseLeave={() =>
-                                        setHoveredRating(0)
+                                        setHoveredRating(
+                                            0
+                                        )
                                     }
                                 >
 
                                     {[1, 2, 3, 4, 5].map(
-                                        (star) => {
+                                        (
+                                            star
+                                        ) => {
                                             const activeRating =
                                                 hoveredRating ||
                                                 rating;
@@ -492,7 +873,9 @@ export default function StudentReviewPage() {
 
                                             return (
                                                 <button
-                                                    key={star}
+                                                    key={
+                                                        star
+                                                    }
                                                     type="button"
                                                     onClick={() =>
                                                         setRating(
@@ -505,7 +888,8 @@ export default function StudentReviewPage() {
                                                         )
                                                     }
                                                     aria-label={`${star} star${
-                                                        star === 1
+                                                        star ===
+                                                        1
                                                             ? ""
                                                             : "s"
                                                     }`}
@@ -528,12 +912,17 @@ export default function StudentReviewPage() {
                                 </div>
 
                                 <p className="mt-3 text-sm font-medium text-slate-600">
-                                    {rating > 0
+
+                                    {rating >
+                                    0
                                         ? `${rating} out of 5 stars`
                                         : "Choose 1 to 5 stars"}
+
                                 </p>
 
                             </fieldset>
+
+                            {/* FEEDBACK */}
 
                             <div>
 
@@ -542,15 +931,21 @@ export default function StudentReviewPage() {
                                     className="block font-semibold text-slate-800"
                                 >
                                     Feedback{" "}
+
                                     <span className="font-normal text-slate-500">
                                         (optional)
                                     </span>
+
                                 </label>
 
                                 <textarea
                                     id="feedback"
-                                    value={feedback}
-                                    onChange={(event) =>
+                                    value={
+                                        feedback
+                                    }
+                                    onChange={(
+                                        event
+                                    ) =>
                                         setFeedback(
                                             event.target.value
                                         )
@@ -559,73 +954,103 @@ export default function StudentReviewPage() {
                                         alreadyReviewed ||
                                         submitting
                                     }
-                                    maxLength={1000}
-                                    rows={5}
+                                    maxLength={
+                                        1000
+                                    }
+                                    rows={
+                                        5
+                                    }
                                     placeholder="Tell us what went well and what could be improved."
                                     className="mt-3 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-100"
                                 />
 
                                 <p className="mt-1 text-right text-xs text-slate-400">
-                                    {feedback.length}/1000
+                                    {
+                                        feedback.length
+                                    }
+                                    /1000
                                 </p>
 
                             </div>
 
+                            {/* ERROR */}
+
                             {error && (
+
                                 <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                                     {error}
                                 </div>
+
                             )}
+
+                            {/* EXISTING REVIEW */}
 
                             {alreadyReviewed &&
                                 !error && (
-                                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
-                                        <p className="font-semibold text-emerald-800">
-                                            Review already submitted
-                                        </p>
+                                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
 
-                                        <div className="mt-2 flex gap-1">
-                                            {[1, 2, 3, 4, 5].map(
-                                                (star) => (
-                                                    <span
-                                                        key={star}
-                                                        className={`text-2xl ${
-                                                            star <= rating
-                                                                ? "text-amber-400"
-                                                                : "text-slate-300"
-                                                        }`}
-                                                    >
-                                                        ★
-                                                    </span>
-                                                )
-                                            )}
-                                        </div>
+                                    <p className="font-semibold text-emerald-800">
+                                        Review already submitted
+                                    </p>
 
-                                        <p className="mt-2 text-sm text-emerald-700">
-                                            Your rating: {rating} out of 5 stars
-                                        </p>
+                                    <div className="mt-2 flex gap-1">
+
+                                        {[1, 2, 3, 4, 5].map(
+                                            (
+                                                star
+                                            ) => (
+                                                <span
+                                                    key={
+                                                        star
+                                                    }
+                                                    className={`text-2xl ${
+                                                        star <=
+                                                        rating
+                                                            ? "text-amber-400"
+                                                            : "text-slate-300"
+                                                    }`}
+                                                >
+                                                    ★
+                                                </span>
+                                            )
+                                        )}
 
                                     </div>
-                                )}
+
+                                    <p className="mt-2 text-sm text-emerald-700">
+                                        Your rating:{" "}
+                                        {rating} out
+                                        of 5 stars
+                                    </p>
+
+                                </div>
+
+                            )}
+
+                            {/* SUBMIT */}
 
                             <button
                                 type="submit"
                                 disabled={
                                     submitting ||
                                     alreadyReviewed ||
-                                    rating === 0
+                                    rating ===
+                                        0
                                 }
                                 className="w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
                             >
+
                                 {submitting
                                     ? "Submitting..."
                                     : alreadyReviewed
                                       ? "Review submitted"
                                       : "Submit review"}
+
                             </button>
 
                         </form>
+
                     </>
                 )}
 
@@ -633,4 +1058,4 @@ export default function StudentReviewPage() {
 
         </main>
     );
-}
+} 

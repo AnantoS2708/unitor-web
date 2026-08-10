@@ -88,15 +88,11 @@ export default function TutorProposalDetailsPage() {
     proposalId: string;
   }>();
 
-  const proposalId =
-    params.proposalId;
+  const proposalId = params.proposalId;
 
   const [currentTutorId, setCurrentTutorId] =
     useState("");
 
-  /*
-   * Only admin-approved courses.
-   */
   const [
     approvedCourseCodes,
     setApprovedCourseCodes,
@@ -114,10 +110,19 @@ export default function TutorProposalDetailsPage() {
   const [
     existingApplication,
     setExistingApplication,
-  ] =
-    useState<ExistingApplication | null>(
-      null
-    );
+  ] = useState<ExistingApplication | null>(
+    null
+  );
+
+  const [
+    invitationDocumentId,
+    setInvitationDocumentId,
+  ] = useState("");
+
+  const [
+    editingApplication,
+    setEditingApplication,
+  ] = useState(false);
 
   const [form, setForm] =
     useState<ApplicationForm>(
@@ -159,16 +164,9 @@ export default function TutorProposalDetailsPage() {
           );
 
           /*
-           * ======================================
+           * ========================================
            * TUTOR PROFILE
-           * ======================================
-           *
-           * Read only:
-           * courseCodesToTeach
-           *
-           * Do NOT use:
-           * courses
-           * requestedCourseCodes
+           * ========================================
            */
           unsubscribeProfile =
             onSnapshot(
@@ -212,9 +210,6 @@ export default function TutorProposalDetailsPage() {
                     .trim()
                     .toLowerCase();
 
-                /*
-                 * Must be an approved tutor.
-                 */
                 if (
                   !roles.includes(
                     "tutor"
@@ -225,6 +220,7 @@ export default function TutorProposalDetailsPage() {
                   router.replace(
                     "/student/dashboard"
                   );
+
                   return;
                 }
 
@@ -286,7 +282,9 @@ export default function TutorProposalDetailsPage() {
                   true
                 );
               },
-              (profileError) => {
+              (
+                profileError
+              ) => {
                 console.error(
                   "Tutor verification error:",
                   profileError
@@ -303,9 +301,9 @@ export default function TutorProposalDetailsPage() {
             );
 
           /*
-           * ======================================
+           * ========================================
            * PROPOSAL
-           * ======================================
+           * ========================================
            */
           const proposalReference =
             doc(
@@ -339,10 +337,6 @@ export default function TutorProposalDetailsPage() {
                 const data =
                   snapshot.data();
 
-                /*
-                 * Tutor cannot apply to their own
-                 * student proposal.
-                 */
                 if (
                   data.studentId ===
                   user.uid
@@ -501,9 +495,9 @@ export default function TutorProposalDetailsPage() {
             );
 
           /*
-           * ======================================
-           * EXISTING APPLICATION
-           * ======================================
+           * ========================================
+           * JOB PROPOSALS / APPLICATIONS
+           * ========================================
            */
           const applicationsQuery =
             query(
@@ -522,8 +516,8 @@ export default function TutorProposalDetailsPage() {
             onSnapshot(
               applicationsQuery,
               (snapshot) => {
-                const matchingDocument =
-                  snapshot.docs.find(
+                const proposalApplications =
+                  snapshot.docs.filter(
                     (
                       applicationDocument
                     ) =>
@@ -532,8 +526,58 @@ export default function TutorProposalDetailsPage() {
                       proposalId
                   );
 
+                /*
+                 * Invitation only
+                 */
+                const invitationDocument =
+                  proposalApplications.find(
+                    (
+                      applicationDocument
+                    ) =>
+                      normalizeStatus(
+                        applicationDocument.data()
+                          .status
+                      ) ===
+                      "invited"
+                  );
+
                 if (
-                  !matchingDocument
+                  invitationDocument
+                ) {
+                  setInvitationDocumentId(
+                    invitationDocument.id
+                  );
+                } else {
+                  setInvitationDocumentId(
+                    ""
+                  );
+                }
+
+                /*
+                 * Real submitted application
+                 *
+                 * invited is NOT considered submitted.
+                 */
+                const submittedDocument =
+                  proposalApplications.find(
+                    (
+                      applicationDocument
+                    ) => {
+                      const status =
+                        normalizeStatus(
+                          applicationDocument.data()
+                            .status
+                        );
+
+                      return (
+                        status !==
+                        "invited"
+                      );
+                    }
+                  );
+
+                if (
+                  !submittedDocument
                 ) {
                   setExistingApplication(
                     null
@@ -543,12 +587,12 @@ export default function TutorProposalDetailsPage() {
                 }
 
                 const data =
-                  matchingDocument.data();
+                  submittedDocument.data();
 
                 setExistingApplication(
                   {
                     id:
-                      matchingDocument.id,
+                      submittedDocument.id,
 
                     description:
                       data.description ??
@@ -620,9 +664,9 @@ export default function TutorProposalDetailsPage() {
   ]);
 
   /*
-   * ==========================================
-   * CHECK WHETHER THIS COURSE IS APPROVED
-   * ==========================================
+   * ========================================
+   * CHECK COURSE PERMISSION
+   * ========================================
    */
   const courseAllowed =
     useMemo(() => {
@@ -662,17 +706,81 @@ export default function TutorProposalDetailsPage() {
     );
   }
 
+  /*
+   * ========================================
+   * OPEN EDIT MODE
+   * ========================================
+   */
+  function startEditingApplication() {
+    if (
+      !existingApplication
+    ) {
+      return;
+    }
+
+    const status =
+      normalizeStatus(
+        existingApplication.status
+      );
+
+    if (
+      status !== "applied" &&
+      status !== "pending"
+    ) {
+      setError(
+        "This application can no longer be edited."
+      );
+
+      return;
+    }
+
+    setForm({
+      description:
+        existingApplication.description,
+
+      estimatedHours:
+        String(
+          existingApplication.estimatedHours ||
+            1
+        ),
+
+      payment:
+        String(
+          existingApplication.payment ||
+            ""
+        ),
+
+      dateFrom:
+        existingApplication.dateFrom,
+
+      dateTo:
+        existingApplication.dateTo,
+
+      timeFrom:
+        existingApplication.timeFrom,
+
+      timeTo:
+        existingApplication.timeTo,
+    });
+
+    setError("");
+
+    setEditingApplication(
+      true
+    );
+  }
+
+  /*
+   * ========================================
+   * SUBMIT NEW APPLICATION
+   * ========================================
+   */
   async function handleApply(
     event:
       FormEvent<HTMLFormElement>
   ) {
     event.preventDefault();
 
-    /*
-     * IMPORTANT:
-     * Check permission again before
-     * creating the application.
-     */
     if (!courseAllowed) {
       setError(
         "You are not approved to teach this course."
@@ -683,9 +791,18 @@ export default function TutorProposalDetailsPage() {
 
     if (
       !proposal ||
-      !currentTutorId ||
+      !currentTutorId
+    ) {
+      return;
+    }
+
+    if (
       existingApplication
     ) {
+      setError(
+        "You have already applied to this proposal."
+      );
+
       return;
     }
 
@@ -737,31 +854,17 @@ export default function TutorProposalDetailsPage() {
       return;
     }
 
-    if (
-      proposal.budget >
-        0 &&
-      payment >
-        proposal.budget
-    ) {
-      setError(
-        `Requested payment cannot exceed the student budget of ৳${proposal.budget}.`
-      );
-
-      return;
-    }
+    /*
+     * NO MAXIMUM-BUDGET RESTRICTION.
+     *
+     * Tutor can request more than the student's budget.
+     * Student decides whether to accept.
+     */
 
     setSubmitting(true);
     setError("");
 
     try {
-      /*
-       * Check the tutor profile one more
-       * time before writing.
-       *
-       * This protects against the admin
-       * removing the course while this page
-       * is open.
-       */
       const currentUser =
         auth.currentUser;
 
@@ -769,16 +872,9 @@ export default function TutorProposalDetailsPage() {
         router.replace(
           "/login"
         );
+
         return;
       }
-
-      const applicationReference =
-        doc(
-          collection(
-            firestore,
-            "jobProposals"
-          )
-        );
 
       const proposalReference =
         doc(
@@ -792,62 +888,146 @@ export default function TutorProposalDetailsPage() {
           firestore
         );
 
-      batch.set(
-        applicationReference,
-        {
-          proposalId:
-            proposal.id,
+      /*
+       * INVITED TUTOR:
+       * update invitation document.
+       */
+      if (
+        invitationDocumentId
+      ) {
+        const invitationReference =
+          doc(
+            firestore,
+            "jobProposals",
+            invitationDocumentId
+          );
 
-          studentId:
-            proposal.studentId,
+        batch.update(
+          invitationReference,
+          {
+            proposalId:
+              proposal.id,
 
-          tutorId:
-            currentTutorId,
+            studentId:
+              proposal.studentId,
 
-          courseCode:
-            normalizeCourseCode(
-              proposal.courseCode
-            ),
+            tutorId:
+              currentTutorId,
 
-          description:
-            form.description.trim(),
+            courseCode:
+              normalizeCourseCode(
+                proposal.courseCode
+              ),
 
-          estimatedHours,
+            description:
+              form.description.trim(),
 
-          payment,
+            estimatedHours,
 
-          dateFrom:
-            form.dateFrom.trim(),
+            payment,
 
-          dateTo:
-            form.dateTo.trim(),
+            dateFrom:
+              form.dateFrom.trim(),
 
-          timeFrom:
-            form.timeFrom.trim(),
+            dateTo:
+              form.dateTo.trim(),
 
-          timeTo:
-            form.timeTo.trim(),
+            timeFrom:
+              form.timeFrom.trim(),
 
-          status:
-            "applied",
+            timeTo:
+              form.timeTo.trim(),
 
-          paymentId:
-            "",
+            status:
+              "applied",
 
-          paymentStatus:
-            "pending",
+            paymentId:
+              "",
 
-          appliedAt:
-            serverTimestamp(),
+            paymentStatus:
+              "pending",
 
-          createdAt:
-            serverTimestamp(),
+            appliedAt:
+              serverTimestamp(),
 
-          updatedAt:
-            serverTimestamp(),
-        }
-      );
+            updatedAt:
+              serverTimestamp(),
+          }
+        );
+      } else {
+        /*
+         * NORMAL APPLICATION:
+         * create new jobProposal.
+         */
+        const applicationReference =
+          doc(
+            collection(
+              firestore,
+              "jobProposals"
+            )
+          );
 
+        batch.set(
+          applicationReference,
+          {
+            proposalId:
+              proposal.id,
+
+            studentId:
+              proposal.studentId,
+
+            tutorId:
+              currentTutorId,
+
+            courseCode:
+              normalizeCourseCode(
+                proposal.courseCode
+              ),
+
+            description:
+              form.description.trim(),
+
+            estimatedHours,
+
+            payment,
+
+            dateFrom:
+              form.dateFrom.trim(),
+
+            dateTo:
+              form.dateTo.trim(),
+
+            timeFrom:
+              form.timeFrom.trim(),
+
+            timeTo:
+              form.timeTo.trim(),
+
+            status:
+              "applied",
+
+            paymentId:
+              "",
+
+            paymentStatus:
+              "pending",
+
+            appliedAt:
+              serverTimestamp(),
+
+            createdAt:
+              serverTimestamp(),
+
+            updatedAt:
+              serverTimestamp(),
+          }
+        );
+      }
+
+      /*
+       * Increase number of tutors
+       * who actually applied.
+       */
       batch.update(
         proposalReference,
         {
@@ -878,9 +1058,160 @@ export default function TutorProposalDetailsPage() {
   }
 
   /*
-   * ==========================================
+   * ========================================
+   * UPDATE EXISTING APPLICATION
+   * ========================================
+   */
+  async function handleUpdateApplication(
+    event:
+      FormEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
+
+    if (
+      !existingApplication ||
+      !proposal ||
+      !courseAllowed
+    ) {
+      return;
+    }
+
+    const status =
+      normalizeStatus(
+        existingApplication.status
+      );
+
+    /*
+     * Tutor can edit only while waiting.
+     */
+    if (
+      status !== "applied" &&
+      status !== "pending"
+    ) {
+      setError(
+        "This application can no longer be edited because the student has already made a decision."
+      );
+
+      return;
+    }
+
+    const estimatedHours =
+      Number(
+        form.estimatedHours
+      );
+
+    const payment =
+      Number(
+        form.payment
+      );
+
+    if (
+      form.description
+        .trim()
+        .length < 10
+    ) {
+      setError(
+        "Please write at least 10 characters explaining how you can help."
+      );
+
+      return;
+    }
+
+    if (
+      !Number.isFinite(
+        estimatedHours
+      ) ||
+      estimatedHours <= 0
+    ) {
+      setError(
+        "Estimated hours must be greater than zero."
+      );
+
+      return;
+    }
+
+    if (
+      !Number.isFinite(
+        payment
+      ) ||
+      payment <= 0
+    ) {
+      setError(
+        "Requested payment must be greater than zero."
+      );
+
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const applicationReference =
+        doc(
+          firestore,
+          "jobProposals",
+          existingApplication.id
+        );
+
+      const batch =
+        writeBatch(
+          firestore
+        );
+
+      batch.update(
+        applicationReference,
+        {
+          description:
+            form.description.trim(),
+
+          estimatedHours,
+
+          payment,
+
+          dateFrom:
+            form.dateFrom.trim(),
+
+          dateTo:
+            form.dateTo.trim(),
+
+          timeFrom:
+            form.timeFrom.trim(),
+
+          timeTo:
+            form.timeTo.trim(),
+
+          updatedAt:
+            serverTimestamp(),
+        }
+      );
+
+      await batch.commit();
+
+      setEditingApplication(
+        false
+      );
+
+    } catch (
+      updateError
+    ) {
+      console.error(
+        "Application update error:",
+        updateError
+      );
+
+      setError(
+        "Unable to update your application."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  /*
+   * ========================================
    * LOADING
-   * ==========================================
+   * ========================================
    */
   if (loading) {
     return (
@@ -895,9 +1226,9 @@ export default function TutorProposalDetailsPage() {
   }
 
   /*
-   * ==========================================
-   * PROPOSAL NOT AVAILABLE
-   * ==========================================
+   * ========================================
+   * PROPOSAL ERROR
+   * ========================================
    */
   if (
     error &&
@@ -934,20 +1265,9 @@ export default function TutorProposalDetailsPage() {
   }
 
   /*
-   * ==========================================
+   * ========================================
    * WRONG COURSE
-   * ==========================================
-   *
-   * Example:
-   *
-   * Tutor approved:
-   * ["CSE115"]
-   *
-   * URL:
-   * /tutor/proposals/ENG111-PROPOSAL
-   *
-   * Result:
-   * BLOCKED
+   * ========================================
    */
   if (!courseAllowed) {
     return (
@@ -993,7 +1313,7 @@ export default function TutorProposalDetailsPage() {
                 {proposal.courseCode}
               </span>
               , but this course is not included in your
-              administrator-approved teaching courses.
+              approved teaching courses.
             </p>
 
             <div className="mt-5 rounded-xl bg-emerald-50 p-4">
@@ -1003,8 +1323,7 @@ export default function TutorProposalDetailsPage() {
               </p>
 
               <p className="mt-2 font-bold text-emerald-800">
-                {approvedCourseCodes.length >
-                0
+                {approvedCourseCodes.length > 0
                   ? approvedCourseCodes.join(
                       ", "
                     )
@@ -1072,7 +1391,7 @@ export default function TutorProposalDetailsPage() {
 
       <div className="mx-auto max-w-5xl px-6 py-10">
 
-        {/* PROPOSAL */}
+        {/* PROPOSAL DETAILS */}
 
         <section className="rounded-2xl bg-white p-8 shadow-sm">
 
@@ -1136,7 +1455,7 @@ export default function TutorProposalDetailsPage() {
           <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
             <InformationItem
-              label="Budget"
+              label="Student budget"
               value={`৳${proposal.budget}`}
             />
 
@@ -1148,44 +1467,192 @@ export default function TutorProposalDetailsPage() {
             <InformationItem
               label="Date"
               value={
-                proposal.dateFrom ===
-                proposal.dateTo
-                  ? proposal.dateFrom
-                  : `${proposal.dateFrom} – ${proposal.dateTo}`
+                formatRange(
+                  proposal.dateFrom,
+                  proposal.dateTo
+                )
               }
             />
 
             <InformationItem
               label="Time"
-              value={`${proposal.timeFrom} – ${proposal.timeTo}`}
+              value={
+                formatRange(
+                  proposal.timeFrom,
+                  proposal.timeTo
+                )
+              }
             />
 
           </div>
 
         </section>
 
+        {/* INVITATION NOTICE */}
+
+        {!existingApplication &&
+          invitationDocumentId &&
+          proposalAvailable && (
+
+            <section className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6">
+
+              <p className="font-bold text-amber-800">
+                You were invited to this proposal
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-amber-700">
+                The student invited you to help with this course.
+                Complete the application below if you want to
+                accept the opportunity.
+              </p>
+
+            </section>
+          )}
+
         {/* EXISTING APPLICATION */}
 
         {existingApplication ? (
-          <ExistingApplicationCard
-            application={
-              existingApplication
-            }
-          />
+
+          editingApplication ? (
+
+            <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
+
+              <div className="flex flex-wrap items-start justify-between gap-4">
+
+                <div>
+
+                  <p className="font-semibold text-emerald-600">
+                    Application submitted
+                  </p>
+
+                  <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                    Edit Application
+                  </h2>
+
+                  <p className="mt-2 text-slate-600">
+                    You can update your offer until the student
+                    selects you.
+                  </p>
+
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingApplication(
+                      false
+                    );
+
+                    setError("");
+                  }}
+                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+
+              </div>
+
+              <div className="mt-6 rounded-xl bg-blue-50 p-5">
+
+                <p className="text-sm text-blue-700">
+                  Student&apos;s original budget
+                </p>
+
+                <p className="mt-1 text-2xl font-bold text-blue-900">
+                  ৳{proposal.budget}
+                </p>
+
+                <p className="mt-2 text-sm leading-6 text-blue-700">
+                  You may request a lower or higher amount.
+                  The student will decide whether to accept
+                  your offer.
+                </p>
+
+              </div>
+
+              {error && (
+                <p className="mt-6 rounded-lg bg-red-50 p-4 text-red-600">
+                  {error}
+                </p>
+              )}
+
+              <form
+                onSubmit={
+                  handleUpdateApplication
+                }
+                className="mt-7"
+              >
+
+                <ApplicationFormFields
+                  form={form}
+                  updateField={
+                    updateField
+                  }
+                />
+
+                <button
+                  type="submit"
+                  disabled={
+                    submitting
+                  }
+                  className="mt-8 w-full rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting
+                    ? "Saving changes..."
+                    : "Save Changes"}
+                </button>
+
+              </form>
+
+            </section>
+
+          ) : (
+
+            <ExistingApplicationCard
+              application={
+                existingApplication
+              }
+              onEdit={
+                startEditingApplication
+              }
+            />
+
+          )
+
         ) : proposalAvailable ? (
 
-          /* APPLICATION FORM */
+          /* NEW APPLICATION FORM */
 
           <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
 
             <h2 className="text-2xl font-bold text-slate-900">
-              Apply to this proposal
+              {invitationDocumentId
+                ? "Respond to invitation"
+                : "Apply to this proposal"}
             </h2>
 
             <p className="mt-2 text-slate-600">
               Explain how you can help and confirm your proposed
               schedule and payment.
             </p>
+
+            <div className="mt-6 rounded-xl bg-blue-50 p-5">
+
+              <p className="text-sm text-blue-700">
+                Student&apos;s budget
+              </p>
+
+              <p className="mt-1 text-2xl font-bold text-blue-900">
+                ৳{proposal.budget}
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-blue-700">
+                You can request a different amount, including
+                more than the student&apos;s original budget.
+                The student can then decide whether to accept.
+              </p>
+
+            </div>
 
             {error && (
               <p className="mt-6 rounded-lg bg-red-50 p-4 text-red-600">
@@ -1200,131 +1667,12 @@ export default function TutorProposalDetailsPage() {
               className="mt-7"
             >
 
-              <div>
-
-                <label
-                  htmlFor="description"
-                  className="mb-2 block font-medium text-slate-700"
-                >
-                  Application message
-                </label>
-
-                <textarea
-                  id="description"
-                  value={
-                    form.description
-                  }
-                  onChange={(
-                    event
-                  ) =>
-                    updateField(
-                      "description",
-                      event.target.value
-                    )
-                  }
-                  rows={5}
-                  required
-                  placeholder="Explain your experience with this course and how you can help."
-                  className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-                />
-
-              </div>
-
-              <div className="mt-6 grid gap-6 md:grid-cols-2">
-
-                <FormInput
-                  label="Estimated hours"
-                  type="number"
-                  value={
-                    form.estimatedHours
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "estimatedHours",
-                      value
-                    )
-                  }
-                />
-
-                <FormInput
-                  label="Requested payment (BDT)"
-                  type="number"
-                  value={
-                    form.payment
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "payment",
-                      value
-                    )
-                  }
-                />
-
-                <FormInput
-                  label="Starting date"
-                  value={
-                    form.dateFrom
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "dateFrom",
-                      value
-                    )
-                  }
-                />
-
-                <FormInput
-                  label="Ending date"
-                  value={
-                    form.dateTo
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "dateTo",
-                      value
-                    )
-                  }
-                />
-
-                <FormInput
-                  label="Starting time"
-                  value={
-                    form.timeFrom
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "timeFrom",
-                      value
-                    )
-                  }
-                />
-
-                <FormInput
-                  label="Ending time"
-                  value={
-                    form.timeTo
-                  }
-                  onChange={(
-                    value
-                  ) =>
-                    updateField(
-                      "timeTo",
-                      value
-                    )
-                  }
-                />
-
-              </div>
+              <ApplicationFormFields
+                form={form}
+                updateField={
+                  updateField
+                }
+              />
 
               <button
                 type="submit"
@@ -1335,7 +1683,9 @@ export default function TutorProposalDetailsPage() {
               >
                 {submitting
                   ? "Submitting application..."
-                  : "Submit Application"}
+                  : invitationDocumentId
+                    ? "Accept & Submit Application"
+                    : "Submit Application"}
               </button>
 
             </form>
@@ -1356,7 +1706,6 @@ export default function TutorProposalDetailsPage() {
             </p>
 
           </section>
-
         )}
 
       </div>
@@ -1365,12 +1714,157 @@ export default function TutorProposalDetailsPage() {
   );
 }
 
+function ApplicationFormFields({
+  form,
+  updateField,
+}: {
+  form: ApplicationForm;
+
+  updateField: (
+    field: keyof ApplicationForm,
+    value: string
+  ) => void;
+}) {
+  return (
+    <>
+
+      <div>
+
+        <label
+          htmlFor="description"
+          className="mb-2 block font-medium text-slate-700"
+        >
+          Application message
+        </label>
+
+        <textarea
+          id="description"
+          value={
+            form.description
+          }
+          onChange={(event) =>
+            updateField(
+              "description",
+              event.target.value
+            )
+          }
+          rows={5}
+          required
+          placeholder="Explain your experience with this course and how you can help."
+          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+        />
+
+      </div>
+
+      <div className="mt-6 grid gap-6 md:grid-cols-2">
+
+        <FormInput
+          label="Estimated hours"
+          type="number"
+          value={
+            form.estimatedHours
+          }
+          onChange={(value) =>
+            updateField(
+              "estimatedHours",
+              value
+            )
+          }
+        />
+
+        <FormInput
+          label="Requested payment (BDT)"
+          type="number"
+          value={
+            form.payment
+          }
+          onChange={(value) =>
+            updateField(
+              "payment",
+              value
+            )
+          }
+        />
+
+        <FormInput
+          label="Starting date"
+          value={
+            form.dateFrom
+          }
+          onChange={(value) =>
+            updateField(
+              "dateFrom",
+              value
+            )
+          }
+        />
+
+        <FormInput
+          label="Ending date"
+          value={
+            form.dateTo
+          }
+          onChange={(value) =>
+            updateField(
+              "dateTo",
+              value
+            )
+          }
+        />
+
+        <FormInput
+          label="Starting time"
+          value={
+            form.timeFrom
+          }
+          onChange={(value) =>
+            updateField(
+              "timeFrom",
+              value
+            )
+          }
+        />
+
+        <FormInput
+          label="Ending time"
+          value={
+            form.timeTo
+          }
+          onChange={(value) =>
+            updateField(
+              "timeTo",
+              value
+            )
+          }
+        />
+
+      </div>
+
+    </>
+  );
+}
+
 function ExistingApplicationCard({
   application,
+  onEdit,
 }: {
   application:
     ExistingApplication;
+
+  onEdit:
+    () => void;
 }) {
+  const status =
+    normalizeStatus(
+      application.status
+    );
+
+  const canEdit =
+    status ===
+      "applied" ||
+    status ===
+      "pending";
+
   return (
     <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
 
@@ -1388,14 +1882,21 @@ function ExistingApplicationCard({
 
         </div>
 
-        <span className="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold capitalize text-amber-700">
+        <span
+          className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${
+            canEdit
+              ? "bg-amber-50 text-amber-700"
+              : "bg-emerald-50 text-emerald-700"
+          }`}
+        >
           {application.status}
         </span>
 
       </div>
 
       <p className="mt-6 whitespace-pre-wrap leading-7 text-slate-600">
-        {application.description}
+        {application.description ||
+          "No application message."}
       </p>
 
       <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -1413,10 +1914,10 @@ function ExistingApplicationCard({
         <InformationItem
           label="Date"
           value={
-            application.dateFrom ===
-            application.dateTo
-              ? application.dateFrom
-              : `${application.dateFrom} – ${application.dateTo}`
+            formatRange(
+              application.dateFrom,
+              application.dateTo
+            )
           }
         />
 
@@ -1429,12 +1930,47 @@ function ExistingApplicationCard({
 
       </div>
 
-      <Link
-        href="/tutor/applications"
-        className="mt-7 block rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
-      >
-        View All Applications
-      </Link>
+      {canEdit && (
+
+        <div className="mt-7 rounded-xl border border-amber-200 bg-amber-50 p-4">
+
+          <p className="font-semibold text-amber-800">
+            Waiting for student selection
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-amber-700">
+            You can edit your requested payment, schedule and
+            application message until the student selects you.
+          </p>
+
+        </div>
+
+      )}
+
+      <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+
+        {canEdit && (
+
+          <button
+            type="button"
+            onClick={
+              onEdit
+            }
+            className="flex-1 rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-700"
+          >
+            Edit Application
+          </button>
+
+        )}
+
+        <Link
+          href="/tutor/applications"
+          className="flex-1 rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
+        >
+          View All Applications
+        </Link>
+
+      </div>
 
     </section>
   );
@@ -1448,9 +1984,11 @@ function FormInput({
 }: {
   label: string;
   value: string;
+
   onChange:
     (value: string) =>
       void;
+
   type?: string;
 }) {
   return (
@@ -1461,8 +1999,12 @@ function FormInput({
       </label>
 
       <input
-        type={type}
-        value={value}
+        type={
+          type
+        }
+        value={
+          value
+        }
         min={
           type === "number"
             ? "1"
@@ -1507,8 +2049,51 @@ function InformationItem({
 function normalizeCourseCode(
   courseCode: string
 ) {
-  return courseCode
+  return String(
+    courseCode ?? ""
+  )
     .trim()
-    .replace(/\s+/g, "")
+    .replace(
+      /\s+/g,
+      ""
+    )
     .toUpperCase();
+}
+
+function normalizeStatus(
+  status: unknown
+) {
+  return String(
+    status ?? ""
+  )
+    .trim()
+    .toLowerCase();
+}
+
+function formatRange(
+  from: string,
+  to: string
+) {
+  if (
+    !from &&
+    !to
+  ) {
+    return "Not provided";
+  }
+
+  if (
+    from === to ||
+    !to
+  ) {
+    return (
+      from ||
+      "Not provided"
+    );
+  }
+
+  if (!from) {
+    return to;
+  }
+
+  return `${from} – ${to}`;
 }

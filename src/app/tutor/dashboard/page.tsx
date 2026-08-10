@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -25,8 +25,7 @@ interface TutorProfile {
   profileImageUrl: string;
   tutorStatus: string;
   roles: string[];
-  courseCodesToTeach: string;
-  courses: string[];
+  courseCodesToTeach: string[];
 }
 
 interface AvailableProposal {
@@ -49,7 +48,7 @@ export default function TutorDashboardPage() {
   const [profile, setProfile] =
     useState<TutorProfile | null>(null);
 
-  const [availableProposals, setAvailableProposals] =
+  const [allProposals, setAllProposals] =
     useState<AvailableProposal[]>([]);
 
   const [applicationCount, setApplicationCount] =
@@ -59,6 +58,7 @@ export default function TutorDashboardPage() {
     useState(0);
 
   const [loading, setLoading] = useState(true);
+
   const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
 
@@ -66,13 +66,18 @@ export default function TutorDashboardPage() {
 
   useEffect(() => {
     let unsubscribeProfile: (() => void) | undefined;
+
     let unsubscribeProposals:
       | (() => void)
       | undefined;
+
     let unsubscribeApplications:
       | (() => void)
       | undefined;
-    let unsubscribeChats: (() => void) | undefined;
+
+    let unsubscribeChats:
+      | (() => void)
+      | undefined;
 
     const unsubscribeAuth = onAuthStateChanged(
       auth,
@@ -82,19 +87,40 @@ export default function TutorDashboardPage() {
           return;
         }
 
+        /*
+         * =========================================
+         * TUTOR PROFILE
+         * =========================================
+         */
         unsubscribeProfile = onSnapshot(
-          doc(firestore, "users", user.uid),
+          doc(
+            firestore,
+            "users",
+            user.uid
+          ),
           (snapshot) => {
             if (!snapshot.exists()) {
               router.replace("/login");
               return;
             }
 
-            const data = snapshot.data();
-            const roles = data.roles ?? [];
-            const tutorStatus = (
-              data.tutorStatus ?? ""
-            ).toLowerCase();
+            const data =
+              snapshot.data();
+
+            const roles =
+              Array.isArray(data.roles)
+                ? data.roles.map(
+                    (role: unknown) =>
+                      String(role)
+                  )
+                : [];
+
+            const tutorStatus =
+              String(
+                data.tutorStatus ?? ""
+              )
+                .trim()
+                .toLowerCase();
 
             if (
               !roles.includes("tutor") ||
@@ -103,34 +129,95 @@ export default function TutorDashboardPage() {
               router.replace(
                 "/student/dashboard"
               );
+
               return;
             }
 
+            /*
+             * IMPORTANT:
+             *
+             * Use ONLY courseCodesToTeach.
+             *
+             * Do NOT use:
+             * requestedCourseCodes
+             * courses
+             */
+            let approvedCourses: string[] =
+              [];
+
+            if (
+              Array.isArray(
+                data.courseCodesToTeach
+              )
+            ) {
+              approvedCourses =
+                data.courseCodesToTeach
+                  .map(
+                    (course: unknown) =>
+                      normalizeCourseCode(
+                        String(course)
+                      )
+                  )
+                  .filter(Boolean);
+            } else if (
+              typeof data.courseCodesToTeach ===
+              "string"
+            ) {
+              approvedCourses =
+                data.courseCodesToTeach
+                  .split(",")
+                  .map(
+                    (course: string) =>
+                      normalizeCourseCode(
+                        course
+                      )
+                  )
+                  .filter(Boolean);
+            }
+
+            approvedCourses =
+              Array.from(
+                new Set(
+                  approvedCourses
+                )
+              );
+
             setProfile({
-              fullName: data.fullName ?? "Tutor",
+              fullName:
+                data.fullName ??
+                "Tutor",
+
               universityEmail:
                 data.universityEmail ??
                 user.email ??
                 "",
+
               universityName:
-                data.universityName ?? "",
-              major: data.major ?? "",
+                data.universityName ??
+                "",
+
+              major:
+                data.major ??
+                "",
+
               profileImageUrl:
-                data.profileImageUrl ?? "",
-              tutorStatus:
-                data.tutorStatus ?? "",
+                data.profileImageUrl ??
+                "",
+
+              tutorStatus,
+
               roles,
+
               courseCodesToTeach:
-                data.courseCodesToTeach ?? "",
-              courses: data.courses ?? [],
+                approvedCourses,
             });
 
             setLoading(false);
           },
-          (error) => {
+          (profileError) => {
             console.error(
               "Tutor profile error:",
-              error
+              profileError
             );
 
             setError(
@@ -141,100 +228,185 @@ export default function TutorDashboardPage() {
           }
         );
 
-        unsubscribeProposals = onSnapshot(
-          collection(firestore, "proposals"),
-          (snapshot) => {
-            const proposalList = snapshot.docs
-              .map((proposalDocument) => {
-                const data =
-                  proposalDocument.data();
+        /*
+         * =========================================
+         * LOAD PROPOSALS
+         *
+         * We load them here and apply the strict
+         * approved-course filter below.
+         * =========================================
+         */
+        unsubscribeProposals =
+          onSnapshot(
+            collection(
+              firestore,
+              "proposals"
+            ),
+            (snapshot) => {
+              const proposalList =
+                snapshot.docs.map(
+                  (
+                    proposalDocument
+                  ) => {
+                    const data =
+                      proposalDocument.data();
 
-                return {
-                  id: proposalDocument.id,
-                  title: data.title ?? "",
-                  courseCode:
-                    data.courseCode ?? "",
-                  description:
-                    data.description ?? "",
-                  budget: data.budget ?? 0,
-                  estimatedHours:
-                    data.estimatedHours ?? 0,
-                  dateFrom:
-                    data.dateFrom ?? "",
-                  dateTo: data.dateTo ?? "",
-                  studentName:
-                    data.studentName ??
-                    "Student",
-                  status:
-                    data.status ?? "unknown",
-                  createdAt: data.createdAt,
-                } as AvailableProposal;
-              })
-              .filter((proposal) => {
-                const status =
-                  proposal.status.toLowerCase();
+                    return {
+                      id:
+                        proposalDocument.id,
 
-                return (
-                  status === "open" ||
-                  status === "active" ||
-                  status === "pending"
+                      title:
+                        data.title ?? "",
+
+                      courseCode:
+                        String(
+                          data.courseCode ??
+                            ""
+                        ),
+
+                      description:
+                        data.description ??
+                        "",
+
+                      budget:
+                        Number(
+                          data.budget ??
+                            0
+                        ),
+
+                      estimatedHours:
+                        Number(
+                          data.estimatedHours ??
+                            0
+                        ),
+
+                      dateFrom:
+                        data.dateFrom ??
+                        "",
+
+                      dateTo:
+                        data.dateTo ??
+                        "",
+
+                      studentName:
+                        data.studentName ??
+                        "Student",
+
+                      status:
+                        String(
+                          data.status ??
+                            "unknown"
+                        ),
+
+                      createdAt:
+                        data.createdAt,
+                    } as AvailableProposal;
+                  }
                 );
-              });
 
-            proposalList.sort(
-              (first, second) => {
-                const firstTime =
-                  first.createdAt?.toMillis?.() ??
-                  0;
+              proposalList.sort(
+                (
+                  first,
+                  second
+                ) => {
+                  const firstTime =
+                    first.createdAt
+                      ?.toMillis?.() ??
+                    0;
 
-                const secondTime =
-                  second.createdAt?.toMillis?.() ??
-                  0;
+                  const secondTime =
+                    second.createdAt
+                      ?.toMillis?.() ??
+                    0;
 
-                return secondTime - firstTime;
-              }
-            );
+                  return (
+                    secondTime -
+                    firstTime
+                  );
+                }
+              );
 
-            setAvailableProposals(proposalList);
-          },
-          (error) => {
-            console.error(
-              "Available proposals error:",
-              error
-            );
-          }
-        );
+              setAllProposals(
+                proposalList
+              );
+            },
+            (proposalError) => {
+              console.error(
+                "Available proposals error:",
+                proposalError
+              );
 
-        const applicationsQuery = query(
-          collection(firestore, "jobProposals"),
-          where("tutorId", "==", user.uid)
-        );
+              setError(
+                "Unable to load available proposals."
+              );
+            }
+          );
 
-        unsubscribeApplications = onSnapshot(
-          applicationsQuery,
-          (snapshot) => {
-            setApplicationCount(snapshot.size);
-          }
-        );
+        /*
+         * =========================================
+         * MY APPLICATIONS
+         * =========================================
+         */
+        const applicationsQuery =
+          query(
+            collection(
+              firestore,
+              "jobProposals"
+            ),
+            where(
+              "tutorId",
+              "==",
+              user.uid
+            )
+          );
 
-        const chatsQuery = query(
-          collection(firestore, "chats"),
-          where("tutorId", "==", user.uid)
-        );
+        unsubscribeApplications =
+          onSnapshot(
+            applicationsQuery,
+            (snapshot) => {
+              setApplicationCount(
+                snapshot.size
+              );
+            }
+          );
 
-        unsubscribeChats = onSnapshot(
-          chatsQuery,
-          (snapshot) => {
-            const activeCount =
-              snapshot.docs.filter(
-                (chatDocument) =>
-                  chatDocument.data().isActive ===
-                  true
-              ).length;
+        /*
+         * =========================================
+         * ACTIVE CHATS
+         * =========================================
+         */
+        const chatsQuery =
+          query(
+            collection(
+              firestore,
+              "chats"
+            ),
+            where(
+              "tutorId",
+              "==",
+              user.uid
+            )
+          );
 
-            setActiveChatCount(activeCount);
-          }
-        );
+        unsubscribeChats =
+          onSnapshot(
+            chatsQuery,
+            (snapshot) => {
+              const activeCount =
+                snapshot.docs.filter(
+                  (
+                    chatDocument
+                  ) =>
+                    chatDocument.data()
+                      .isActive ===
+                    true
+                ).length;
+
+              setActiveChatCount(
+                activeCount
+              );
+            }
+          );
       }
     );
 
@@ -247,28 +419,118 @@ export default function TutorDashboardPage() {
     };
   }, [router]);
 
+  /*
+   * =========================================
+   * STRICT APPROVED COURSE FILTER
+   * =========================================
+   *
+   * Example:
+   *
+   * Tutor:
+   * ["CSE115"]
+   *
+   * CSE115 -> show
+   * CSE215 -> hide
+   * ENG111 -> hide
+   */
+  const availableProposals =
+    useMemo(() => {
+      if (!profile) {
+        return [];
+      }
+
+      const approvedCourseSet =
+        new Set(
+          profile.courseCodesToTeach.map(
+            (course) =>
+              normalizeCourseCode(
+                course
+              )
+          )
+        );
+
+      /*
+       * Tutor with zero approved courses
+       * sees zero proposals.
+       */
+      if (
+        approvedCourseSet.size ===
+        0
+      ) {
+        return [];
+      }
+
+      return allProposals.filter(
+        (proposal) => {
+          const proposalCourse =
+            normalizeCourseCode(
+              proposal.courseCode
+            );
+
+          /*
+           * COURSE MUST MATCH EXACTLY
+           */
+          if (
+            !approvedCourseSet.has(
+              proposalCourse
+            )
+          ) {
+            return false;
+          }
+
+          /*
+           * Proposal must also be available.
+           */
+          const status =
+            proposal.status
+              .trim()
+              .toLowerCase();
+
+          return (
+            status === "open" ||
+            status === "active" ||
+            status === "available" ||
+            status === "pending"
+          );
+        }
+      );
+    }, [
+      allProposals,
+      profile,
+    ]);
+
   async function handleLogout() {
     await signOut(auth);
+
     router.replace("/login");
   }
 
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50">
+
         <p className="text-slate-600">
           Loading tutor dashboard...
         </p>
+
       </main>
     );
   }
 
   const firstName =
-    profile?.fullName.split(" ")[0] || "Tutor";
+    profile?.fullName
+      .split(" ")[0] ||
+    "Tutor";
 
   return (
     <main className="min-h-screen bg-slate-50">
+
+      {/* HEADER */}
+
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
           <Link
             href="/tutor/dashboard"
             className="text-2xl font-bold text-emerald-600"
@@ -277,6 +539,7 @@ export default function TutorDashboardPage() {
           </Link>
 
           <nav className="hidden items-center gap-7 md:flex">
+
             <Link
               href="/tutor/dashboard"
               className="font-semibold text-emerald-600"
@@ -304,50 +567,70 @@ export default function TutorDashboardPage() {
             >
               Messages
             </Link>
+
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
+
             <button
+              type="button"
               onClick={() =>
-                router.push("/role-selection")
+                router.push(
+                  "/role-selection"
+                )
               }
               className="rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-50"
             >
               Switch view
             </button>
 
-            <Link href="/tutor/profile">
+            <Link
+              href="/tutor/profile"
+            >
+
               {profile?.profileImageUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={profile.profileImageUrl}
-                  alt={profile.fullName}
+                  src={
+                    profile.profileImageUrl
+                  }
+                  alt={
+                    profile.fullName
+                  }
                   className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-600">
                   {profile?.fullName
                     .charAt(0)
-                    .toUpperCase() || "T"}
+                    .toUpperCase() ||
+                    "T"}
                 </div>
               )}
+
             </Link>
+
           </div>
 
           <button
             type="button"
             onClick={() =>
-              setMobileMenuOpen(!mobileMenuOpen)
+              setMobileMenuOpen(
+                !mobileMenuOpen
+              )
             }
             className="rounded-lg border border-slate-200 px-3 py-2 md:hidden"
           >
             ☰
           </button>
+
         </div>
 
         {mobileMenuOpen && (
           <nav className="border-t border-slate-200 bg-white px-6 py-4 md:hidden">
+
             <div className="flex flex-col gap-4">
+
               <Link href="/tutor/dashboard">
                 Dashboard
               </Link>
@@ -369,8 +652,11 @@ export default function TutorDashboardPage() {
               </Link>
 
               <button
+                type="button"
                 onClick={() =>
-                  router.push("/role-selection")
+                  router.push(
+                    "/role-selection"
+                  )
                 }
                 className="text-left font-medium text-emerald-600"
               >
@@ -378,35 +664,46 @@ export default function TutorDashboardPage() {
               </button>
 
               <button
-                onClick={handleLogout}
+                type="button"
+                onClick={
+                  handleLogout
+                }
                 className="text-left font-medium text-red-600"
               >
                 Log out
               </button>
+
             </div>
+
           </nav>
         )}
+
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
+
         {error && (
           <p className="mb-8 rounded-lg bg-red-50 p-4 text-red-600">
             {error}
           </p>
         )}
 
+        {/* HERO */}
+
         <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-emerald-500 p-8 text-white shadow-sm md:p-10">
+
           <p className="font-medium text-emerald-100">
             Tutor Dashboard
           </p>
 
           <h1 className="mt-2 text-3xl font-bold md:text-4xl">
-            Welcome back, {firstName}
+            Welcome back,{" "}
+            {firstName}
           </h1>
 
           <p className="mt-4 max-w-2xl leading-7 text-emerald-50">
-            Browse academic proposals, support fellow
-            students and manage your tutoring sessions.
+            Browse academic proposals for the courses you are
+            approved to teach and manage your tutoring sessions.
           </p>
 
           <Link
@@ -415,31 +712,84 @@ export default function TutorDashboardPage() {
           >
             Browse Available Proposals
           </Link>
+
         </section>
 
+        {/* APPROVED COURSES */}
+
+        <section className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+
+          <p className="text-sm font-semibold text-emerald-600">
+            Your approved teaching courses
+          </p>
+
+          {profile &&
+          profile.courseCodesToTeach
+            .length > 0 ? (
+
+            <div className="mt-3 flex flex-wrap gap-2">
+
+              {profile.courseCodesToTeach.map(
+                (course) => (
+                  <span
+                    key={course}
+                    className="rounded-full bg-white px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm"
+                  >
+                    {course}
+                  </span>
+                )
+              )}
+
+            </div>
+
+          ) : (
+
+            <p className="mt-2 text-sm text-slate-600">
+              No courses have been approved for your tutor account.
+            </p>
+
+          )}
+
+        </section>
+
+        {/* STATS */}
+
         <section className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
           <StatCard
             label="Available proposals"
-            value={availableProposals.length}
+            value={
+              availableProposals.length
+            }
             href="/tutor/proposals"
           />
 
           <StatCard
             label="My applications"
-            value={applicationCount}
+            value={
+              applicationCount
+            }
             href="/tutor/applications"
           />
 
           <StatCard
             label="Active sessions"
-            value={activeChatCount}
+            value={
+              activeChatCount
+            }
             href="/tutor/messages"
           />
+
         </section>
 
+        {/* LATEST PROPOSALS */}
+
         <section className="mt-10">
+
           <div className="flex items-center justify-between gap-5">
+
             <div>
+
               <p className="font-semibold text-emerald-600">
                 Latest opportunities
               </p>
@@ -447,6 +797,12 @@ export default function TutorDashboardPage() {
               <h2 className="mt-1 text-2xl font-bold text-slate-900">
                 Available Proposals
               </h2>
+
+              <p className="mt-2 text-sm text-slate-500">
+                Only proposals matching your approved courses
+                appear here.
+              </p>
+
             </div>
 
             <Link
@@ -455,28 +811,51 @@ export default function TutorDashboardPage() {
             >
               View all →
             </Link>
+
           </div>
 
-          {availableProposals.length === 0 ? (
+          {availableProposals.length ===
+          0 ? (
+
             <div className="mt-6 rounded-2xl bg-white p-10 text-center shadow-sm">
-              <p className="text-slate-600">
-                No proposals are currently available.
+
+              <div className="text-4xl">
+                📚
+              </div>
+
+              <p className="mt-4 text-slate-600">
+                No proposals are currently available for your
+                approved courses.
               </p>
+
             </div>
+
           ) : (
+
             <div className="mt-6 grid gap-6 lg:grid-cols-3">
+
               {availableProposals
                 .slice(0, 3)
-                .map((proposal) => (
-                  <ProposalCard
-                    key={proposal.id}
-                    proposal={proposal}
-                  />
-                ))}
+                .map(
+                  (proposal) => (
+                    <ProposalCard
+                      key={
+                        proposal.id
+                      }
+                      proposal={
+                        proposal
+                      }
+                    />
+                  )
+                )}
+
             </div>
           )}
+
         </section>
+
       </div>
+
     </main>
   );
 }
@@ -495,7 +874,10 @@ function StatCard({
       href={href}
       className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 hover:shadow-md"
     >
-      <p className="text-slate-500">{label}</p>
+
+      <p className="text-slate-500">
+        {label}
+      </p>
 
       <p className="mt-3 text-4xl font-bold text-slate-900">
         {value}
@@ -504,6 +886,7 @@ function StatCard({
       <p className="mt-4 font-medium text-emerald-600">
         View details →
       </p>
+
     </Link>
   );
 }
@@ -515,12 +898,14 @@ function ProposalCard({
 }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+
       <p className="font-semibold text-emerald-600">
         {proposal.courseCode}
       </p>
 
       <h3 className="mt-2 text-xl font-bold text-slate-900">
-        {proposal.title || "Untitled proposal"}
+        {proposal.title ||
+          "Untitled proposal"}
       </h3>
 
       <p className="mt-3 line-clamp-3 leading-7 text-slate-600">
@@ -529,7 +914,9 @@ function ProposalCard({
       </p>
 
       <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
+
         <div>
+
           <p className="text-sm text-slate-500">
             Budget
           </p>
@@ -537,9 +924,11 @@ function ProposalCard({
           <p className="font-bold text-slate-900">
             ৳{proposal.budget}
           </p>
+
         </div>
 
         <div className="text-right">
+
           <p className="text-sm text-slate-500">
             Student
           </p>
@@ -547,7 +936,9 @@ function ProposalCard({
           <p className="font-semibold text-slate-900">
             {proposal.studentName}
           </p>
+
         </div>
+
       </div>
 
       <Link
@@ -556,6 +947,16 @@ function ProposalCard({
       >
         View Proposal
       </Link>
+
     </article>
   );
+}
+
+function normalizeCourseCode(
+  courseCode: string
+) {
+  return courseCode
+    .trim()
+    .replace(/\s+/g, "")
+    .toUpperCase();
 }

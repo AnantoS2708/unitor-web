@@ -31,10 +31,11 @@ interface TutorApplication {
   cgpa: string;
   tutorStatus: string;
   profileImageUrl: string;
-  courseCodesToTeach: string;
-  courses: string[];
+  requestedCourseCodes: string[];
+  courseCodesToTeach: string[];
   roles: string[];
   createdAt?: Timestamp;
+  tutorAppliedAt?: Timestamp;
   approvedAt?: Timestamp;
   approvedBy?: string;
 }
@@ -51,8 +52,12 @@ export default function AdminTutorApplicationsPage() {
   const [applications, setApplications] = useState<
     TutorApplication[]
   >([]);
+
   const [selectedApplication, setSelectedApplication] =
     useState<TutorApplication | null>(null);
+
+  const [selectedApprovedCourses, setSelectedApprovedCourses] =
+    useState<string[]>([]);
 
   const [statusFilter, setStatusFilter] =
     useState<StatusFilter>("pending");
@@ -68,8 +73,7 @@ export default function AdminTutorApplicationsPage() {
     const unsubscribeAuth = onAuthStateChanged(
       auth,
       (user) => {
-        const email =
-          user?.email?.toLowerCase() ?? "";
+        const email = user?.email?.toLowerCase() ?? "";
 
         if (!user || email !== ADMIN_EMAIL) {
           router.replace("/admin/login");
@@ -87,49 +91,80 @@ export default function AdminTutorApplicationsPage() {
                   ? data.roles
                   : [];
 
-                const courses = Array.isArray(data.courses)
-                  ? data.courses
-                  : [];
+                const requestedCourseCodes =
+                  normalizeCourseArray(
+                    data.requestedCourseCodes
+                  );
+
+                const courseCodesToTeach =
+                  normalizeCourseArray(
+                    data.courseCodesToTeach
+                  );
 
                 return {
                   id: userDocument.id,
                   uid: data.uid ?? userDocument.id,
-                  fullName: data.fullName ?? "Unknown tutor",
+                  fullName:
+                    data.fullName ?? "Unknown applicant",
                   universityEmail:
                     data.universityEmail ?? "",
-                  universityId: data.universityId ?? "",
+                  universityId:
+                    data.universityId ?? "",
                   universityName:
                     data.universityName ?? "",
                   major: data.major ?? "",
                   currentSemester:
                     data.currentSemester ?? "",
-                  phoneNumber: data.phoneNumber ?? "",
-                  country: data.country ?? "",
-                  bio: data.bio ?? "",
-                  cgpa: data.cgpa ?? "",
+                  phoneNumber:
+                    data.phoneNumber ?? "",
+                  country:
+                    data.country ?? "",
+                  bio:
+                    data.bio ?? "",
+                  cgpa:
+                    data.cgpa !== undefined
+                      ? String(data.cgpa)
+                      : "",
                   tutorStatus:
-                    data.tutorStatus ?? "pending",
+                    data.tutorStatus ?? "",
                   profileImageUrl:
                     data.profileImageUrl ?? "",
-                  courseCodesToTeach:
-                    data.courseCodesToTeach ?? "",
-                  courses,
+                  requestedCourseCodes,
+                  courseCodesToTeach,
                   roles,
-                  createdAt: data.createdAt,
-                  approvedAt: data.approvedAt,
-                  approvedBy: data.approvedBy ?? "",
+                  createdAt:
+                    data.createdAt,
+                  tutorAppliedAt:
+                    data.tutorAppliedAt,
+                  approvedAt:
+                    data.approvedAt,
+                  approvedBy:
+                    data.approvedBy ?? "",
                 } as TutorApplication;
               })
-              .filter((userRecord) =>
-                userRecord.roles.includes("tutor")
-              );
+              .filter((userRecord) => {
+                const status =
+                  userRecord.tutorStatus
+                    .trim()
+                    .toLowerCase();
+
+                return (
+                  status === "pending" ||
+                  status === "approved" ||
+                  status === "rejected"
+                );
+              });
 
             tutorList.sort((first, second) => {
               const firstTime =
-                first.createdAt?.toMillis?.() ?? 0;
+                first.tutorAppliedAt?.toMillis?.() ??
+                first.createdAt?.toMillis?.() ??
+                0;
 
               const secondTime =
-                second.createdAt?.toMillis?.() ?? 0;
+                second.tutorAppliedAt?.toMillis?.() ??
+                second.createdAt?.toMillis?.() ??
+                0;
 
               return secondTime - firstTime;
             });
@@ -184,8 +219,9 @@ export default function AdminTutorApplicationsPage() {
 
     return applications.filter(
       (application) =>
-        application.tutorStatus.toLowerCase() ===
-        statusFilter
+        application.tutorStatus
+          .trim()
+          .toLowerCase() === statusFilter
     );
   }, [applications, statusFilter]);
 
@@ -193,8 +229,9 @@ export default function AdminTutorApplicationsPage() {
     () =>
       applications.filter(
         (application) =>
-          application.tutorStatus.toLowerCase() ===
-          "pending"
+          application.tutorStatus
+            .trim()
+            .toLowerCase() === "pending"
       ).length,
     [applications]
   );
@@ -203,8 +240,9 @@ export default function AdminTutorApplicationsPage() {
     () =>
       applications.filter(
         (application) =>
-          application.tutorStatus.toLowerCase() ===
-          "approved"
+          application.tutorStatus
+            .trim()
+            .toLowerCase() === "approved"
       ).length,
     [applications]
   );
@@ -213,18 +251,65 @@ export default function AdminTutorApplicationsPage() {
     () =>
       applications.filter(
         (application) =>
-          application.tutorStatus.toLowerCase() ===
-          "rejected"
+          application.tutorStatus
+            .trim()
+            .toLowerCase() === "rejected"
       ).length,
     [applications]
   );
+
+  function openApplication(
+    application: TutorApplication
+  ) {
+    setSelectedApplication(application);
+
+    if (
+      application.courseCodesToTeach.length > 0
+    ) {
+      setSelectedApprovedCourses(
+        application.courseCodesToTeach
+      );
+    } else {
+      setSelectedApprovedCourses(
+        application.requestedCourseCodes
+      );
+    }
+  }
+
+  function toggleApprovedCourse(
+    course: string
+  ) {
+    setSelectedApprovedCourses(
+      (currentCourses) =>
+        currentCourses.includes(course)
+          ? currentCourses.filter(
+              (currentCourse) =>
+                currentCourse !== course
+            )
+          : [...currentCourses, course]
+    );
+  }
 
   async function updateTutorStatus(
     application: TutorApplication,
     newStatus: "approved" | "rejected"
   ) {
     const action =
-      newStatus === "approved" ? "approve" : "reject";
+      newStatus === "approved"
+        ? "approve"
+        : "reject";
+
+    if (
+      newStatus === "approved" &&
+      selectedApplication?.id ===
+        application.id &&
+      selectedApprovedCourses.length === 0
+    ) {
+      setError(
+        "Select at least one course before approving this tutor."
+      );
+      return;
+    }
 
     const confirmed = window.confirm(
       `Are you sure you want to ${action} ${application.fullName}?`
@@ -239,27 +324,68 @@ export default function AdminTutorApplicationsPage() {
     setSuccess("");
 
     try {
-      const updateData =
-        newStatus === "approved"
-          ? {
-              tutorStatus: "approved",
-              approvedAt: serverTimestamp(),
-              approvedBy: "admin",
-            }
-          : {
-              tutorStatus: "rejected",
-              approvedAt: null,
-              approvedBy: "admin",
-            };
-
-      await updateDoc(
-        doc(firestore, "users", application.id),
-        updateData
+      const userReference = doc(
+        firestore,
+        "users",
+        application.id
       );
 
-      setSuccess(
-        `${application.fullName} was ${newStatus}.`
-      );
+      if (newStatus === "approved") {
+        const updatedRoles =
+          application.roles.includes("tutor")
+            ? application.roles
+            : [...application.roles, "tutor"];
+
+        const approvedCourses =
+          selectedApplication?.id ===
+          application.id
+            ? selectedApprovedCourses
+            : application.requestedCourseCodes;
+
+        if (approvedCourses.length === 0) {
+          setError(
+            "No approved courses were selected."
+          );
+          setUpdatingId("");
+          return;
+        }
+
+        await updateDoc(userReference, {
+          roles: updatedRoles,
+          tutorStatus: "approved",
+          courseCodesToTeach:
+            approvedCourses,
+          approvedAt:
+            serverTimestamp(),
+          approvedBy:
+            "admin",
+          updatedAt:
+            serverTimestamp(),
+        });
+
+        setSuccess(
+          `${application.fullName} was approved as a tutor.`
+        );
+      } else {
+        const updatedRoles =
+          application.roles.filter(
+            (role) => role !== "tutor"
+          );
+
+        await updateDoc(userReference, {
+          roles: updatedRoles,
+          tutorStatus: "rejected",
+          courseCodesToTeach: [],
+          approvedAt: null,
+          approvedBy: "admin",
+          updatedAt:
+            serverTimestamp(),
+        });
+
+        setSuccess(
+          `${application.fullName}'s tutor application was rejected.`
+        );
+      }
     } catch (updateError) {
       console.error(
         "Tutor status update error:",
@@ -276,8 +402,10 @@ export default function AdminTutorApplicationsPage() {
 
   return (
     <main className="min-h-screen bg-slate-100">
+
       <header className="border-b border-slate-800 bg-slate-900 text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
           <Link
             href="/admin/dashboard"
             className="text-2xl font-bold text-emerald-400"
@@ -291,10 +419,12 @@ export default function AdminTutorApplicationsPage() {
           >
             ← Dashboard
           </Link>
+
         </div>
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
+
         <div>
           <p className="font-semibold text-emerald-600">
             Account management
@@ -305,12 +435,13 @@ export default function AdminTutorApplicationsPage() {
           </h1>
 
           <p className="mt-3 text-slate-600">
-            Review tutor information before approving their
-            account.
+            Review tutor applications and choose the exact
+            courses each tutor is allowed to teach.
           </p>
         </div>
 
         <section className="mt-8 grid gap-4 sm:grid-cols-3">
+
           <StatusCard
             title="Pending"
             count={pendingCount}
@@ -328,6 +459,7 @@ export default function AdminTutorApplicationsPage() {
             count={rejectedCount}
             color="red"
           />
+
         </section>
 
         {error && (
@@ -343,29 +475,39 @@ export default function AdminTutorApplicationsPage() {
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
+
           <FilterButton
             label={`Pending (${pendingCount})`}
             active={statusFilter === "pending"}
-            onClick={() => setStatusFilter("pending")}
+            onClick={() =>
+              setStatusFilter("pending")
+            }
           />
 
           <FilterButton
             label={`Approved (${approvedCount})`}
             active={statusFilter === "approved"}
-            onClick={() => setStatusFilter("approved")}
+            onClick={() =>
+              setStatusFilter("approved")
+            }
           />
 
           <FilterButton
             label={`Rejected (${rejectedCount})`}
             active={statusFilter === "rejected"}
-            onClick={() => setStatusFilter("rejected")}
+            onClick={() =>
+              setStatusFilter("rejected")
+            }
           />
 
           <FilterButton
             label={`All (${applications.length})`}
             active={statusFilter === "all"}
-            onClick={() => setStatusFilter("all")}
+            onClick={() =>
+              setStatusFilter("all")
+            }
           />
+
         </div>
 
         {loading ? (
@@ -376,58 +518,73 @@ export default function AdminTutorApplicationsPage() {
           </section>
         ) : filteredApplications.length === 0 ? (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <div className="text-5xl">📋</div>
+
+            <div className="text-5xl">
+              📋
+            </div>
 
             <h2 className="mt-5 text-2xl font-bold text-slate-900">
-              No {statusFilter === "all" ? "" : statusFilter}{" "}
+              No{" "}
+              {statusFilter === "all"
+                ? ""
+                : statusFilter}{" "}
               applications
             </h2>
 
-            <p className="mt-3 text-slate-600">
-              Tutor applications will appear here.
-            </p>
           </section>
         ) : (
           <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
             <div className="divide-y divide-slate-100">
-              {filteredApplications.map((application) => (
-                <TutorApplicationRow
-                  key={application.id}
-                  application={application}
-                  updating={
-                    updatingId === application.id
-                  }
-                  onView={() =>
-                    setSelectedApplication(application)
-                  }
-                  onApprove={() =>
-                    updateTutorStatus(
-                      application,
-                      "approved"
-                    )
-                  }
-                  onReject={() =>
-                    updateTutorStatus(
-                      application,
-                      "rejected"
-                    )
-                  }
-                />
-              ))}
+
+              {filteredApplications.map(
+                (application) => (
+                  <TutorApplicationRow
+                    key={application.id}
+                    application={application}
+                    updating={
+                      updatingId ===
+                      application.id
+                    }
+                    onView={() =>
+                      openApplication(
+                        application
+                      )
+                    }
+                    onReject={() =>
+                      updateTutorStatus(
+                        application,
+                        "rejected"
+                      )
+                    }
+                  />
+                )
+              )}
+
             </div>
+
           </section>
         )}
+
       </div>
 
       {selectedApplication && (
         <ApplicationDetailsModal
           application={selectedApplication}
+          selectedApprovedCourses={
+            selectedApprovedCourses
+          }
           updating={
-            updatingId === selectedApplication.id
+            updatingId ===
+            selectedApplication.id
           }
-          onClose={() =>
-            setSelectedApplication(null)
+          onToggleCourse={
+            toggleApprovedCourse
           }
+          onClose={() => {
+            setSelectedApplication(null);
+            setSelectedApprovedCourses([]);
+          }}
           onApprove={() =>
             updateTutorStatus(
               selectedApplication,
@@ -442,6 +599,7 @@ export default function AdminTutorApplicationsPage() {
           }
         />
       )}
+
     </main>
   );
 }
@@ -450,17 +608,17 @@ function TutorApplicationRow({
   application,
   updating,
   onView,
-  onApprove,
   onReject,
 }: {
   application: TutorApplication;
   updating: boolean;
   onView: () => void;
-  onApprove: () => void;
   onReject: () => void;
 }) {
   const status =
-    application.tutorStatus.toLowerCase();
+    application.tutorStatus
+      .trim()
+      .toLowerCase();
 
   const statusStyle =
     status === "approved"
@@ -471,16 +629,20 @@ function TutorApplicationRow({
 
   return (
     <article className="p-5">
+
       <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
+
         <div className="flex min-w-0 items-center gap-4">
+
           {application.profileImageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={application.profileImageUrl}
               alt={application.fullName}
               className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-700">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xl font-bold text-emerald-700">
               {application.fullName
                 .charAt(0)
                 .toUpperCase() || "T"}
@@ -488,7 +650,9 @@ function TutorApplicationRow({
           )}
 
           <div className="min-w-0">
+
             <div className="flex flex-wrap items-center gap-3">
+
               <h2 className="truncate font-bold text-slate-900">
                 {application.fullName}
               </h2>
@@ -498,39 +662,46 @@ function TutorApplicationRow({
               >
                 {status}
               </span>
+
             </div>
 
             <p className="mt-1 truncate text-sm text-slate-600">
               {application.universityEmail.toLowerCase()}
             </p>
 
-            <p className="mt-1 text-sm text-slate-500">
-              {application.major || "Major not provided"} ·{" "}
-              {application.universityName ||
-                "University not provided"}
-            </p>
+            {application.requestedCourseCodes.length >
+              0 && (
+              <p className="mt-2 text-sm text-slate-500">
+                Requested:{" "}
+                {application.requestedCourseCodes.join(
+                  ", "
+                )}
+              </p>
+            )}
+
+            {application.courseCodesToTeach.length >
+              0 && (
+              <p className="mt-1 text-sm font-medium text-emerald-700">
+                Approved:{" "}
+                {application.courseCodesToTeach.join(
+                  ", "
+                )}
+              </p>
+            )}
+
           </div>
+
         </div>
 
         <div className="flex flex-wrap gap-3">
+
           <button
             type="button"
             onClick={onView}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-emerald-600 hover:text-emerald-600"
           >
-            View details
+            View / Select courses
           </button>
-
-          {status !== "approved" && (
-            <button
-              type="button"
-              onClick={onApprove}
-              disabled={updating}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
-            >
-              {updating ? "Updating..." : "Approve"}
-            </button>
-          )}
 
           {status !== "rejected" && (
             <button
@@ -542,44 +713,51 @@ function TutorApplicationRow({
               Reject
             </button>
           )}
+
         </div>
+
       </div>
+
     </article>
   );
 }
 
 function ApplicationDetailsModal({
   application,
+  selectedApprovedCourses,
   updating,
+  onToggleCourse,
   onClose,
   onApprove,
   onReject,
 }: {
   application: TutorApplication;
+  selectedApprovedCourses: string[];
   updating: boolean;
+  onToggleCourse: (course: string) => void;
   onClose: () => void;
   onApprove: () => void;
   onReject: () => void;
 }) {
-  const courses =
-    application.courses.length > 0
-      ? application.courses
-      : application.courseCodesToTeach
-          .split(",")
-          .map((course) => course.trim())
-          .filter(Boolean);
+  const status =
+    application.tutorStatus
+      .trim()
+      .toLowerCase();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-5 py-10">
+
       <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl">
+
         <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6">
+
           <div>
             <h2 className="text-2xl font-bold text-slate-900">
               Tutor application
             </h2>
 
             <p className="mt-1 text-sm text-slate-500">
-              Review the applicant’s information.
+              Select the courses this tutor is allowed to teach.
             </p>
           </div>
 
@@ -590,18 +768,22 @@ function ApplicationDetailsModal({
           >
             ×
           </button>
+
         </div>
 
         <div className="p-6">
+
           <div className="flex items-center gap-4">
+
             {application.profileImageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={application.profileImageUrl}
                 alt={application.fullName}
                 className="h-20 w-20 rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-3xl font-bold text-blue-700">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-700">
                 {application.fullName
                   .charAt(0)
                   .toUpperCase() || "T"}
@@ -617,9 +799,11 @@ function ApplicationDetailsModal({
                 {application.universityEmail.toLowerCase()}
               </p>
             </div>
+
           </div>
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2">
+
             <InformationItem
               label="University ID"
               value={application.universityId}
@@ -657,60 +841,132 @@ function ApplicationDetailsModal({
 
             <InformationItem
               label="Application date"
-              value={formatDate(application.createdAt)}
+              value={formatDate(
+                application.tutorAppliedAt ??
+                  application.createdAt
+              )}
             />
+
           </div>
 
           <div className="mt-8">
+
             <h3 className="font-bold text-slate-900">
-              Courses to teach
+              Requested courses
             </h3>
 
-            {courses.length > 0 ? (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {courses.map((course) => (
-                  <span
-                    key={course}
-                    className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700"
-                  >
-                    {course}
-                  </span>
-                ))}
+            <p className="mt-2 text-sm text-slate-500">
+              Check only the courses the tutor is approved to teach.
+            </p>
+
+            {application.requestedCourseCodes.length >
+            0 ? (
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+
+                {application.requestedCourseCodes.map(
+                  (course) => {
+                    const checked =
+                      selectedApprovedCourses.includes(
+                        course
+                      );
+
+                    return (
+                      <label
+                        key={course}
+                        className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 ${
+                          checked
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-slate-200 bg-white"
+                        }`}
+                      >
+
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            onToggleCourse(
+                              course
+                            )
+                          }
+                          className="h-5 w-5 accent-emerald-600"
+                        />
+
+                        <span className="font-semibold text-slate-800">
+                          {course}
+                        </span>
+
+                      </label>
+                    );
+                  }
+                )}
+
               </div>
             ) : (
-              <p className="mt-2 text-slate-500">
-                No courses provided.
+              <p className="mt-3 text-slate-500">
+                No requested courses found.
               </p>
             )}
+
           </div>
 
+          {application.courseCodesToTeach.length >
+            0 && (
+            <div className="mt-8">
+
+              <h3 className="font-bold text-slate-900">
+                Currently approved courses
+              </h3>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+
+                {application.courseCodesToTeach.map(
+                  (course) => (
+                    <span
+                      key={course}
+                      className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700"
+                    >
+                      {course}
+                    </span>
+                  )
+                )}
+
+              </div>
+
+            </div>
+          )}
+
           <div className="mt-8">
+
             <h3 className="font-bold text-slate-900">
-              Tutor bio
+              Bio
             </h3>
 
             <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
-              {application.bio || "No bio provided."}
+              {application.bio ||
+                "No bio provided."}
             </p>
+
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3 border-t border-slate-200 pt-6">
-            {application.tutorStatus.toLowerCase() !==
-              "approved" && (
-              <button
-                type="button"
-                onClick={onApprove}
-                disabled={updating}
-                className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
-              >
-                {updating
-                  ? "Updating..."
-                  : "Approve tutor"}
-              </button>
-            )}
 
-            {application.tutorStatus.toLowerCase() !==
-              "rejected" && (
+            <button
+              type="button"
+              onClick={onApprove}
+              disabled={
+                updating ||
+                selectedApprovedCourses.length === 0
+              }
+              className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {updating
+                ? "Updating..."
+                : status === "approved"
+                  ? "Update approved courses"
+                  : "Approve tutor"}
+            </button>
+
+            {status !== "rejected" && (
               <button
                 type="button"
                 onClick={onReject}
@@ -728,11 +984,59 @@ function ApplicationDetailsModal({
             >
               Close
             </button>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
+}
+
+function normalizeCourseArray(
+  value: unknown
+): string[] {
+  if (Array.isArray(value)) {
+    return Array.from(
+      new Set(
+        value
+          .map((course) =>
+            normalizeCourseCode(
+              String(course)
+            )
+          )
+          .filter(Boolean)
+      )
+    );
+  }
+
+  if (typeof value === "string") {
+    return Array.from(
+      new Set(
+        value
+          .split(",")
+          .map((course) =>
+            normalizeCourseCode(
+              course
+            )
+          )
+          .filter(Boolean)
+      )
+    );
+  }
+
+  return [];
+}
+
+function normalizeCourseCode(
+  courseCode: string
+) {
+  return courseCode
+    .trim()
+    .replace(/\s+/g, "")
+    .toUpperCase();
 }
 
 function StatusCard({
@@ -745,13 +1049,17 @@ function StatusCard({
   color: "amber" | "emerald" | "red";
 }) {
   const styles = {
-    amber: "bg-amber-50 text-amber-700",
-    emerald: "bg-emerald-50 text-emerald-700",
-    red: "bg-red-50 text-red-700",
+    amber:
+      "bg-amber-50 text-amber-700",
+    emerald:
+      "bg-emerald-50 text-emerald-700",
+    red:
+      "bg-red-50 text-red-700",
   };
 
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm">
+
       <span
         className={`rounded-lg px-3 py-1 text-sm font-semibold ${styles[color]}`}
       >
@@ -761,6 +1069,7 @@ function StatusCard({
       <p className="mt-5 text-3xl font-bold text-slate-900">
         {count}
       </p>
+
     </article>
   );
 }
@@ -798,6 +1107,7 @@ function InformationItem({
 }) {
   return (
     <div className="border-b border-slate-100 pb-4">
+
       <p className="text-sm font-medium text-slate-500">
         {label}
       </p>
@@ -805,18 +1115,26 @@ function InformationItem({
       <p className="mt-1 font-medium text-slate-900">
         {value || "Not provided"}
       </p>
+
     </div>
   );
 }
 
-function formatDate(timestamp?: Timestamp) {
+function formatDate(
+  timestamp?: Timestamp
+) {
   if (!timestamp) {
     return "Date unavailable";
   }
 
-  return timestamp.toDate().toLocaleDateString("en-BD", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+  return timestamp
+    .toDate()
+    .toLocaleDateString(
+      "en-BD",
+      {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }
+    );
 }

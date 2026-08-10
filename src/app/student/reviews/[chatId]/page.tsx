@@ -3,447 +3,634 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import {
-  doc,
-  getDoc,
-  serverTimestamp,
-  setDoc,
+    doc,
+    getDoc,
+    serverTimestamp,
+    setDoc,
+    Timestamp,
 } from "firebase/firestore";
+
 import { auth, firestore } from "@/lib/firebase";
 
-interface Chat {
-  id: string;
-  studentId: string;
-  studentName: string;
-  tutorId: string;
-  tutorName: string;
-  proposalId: string;
-  jobProposalId: string;
-  isActive: boolean;
+type ReviewContext = {
+    chatId: string;
+    jobProposalId: string;
+    proposalId: string;
+    studentId: string;
+    studentName: string;
+    tutorId: string;
+    tutorName: string;
+};
+
+function toDate(value: unknown): Date | null {
+    if (!value) {
+        return null;
+    }
+
+    if (value instanceof Date) {
+        return value;
+    }
+
+    if (value instanceof Timestamp) {
+        return value.toDate();
+    }
+
+    if (
+        typeof value === "object" &&
+        value !== null &&
+        "toDate" in value &&
+        typeof (value as { toDate?: unknown }).toDate === "function"
+    ) {
+        return (value as { toDate: () => Date }).toDate();
+    }
+
+    return null;
 }
 
 export default function StudentReviewPage() {
-  const router = useRouter();
-  const params = useParams<{ chatId: string }>();
-  const chatId = params.chatId;
+    const params = useParams();
+    const router = useRouter();
 
-  const [chat, setChat] = useState<Chat | null>(null);
-  const [userId, setUserId] = useState("");
+    const rawChatId = params?.chatId;
 
-  const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
+    const chatId =
+        typeof rawChatId === "string"
+            ? rawChatId
+            : Array.isArray(rawChatId)
+              ? rawChatId[0]
+              : "";
 
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [alreadyReviewed, setAlreadyReviewed] =
-    useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+    const [user, setUser] = useState<User | null>(null);
+    const [context, setContext] = useState<ReviewContext | null>(null);
 
-  useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(
-      auth,
-      async (user) => {
-        if (!user) {
-          router.replace("/login");
-          return;
+    const [rating, setRating] = useState(0);
+    const [hoveredRating, setHoveredRating] = useState(0);
+    const [feedback, setFeedback] = useState("");
+
+    const [authLoading, setAuthLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+
+    const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if (!currentUser) {
+                router.replace("/login");
+                return;
+            }
+
+            setUser(currentUser);
+            setAuthLoading(false);
+        });
+
+        return unsubscribe;
+    }, [router]);
+
+    useEffect(() => {
+        if (authLoading) {
+            return;
         }
 
-        setUserId(user.uid);
+        if (!user || !chatId) {
+            return;
+        }
+
+        const currentUser = user;
+        const currentChatId = chatId;
+
+        async function loadReviewPage() {
+            try {
+                setLoading(true);
+                setError("");
+
+                const chatRef = doc(
+                    firestore,
+                    "chats",
+                    currentChatId
+                );
+
+                const chatSnapshot = await getDoc(chatRef);
+
+                if (!chatSnapshot.exists()) {
+                    setContext(null);
+                    setError(
+                        "This tutoring session could not be found."
+                    );
+                    return;
+                }
+
+                const chat = chatSnapshot.data();
+
+                if (chat.studentId !== currentUser.uid) {
+                    setContext(null);
+                    setError(
+                        "You do not have permission to review this session."
+                    );
+                    return;
+                }
+
+                const jobProposalId =
+                    typeof chat.jobProposalId === "string"
+                        ? chat.jobProposalId
+                        : "";
+
+                if (!jobProposalId) {
+                    setContext(null);
+                    setError(
+                        "Review is unavailable because this session does not have a job proposal ID."
+                    );
+                    return;
+                }
+
+                const expiresAt = toDate(
+                    chat.expiresAt ?? null
+                );
+
+                const expired =
+                    expiresAt !== null &&
+                    expiresAt.getTime() <= Date.now();
+
+                const sessionEnded =
+                    chat.isActive !== true ||
+                    expired;
+
+                if (!sessionEnded) {
+                    setContext(null);
+                    setError(
+                        "You can rate the tutor after the tutoring session ends."
+                    );
+                    return;
+                }
+
+                const reviewContext: ReviewContext = {
+                    chatId: chatSnapshot.id,
+
+                    jobProposalId,
+
+                    proposalId:
+                        typeof chat.proposalId === "string"
+                            ? chat.proposalId
+                            : "",
+
+                    studentId:
+                        typeof chat.studentId === "string"
+                            ? chat.studentId
+                            : currentUser.uid,
+
+                    studentName:
+                        typeof chat.studentName === "string" &&
+                        chat.studentName.trim()
+                            ? chat.studentName
+                            : currentUser.displayName ?? "Student",
+
+                    tutorId:
+                        typeof chat.tutorId === "string"
+                            ? chat.tutorId
+                            : "",
+
+                    tutorName:
+                        typeof chat.tutorName === "string" &&
+                        chat.tutorName.trim()
+                            ? chat.tutorName
+                            : "Tutor",
+                };
+
+                setContext(reviewContext);
+
+                const reviewRef = doc(
+                    firestore,
+                    "reviews",
+                    jobProposalId
+                );
+
+                const reviewSnapshot = await getDoc(
+                    reviewRef
+                );
+
+                if (reviewSnapshot.exists()) {
+                    const review = reviewSnapshot.data();
+
+                    const savedRating = Number(
+                        review.rating
+                    );
+
+                    setRating(
+                        Number.isFinite(savedRating)
+                            ? savedRating
+                            : 0
+                    );
+
+                    setFeedback(
+                        typeof review.feedback === "string"
+                            ? review.feedback
+                            : ""
+                    );
+
+                    setAlreadyReviewed(true);
+                }
+            } catch (loadError) {
+                console.error(
+                    "Review page load error:",
+                    loadError
+                );
+
+                setContext(null);
+                setError(
+                    "Unable to load the review page. Please try again."
+                );
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        void loadReviewPage();
+    }, [
+        authLoading,
+        chatId,
+        user,
+    ]);
+
+    async function handleSubmit(
+        event: FormEvent<HTMLFormElement>
+    ) {
+        event.preventDefault();
+
+        if (
+            !user ||
+            !context ||
+            submitting ||
+            alreadyReviewed
+        ) {
+            return;
+        }
+
+        if (
+            rating < 1 ||
+            rating > 5
+        ) {
+            setError(
+                "Please choose a rating from 1 to 5 stars."
+            );
+            return;
+        }
 
         try {
-          const chatSnapshot = await getDoc(
-            doc(firestore, "chats", chatId)
-          );
+            setSubmitting(true);
+            setError("");
 
-          if (!chatSnapshot.exists()) {
-            setError("This tutoring session could not be found.");
-            setLoading(false);
-            return;
-          }
-
-          const chatData = chatSnapshot.data();
-
-          if (chatData.studentId !== user.uid) {
-            setError(
-              "You do not have permission to review this session."
-            );
-            setLoading(false);
-            return;
-          }
-
-          const loadedChat = {
-            id: chatSnapshot.id,
-            studentId: chatData.studentId ?? "",
-            studentName: chatData.studentName ?? "Student",
-            tutorId: chatData.tutorId ?? "",
-            tutorName: chatData.tutorName ?? "Tutor",
-            proposalId: chatData.proposalId ?? "",
-            jobProposalId: chatData.jobProposalId ?? "",
-            isActive: chatData.isActive ?? false,
-          } as Chat;
-
-          setChat(loadedChat);
-
-          if (loadedChat.jobProposalId) {
-            const reviewSnapshot = await getDoc(
-              doc(
+            const reviewRef = doc(
                 firestore,
                 "reviews",
-                loadedChat.jobProposalId
-              )
+                context.jobProposalId
             );
 
-            if (reviewSnapshot.exists()) {
-              const reviewData = reviewSnapshot.data();
+            const existingReview =
+                await getDoc(reviewRef);
 
-              setAlreadyReviewed(true);
-              setRating(Number(reviewData.rating ?? 0));
-              setFeedback(reviewData.feedback ?? "");
+            if (existingReview.exists()) {
+                setAlreadyReviewed(true);
+                setError(
+                    "A review has already been submitted for this tutoring session."
+                );
+                return;
             }
-          }
-        } catch (loadingError) {
-          console.error("Review page loading error:", loadingError);
-          setError("Unable to load the review page.");
+
+            await setDoc(
+                reviewRef,
+                {
+                    createdAt: serverTimestamp(),
+
+                    feedback: feedback.trim(),
+
+                    jobProposalId:
+                        context.jobProposalId,
+
+                    proposalId:
+                        context.proposalId,
+
+                    rating,
+
+                    studentId:
+                        context.studentId,
+
+                    studentName:
+                        context.studentName,
+
+                    tutorId:
+                        context.tutorId,
+
+                    tutorName:
+                        context.tutorName,
+                }
+            );
+
+            setAlreadyReviewed(true);
+            setSuccess(true);
+        } catch (submitError) {
+            console.error(
+                "Review submit error:",
+                submitError
+            );
+
+            setError(
+                "Your review could not be submitted. Please try again."
+            );
         } finally {
-          setLoading(false);
+            setSubmitting(false);
         }
-      }
-    );
-
-    return unsubscribeAuth;
-  }, [chatId, router]);
-
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
-
-    setError("");
-    setSuccess("");
-
-    if (!chat || !userId) {
-      setError("The tutoring session could not be identified.");
-      return;
     }
 
-    if (rating < 1 || rating > 5) {
-      setError("Please select a rating from 1 to 5 stars.");
-      return;
-    }
-
-    if (feedback.trim().length < 2) {
-      setError("Please write a short review.");
-      return;
-    }
-
-    if (!chat.jobProposalId) {
-      setError(
-        "This session does not have a job proposal ID."
-      );
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      await setDoc(
-        doc(firestore, "reviews", chat.jobProposalId),
-        {
-          createdAt: serverTimestamp(),
-          feedback: feedback.trim(),
-          jobProposalId: chat.jobProposalId,
-          proposalId: chat.proposalId,
-          rating,
-          studentId: userId,
-          studentName: chat.studentName,
-          tutorId: chat.tutorId,
-          tutorName: chat.tutorName,
-        }
-      );
-
-      setAlreadyReviewed(true);
-      setSuccess("Your rating and review were submitted.");
-    } catch (submitError) {
-      console.error("Review submission error:", submitError);
-
-      setError(
-        "Unable to submit your review. Please try again."
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  if (loading) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-600">
-          Loading tutoring session...
-        </p>
-      </main>
-    );
-  }
-
-  if (!chat) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
-        <section className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
-          <div className="text-5xl">⚠️</div>
-
-          <h1 className="mt-5 text-2xl font-bold text-slate-900">
-            Session unavailable
-          </h1>
-
-          <p className="mt-3 text-red-600">
-            {error || "This session could not be found."}
-          </p>
-
-          <Link
-            href="/student/messages"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
-          >
-            Return to messages
-          </Link>
-        </section>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
-          <Link
-            href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
-          >
-            Unitor
-          </Link>
-
-          <Link
-            href={`/student/messages/${chatId}`}
-            className="font-medium text-slate-600 hover:text-emerald-600"
-          >
-            ← Conversation
-          </Link>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-3xl px-6 py-10">
-        <section className="rounded-2xl bg-white p-8 shadow-sm">
-          <div className="text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-700">
-              {chat.tutorName.charAt(0).toUpperCase() || "T"}
-            </div>
-
-            <p className="mt-6 font-semibold text-emerald-600">
-              Session feedback
-            </p>
-
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">
-              Rate {chat.tutorName}
-            </h1>
-
-            <p className="mx-auto mt-3 max-w-md text-slate-600">
-              Your feedback helps other students choose the
-              right tutor.
-            </p>
-          </div>
-
-          {alreadyReviewed ? (
-            <div className="mt-8">
-              <div className="rounded-xl bg-emerald-50 p-6 text-center">
-                <div className="text-4xl">✅</div>
-
-                <h2 className="mt-3 text-xl font-bold text-emerald-800">
-                  Review submitted
-                </h2>
-
-                <div className="mt-3 flex justify-center gap-1 text-3xl">
-                  <RatingStars
-                    selectedRating={rating}
-                    interactive={false}
-                    onSelect={() => undefined}
-                  />
-                </div>
-
-                <p className="mt-4 leading-7 text-slate-700">
-                  “{feedback}”
+    if (
+        authLoading ||
+        loading
+    ) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+                <p className="text-slate-600">
+                    Loading review...
                 </p>
-              </div>
+            </main>
+        );
+    }
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/student/messages"
-                  className="flex-1 rounded-lg border border-slate-300 px-5 py-3 text-center font-semibold text-slate-700 hover:bg-slate-50"
-                >
-                  View messages
-                </Link>
+    if (!context) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+                <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm">
 
-                <Link
-                  href="/student/dashboard"
-                  className="flex-1 rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-700"
-                >
-                  Return to dashboard
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="mt-8"
-            >
-              <div className="text-center">
-                <p className="font-semibold text-slate-700">
-                  Select your rating
-                </p>
+                    <h1 className="text-2xl font-bold text-slate-900">
+                        Review unavailable
+                    </h1>
 
-                <div
-                  className="mt-4 flex justify-center gap-2 text-5xl"
-                  onMouseLeave={() => setHoveredRating(0)}
-                >
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() =>
-                        setHoveredRating(star)
-                      }
-                      className={`transition hover:scale-110 ${
-                        star <= (hoveredRating || rating)
-                          ? "text-amber-400"
-                          : "text-slate-200"
-                      }`}
-                      aria-label={`${star} star rating`}
+                    <p className="mt-3 text-red-700">
+                        {error ||
+                            "This review cannot be opened."}
+                    </p>
+
+                    <Link
+                        href={`/student/messages/${chatId}`}
+                        className="mt-6 inline-block font-semibold text-emerald-600 hover:underline"
                     >
-                      ★
-                    </button>
-                  ))}
+                        ← Back to session
+                    </Link>
+
                 </div>
+            </main>
+        );
+    }
 
-                <p className="mt-3 text-sm font-medium text-slate-500">
-                  {getRatingMessage(rating)}
-                </p>
-              </div>
+    return (
+        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
 
-              <div className="mt-8">
-                <label
-                  htmlFor="feedback"
-                  className="mb-2 block font-medium text-slate-700"
+            <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm sm:p-8">
+
+                <Link
+                    href={`/student/messages/${chatId}`}
+                    className="text-sm font-semibold text-emerald-600 hover:underline"
                 >
-                  Your review
-                </label>
+                    ← Back to session
+                </Link>
 
-                <textarea
-                  id="feedback"
-                  rows={5}
-                  value={feedback}
-                  onChange={(event) =>
-                    setFeedback(event.target.value)
-                  }
-                  placeholder="Tell us about your tutoring experience"
-                  required
-                  className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-                />
+                {success ? (
+                    <div className="py-8 text-center">
 
-                <p className="mt-2 text-right text-sm text-slate-400">
-                  {feedback.length} characters
-                </p>
-              </div>
+                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
+                            ✓
+                        </div>
 
-              {error && (
-                <p className="mt-5 rounded-lg bg-red-50 p-4 text-sm text-red-600">
-                  {error}
-                </p>
-              )}
+                        <h1 className="mt-5 text-2xl font-bold text-slate-900">
+                            Thank you for your review
+                        </h1>
 
-              {success && (
-                <p className="mt-5 rounded-lg bg-emerald-50 p-4 text-sm text-emerald-700">
-                  {success}
-                </p>
-              )}
+                        <div className="mt-4 flex justify-center gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <span
+                                    key={star}
+                                    className={`text-3xl ${
+                                        star <= rating
+                                            ? "text-amber-400"
+                                            : "text-slate-300"
+                                    }`}
+                                >
+                                    ★
+                                </span>
+                            ))}
+                        </div>
 
-              <button
-                type="submit"
-                disabled={submitting || rating === 0}
-                className="mt-6 w-full rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {submitting
-                  ? "Submitting review..."
-                  : "Submit review"}
-              </button>
-            </form>
-          )}
-        </section>
-      </div>
-    </main>
-  );
-}
+                        <p className="mt-3 text-slate-600">
+                            You rated{" "}
+                            <span className="font-semibold">
+                                {context.tutorName}
+                            </span>{" "}
+                            {rating} out of 5 stars.
+                        </p>
 
-function RatingStars({
-  selectedRating,
-  interactive,
-  onSelect,
-}: {
-  selectedRating: number;
-  interactive: boolean;
-  onSelect: (rating: number) => void;
-}) {
-  return (
-    <>
-      {[1, 2, 3, 4, 5].map((star) =>
-        interactive ? (
-          <button
-            key={star}
-            type="button"
-            onClick={() => onSelect(star)}
-            className={
-              star <= selectedRating
-                ? "text-amber-400"
-                : "text-slate-200"
-            }
-          >
-            ★
-          </button>
-        ) : (
-          <span
-            key={star}
-            className={
-              star <= selectedRating
-                ? "text-amber-400"
-                : "text-slate-200"
-            }
-          >
-            ★
-          </span>
-        )
-      )}
-    </>
-  );
-}
+                        <Link
+                            href="/student/messages"
+                            className="mt-7 inline-flex rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700"
+                        >
+                            Return to messages
+                        </Link>
 
-function getRatingMessage(rating: number) {
-  switch (rating) {
-    case 1:
-      return "Poor";
+                    </div>
+                ) : (
+                    <>
+                        <p className="mt-7 text-sm font-semibold text-emerald-600">
+                            Session ended
+                        </p>
 
-    case 2:
-      return "Fair";
+                        <h1 className="mt-1 text-3xl font-bold text-slate-900">
+                            Rate your tutor
+                        </h1>
 
-    case 3:
-      return "Good";
+                        <p className="mt-2 text-slate-600">
+                            How was your tutoring session with{" "}
+                            <span className="font-semibold text-slate-800">
+                                {context.tutorName}
+                            </span>
+                            ?
+                        </p>
 
-    case 4:
-      return "Very good";
+                        <form
+                            onSubmit={handleSubmit}
+                            className="mt-8 space-y-6"
+                        >
 
-    case 5:
-      return "Excellent";
+                            <fieldset
+                                disabled={
+                                    alreadyReviewed ||
+                                    submitting
+                                }
+                            >
 
-    default:
-      return "Choose between 1 and 5 stars";
-  }
+                                <legend className="font-semibold text-slate-800">
+                                    Your rating
+                                </legend>
+
+                                <div
+                                    className="mt-3 flex gap-2"
+                                    onMouseLeave={() =>
+                                        setHoveredRating(0)
+                                    }
+                                >
+
+                                    {[1, 2, 3, 4, 5].map(
+                                        (star) => {
+                                            const activeRating =
+                                                hoveredRating ||
+                                                rating;
+
+                                            const filled =
+                                                star <=
+                                                activeRating;
+
+                                            return (
+                                                <button
+                                                    key={star}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setRating(
+                                                            star
+                                                        )
+                                                    }
+                                                    onMouseEnter={() =>
+                                                        setHoveredRating(
+                                                            star
+                                                        )
+                                                    }
+                                                    aria-label={`${star} star${
+                                                        star === 1
+                                                            ? ""
+                                                            : "s"
+                                                    }`}
+                                                    aria-pressed={
+                                                        rating ===
+                                                        star
+                                                    }
+                                                    className={`text-4xl leading-none transition ${
+                                                        filled
+                                                            ? "text-amber-400"
+                                                            : "text-slate-300"
+                                                    } hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-500`}
+                                                >
+                                                    ★
+                                                </button>
+                                            );
+                                        }
+                                    )}
+
+                                </div>
+
+                                <p className="mt-3 text-sm font-medium text-slate-600">
+                                    {rating > 0
+                                        ? `${rating} out of 5 stars`
+                                        : "Choose 1 to 5 stars"}
+                                </p>
+
+                            </fieldset>
+
+                            <div>
+
+                                <label
+                                    htmlFor="feedback"
+                                    className="block font-semibold text-slate-800"
+                                >
+                                    Feedback{" "}
+                                    <span className="font-normal text-slate-500">
+                                        (optional)
+                                    </span>
+                                </label>
+
+                                <textarea
+                                    id="feedback"
+                                    value={feedback}
+                                    onChange={(event) =>
+                                        setFeedback(
+                                            event.target.value
+                                        )
+                                    }
+                                    disabled={
+                                        alreadyReviewed ||
+                                        submitting
+                                    }
+                                    maxLength={1000}
+                                    rows={5}
+                                    placeholder="Tell us what went well and what could be improved."
+                                    className="mt-3 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+                                />
+
+                                <p className="mt-1 text-right text-xs text-slate-400">
+                                    {feedback.length}/1000
+                                </p>
+
+                            </div>
+
+                            {error && (
+                                <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                                    {error}
+                                </div>
+                            )}
+
+                            {alreadyReviewed &&
+                                !error && (
+                                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+
+                                        <p className="font-semibold text-emerald-800">
+                                            Review already submitted
+                                        </p>
+
+                                        <div className="mt-2 flex gap-1">
+                                            {[1, 2, 3, 4, 5].map(
+                                                (star) => (
+                                                    <span
+                                                        key={star}
+                                                        className={`text-2xl ${
+                                                            star <= rating
+                                                                ? "text-amber-400"
+                                                                : "text-slate-300"
+                                                        }`}
+                                                    >
+                                                        ★
+                                                    </span>
+                                                )
+                                            )}
+                                        </div>
+
+                                        <p className="mt-2 text-sm text-emerald-700">
+                                            Your rating: {rating} out of 5 stars
+                                        </p>
+
+                                    </div>
+                                )}
+
+                            <button
+                                type="submit"
+                                disabled={
+                                    submitting ||
+                                    alreadyReviewed ||
+                                    rating === 0
+                                }
+                                className="w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                {submitting
+                                    ? "Submitting..."
+                                    : alreadyReviewed
+                                      ? "Review submitted"
+                                      : "Submit review"}
+                            </button>
+
+                        </form>
+                    </>
+                )}
+
+            </div>
+
+        </main>
+    );
 }

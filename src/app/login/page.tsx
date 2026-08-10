@@ -24,14 +24,12 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            // Sign in with Firebase Authentication
             const userCredential = await signInWithEmailAndPassword(
                 auth,
                 email.trim(),
                 password
             );
 
-            // Reload user so we get the latest email verification status
             await userCredential.user.reload();
 
             const currentUser = auth.currentUser;
@@ -41,9 +39,7 @@ export default function LoginPage() {
                 return;
             }
 
-            // If the email is NOT verified
             if (!currentUser.emailVerified) {
-                // Keep Firestore synchronized
                 try {
                     await updateDoc(
                         doc(firestore, "users", currentUser.uid),
@@ -62,8 +58,6 @@ export default function LoginPage() {
                 return;
             }
 
-            // If Firebase says the email IS verified,
-            // automatically copy the status into Firestore
             try {
                 await updateDoc(
                     doc(firestore, "users", currentUser.uid),
@@ -78,7 +72,6 @@ export default function LoginPage() {
                 );
             }
 
-            // Continue to normal role selection
             router.push("/role-selection");
         } catch (error: unknown) {
             console.error("Login error:", error);
@@ -125,7 +118,7 @@ export default function LoginPage() {
                             placeholder="Enter your email"
                             autoComplete="email"
                             required
-                            className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-500 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                         />
                     </div>
 
@@ -148,7 +141,7 @@ export default function LoginPage() {
                                 placeholder="Enter your password"
                                 autoComplete="current-password"
                                 required
-                                className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-20 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 pr-20 text-slate-900 placeholder:text-slate-500 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                             />
 
                             <button

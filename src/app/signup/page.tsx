@@ -130,7 +130,7 @@ export default function SignupPage() {
         );
       }
 
-      router.push("/role-selection");
+      router.push("/verify-email");
     } catch (error: unknown) {
       console.error("Signup error:", error);
 

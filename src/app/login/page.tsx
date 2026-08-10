@@ -2,9 +2,11 @@
 
 import { FormEvent, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/firebase";
+
+import { auth, firestore } from "@/lib/firebase";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -17,14 +19,69 @@ export default function LoginPage() {
 
     async function handleLogin(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
         setError("");
         setLoading(true);
 
         try {
-            await signInWithEmailAndPassword(auth, email.trim(), password);
+            // Sign in with Firebase Authentication
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email.trim(),
+                password
+            );
+
+            // Reload user so we get the latest email verification status
+            await userCredential.user.reload();
+
+            const currentUser = auth.currentUser;
+
+            if (!currentUser) {
+                setError("Unable to load your account. Please try again.");
+                return;
+            }
+
+            // If the email is NOT verified
+            if (!currentUser.emailVerified) {
+                // Keep Firestore synchronized
+                try {
+                    await updateDoc(
+                        doc(firestore, "users", currentUser.uid),
+                        {
+                            emailVerified: false,
+                        }
+                    );
+                } catch (firestoreError) {
+                    console.error(
+                        "Could not update email verification status:",
+                        firestoreError
+                    );
+                }
+
+                router.push("/verify-email");
+                return;
+            }
+
+            // If Firebase says the email IS verified,
+            // automatically copy the status into Firestore
+            try {
+                await updateDoc(
+                    doc(firestore, "users", currentUser.uid),
+                    {
+                        emailVerified: true,
+                    }
+                );
+            } catch (firestoreError) {
+                console.error(
+                    "Could not synchronize email verification:",
+                    firestoreError
+                );
+            }
+
+            // Continue to normal role selection
             router.push("/role-selection");
         } catch (error: unknown) {
-            console.error(error);
+            console.error("Login error:", error);
             setError("Email or password is incorrect.");
         } finally {
             setLoading(false);
@@ -62,7 +119,9 @@ export default function LoginPage() {
                             id="email"
                             type="email"
                             value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            onChange={(event) =>
+                                setEmail(event.target.value)
+                            }
                             placeholder="Enter your email"
                             autoComplete="email"
                             required
@@ -83,7 +142,9 @@ export default function LoginPage() {
                                 id="password"
                                 type={showPassword ? "text" : "password"}
                                 value={password}
-                                onChange={(event) => setPassword(event.target.value)}
+                                onChange={(event) =>
+                                    setPassword(event.target.value)
+                                }
                                 placeholder="Enter your password"
                                 autoComplete="current-password"
                                 required
@@ -92,7 +153,9 @@ export default function LoginPage() {
 
                             <button
                                 type="button"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={() =>
+                                    setShowPassword(!showPassword)
+                                }
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-emerald-600"
                             >
                                 {showPassword ? "Hide" : "Show"}

@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -59,6 +65,10 @@ interface AvailableProposal {
 export default function TutorDashboardPage() {
   const router = useRouter();
 
+  /* =========================================================
+     PROFILE
+  ========================================================= */
+
   const [
     profile,
     setProfile,
@@ -66,6 +76,10 @@ export default function TutorDashboardPage() {
     useState<TutorProfile | null>(
       null
     );
+
+  /* =========================================================
+     PROPOSALS
+  ========================================================= */
 
   const [
     allProposals,
@@ -75,29 +89,33 @@ export default function TutorDashboardPage() {
       []
     );
 
+  /* =========================================================
+     ACTIVE SESSIONS
+  ========================================================= */
+
   const [
     activeChatCount,
     setActiveChatCount,
-  ] =
-    useState(0);
+  ] = useState(0);
+
+  /* =========================================================
+     UI
+  ========================================================= */
 
   const [
     loading,
     setLoading,
-  ] =
-    useState(true);
+  ] = useState(true);
 
   const [
     mobileMenuOpen,
     setMobileMenuOpen,
-  ] =
-    useState(false);
+  ] = useState(false);
 
   const [
     error,
     setError,
-  ] =
-    useState("");
+  ] = useState("");
 
   /* =========================================================
      FIREBASE LISTENERS
@@ -120,6 +138,10 @@ export default function TutorDashboardPage() {
       onAuthStateChanged(
         auth,
         (user) => {
+          /* ===============================================
+             USER NOT LOGGED IN
+          =============================================== */
+
           if (!user) {
             router.replace(
               "/login"
@@ -166,7 +188,9 @@ export default function TutorDashboardPage() {
                         (
                           role: unknown
                         ) =>
-                          String(role)
+                          String(
+                            role
+                          )
                             .trim()
                             .toLowerCase()
                       )
@@ -184,12 +208,9 @@ export default function TutorDashboardPage() {
                     .trim()
                     .toLowerCase();
 
-                /*
-                 * Tutor must:
-                 *
-                 * 1. Have tutor role
-                 * 2. Be approved
-                 */
+                /* -----------------------------------------
+                   TUTOR ACCESS CHECK
+                ----------------------------------------- */
 
                 if (
                   !roles.includes(
@@ -211,13 +232,6 @@ export default function TutorDashboardPage() {
 
                 let approvedCourses:
                   string[] = [];
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * Use ONLY:
-                 * courseCodesToTeach
-                 */
 
                 if (
                   Array.isArray(
@@ -259,6 +273,10 @@ export default function TutorDashboardPage() {
                       );
                 }
 
+                /* -----------------------------------------
+                   REMOVE DUPLICATES
+                ----------------------------------------- */
+
                 approvedCourses =
                   Array.from(
                     new Set(
@@ -267,7 +285,7 @@ export default function TutorDashboardPage() {
                   );
 
                 /* -----------------------------------------
-                   SET PROFILE
+                   SAVE PROFILE
                 ----------------------------------------- */
 
                 setProfile({
@@ -334,7 +352,7 @@ export default function TutorDashboardPage() {
             );
 
           /* =================================================
-             LOAD PROPOSALS
+             AVAILABLE PROPOSALS
           ================================================= */
 
           unsubscribeProposals =
@@ -364,9 +382,11 @@ export default function TutorDashboardPage() {
                           ),
 
                         courseCode:
-                          String(
-                            data.courseCode ??
-                              ""
+                          normalizeCourseCode(
+                            String(
+                              data.courseCode ??
+                                ""
+                            )
                           ),
 
                         description:
@@ -421,29 +441,20 @@ export default function TutorDashboardPage() {
                   );
 
                 /* -----------------------------------------
-                   NEWEST PROPOSALS FIRST
+                   NEWEST FIRST
                 ----------------------------------------- */
 
                 proposalList.sort(
                   (
                     first,
                     second
-                  ) => {
-                    const firstTime =
-                      first.createdAt
-                        ?.toMillis() ??
-                      0;
-
-                    const secondTime =
-                      second.createdAt
-                        ?.toMillis() ??
-                      0;
-
-                    return (
-                      secondTime -
-                      firstTime
-                    );
-                  }
+                  ) =>
+                    (second.createdAt
+                      ?.toMillis() ??
+                      0) -
+                    (first.createdAt
+                      ?.toMillis() ??
+                      0)
                 );
 
                 setAllProposals(
@@ -466,7 +477,7 @@ export default function TutorDashboardPage() {
             );
 
           /* =================================================
-             ACTIVE CHATS / SESSIONS
+             ACTIVE CHATS
           ================================================= */
 
           const chatsQuery =
@@ -543,17 +554,9 @@ export default function TutorDashboardPage() {
       const approvedCourseSet =
         new Set(
           profile.courseCodesToTeach.map(
-            (course) =>
-              normalizeCourseCode(
-                course
-              )
+            normalizeCourseCode
           )
         );
-
-      /*
-       * Tutor with no approved
-       * course sees no proposals.
-       */
 
       if (
         approvedCourseSet.size ===
@@ -569,9 +572,9 @@ export default function TutorDashboardPage() {
               proposal.courseCode
             );
 
-          /* -------------------------------------
-             COURSE MUST MATCH
-          ------------------------------------- */
+          /* -----------------------------------------
+             MUST MATCH APPROVED COURSE
+          ----------------------------------------- */
 
           if (
             !approvedCourseSet.has(
@@ -581,21 +584,22 @@ export default function TutorDashboardPage() {
             return false;
           }
 
-          /* -------------------------------------
-             PROPOSAL MUST BE AVAILABLE
-          ------------------------------------- */
+          /* -----------------------------------------
+             PROPOSAL STATUS
+          ----------------------------------------- */
 
           const status =
             proposal.status
               .trim()
               .toLowerCase();
 
-          return (
-            status === "open" ||
-            status === "active" ||
-            status ===
-              "available" ||
-            status === "pending"
+          return [
+            "open",
+            "active",
+            "available",
+            "pending",
+          ].includes(
+            status
           );
         }
       );
@@ -647,10 +651,16 @@ export default function TutorDashboardPage() {
     );
   }
 
+  /* =========================================================
+     FIRST NAME
+  ========================================================= */
+
   const firstName =
     profile?.fullName
       ?.trim()
-      .split(/\s+/)[0] ||
+      .split(
+        /\s+/
+      )[0] ||
     "Tutor";
 
   /* =========================================================
@@ -679,6 +689,8 @@ export default function TutorDashboardPage() {
 
           {/* =================================================
               DESKTOP NAVIGATION
+
+              Course Request removed from navigation.
           ================================================= */}
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -781,15 +793,26 @@ export default function TutorDashboardPage() {
               )
             }
             className="rounded-lg border border-slate-200 px-3 py-2 text-slate-700 md:hidden"
-            aria-label="Open menu"
+            aria-label={
+              mobileMenuOpen
+                ? "Close menu"
+                : "Open menu"
+            }
+            aria-expanded={
+              mobileMenuOpen
+            }
           >
-            ☰
+            {mobileMenuOpen
+              ? "✕"
+              : "☰"}
           </button>
 
         </div>
 
         {/* ===================================================
             MOBILE MENU
+
+            Course Request removed from mobile menu.
         =================================================== */}
 
         {mobileMenuOpen && (
@@ -798,21 +821,20 @@ export default function TutorDashboardPage() {
 
             <div className="flex flex-col gap-4">
 
-              <Link
+              <MobileLink
                 href="/tutor/dashboard"
-                className="font-semibold text-emerald-600"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
                   )
                 }
+                className="font-semibold text-emerald-600"
               >
                 Dashboard
-              </Link>
+              </MobileLink>
 
-              <Link
+              <MobileLink
                 href="/tutor/proposals"
-                className="text-slate-700"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
@@ -820,11 +842,10 @@ export default function TutorDashboardPage() {
                 }
               >
                 Available Proposals
-              </Link>
+              </MobileLink>
 
-              <Link
+              <MobileLink
                 href="/tutor/messages"
-                className="text-slate-700"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
@@ -832,11 +853,10 @@ export default function TutorDashboardPage() {
                 }
               >
                 Messages
-              </Link>
+              </MobileLink>
 
-              <Link
+              <MobileLink
                 href="/tutor/card"
-                className="font-medium text-slate-700"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
@@ -844,11 +864,10 @@ export default function TutorDashboardPage() {
                 }
               >
                 💳 My Card
-              </Link>
+              </MobileLink>
 
-              <Link
+              <MobileLink
                 href="/tutor/profile"
-                className="text-slate-700"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
@@ -856,15 +875,19 @@ export default function TutorDashboardPage() {
                 }
               >
                 Profile
-              </Link>
+              </MobileLink>
 
               <button
                 type="button"
-                onClick={() =>
+                onClick={() => {
+                  setMobileMenuOpen(
+                    false
+                  );
+
                   router.push(
                     "/role-selection"
-                  )
-                }
+                  );
+                }}
                 className="text-left font-medium text-emerald-600"
               >
                 Switch to Student View
@@ -908,6 +931,8 @@ export default function TutorDashboardPage() {
 
         {/* ===================================================
             HERO
+
+            Only Browse Available Proposals button here.
         =================================================== */}
 
         <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-emerald-500 p-8 text-white shadow-sm md:p-10">
@@ -928,61 +953,95 @@ export default function TutorDashboardPage() {
             tutoring sessions.
           </p>
 
-          <Link
-            href="/tutor/proposals"
-            className="mt-7 inline-block rounded-lg bg-white px-6 py-3 font-semibold text-emerald-700 transition hover:bg-emerald-50"
-          >
-            Browse Available Proposals
-          </Link>
+          <div className="mt-7">
+
+            <Link
+              href="/tutor/proposals"
+              className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 font-semibold text-emerald-700 transition hover:bg-emerald-50"
+            >
+              Browse Available Proposals
+            </Link>
+
+          </div>
 
         </section>
 
         {/* ===================================================
             APPROVED COURSES
+
+            THIS IS THE ONLY COURSE REQUEST BUTTON.
         =================================================== */}
 
         <section className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
 
-          <p className="text-sm font-semibold text-emerald-600">
-            Your approved teaching
-            courses
-          </p>
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
 
-          {profile &&
-          profile.courseCodesToTeach
-            .length > 0 ? (
+            {/* COURSES */}
 
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div>
 
-              {profile.courseCodesToTeach.map(
-                (course) => (
+              <p className="text-sm font-semibold text-emerald-600">
+                Your approved teaching courses
+              </p>
 
-                  <span
-                    key={course}
-                    className="rounded-full border border-emerald-100 bg-white px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm"
-                  >
-                    {course}
-                  </span>
+              {profile &&
+              profile
+                .courseCodesToTeach
+                .length >
+                0 ? (
 
-                )
+                <div className="mt-3 flex flex-wrap gap-2">
+
+                  {profile.courseCodesToTeach.map(
+                    (
+                      course
+                    ) => (
+
+                      <span
+                        key={
+                          course
+                        }
+                        className="rounded-full border border-emerald-100 bg-white px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm"
+                      >
+                        {course}
+                      </span>
+
+                    )
+                  )}
+
+                </div>
+
+              ) : (
+
+                <p className="mt-2 text-sm text-slate-600">
+                  No courses have been
+                  approved for your tutor
+                  account.
+                </p>
+
               )}
 
             </div>
 
-          ) : (
+            {/* ===============================================
+                ONLY COURSE REQUEST BUTTON
+            =============================================== */}
 
-            <p className="mt-2 text-sm text-slate-600">
-              No courses have been
-              approved for your tutor
-              account.
-            </p>
+            <Link
+              href="/tutor/course-request"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl border border-emerald-600 bg-white px-5 py-3 font-semibold text-emerald-600 shadow-sm transition hover:bg-emerald-600 hover:text-white"
+            >
+              + Request Extra Course
+            </Link>
 
-          )}
+          </div>
 
         </section>
 
         {/* ===================================================
             DASHBOARD STATS
+
+            Only 2 cards now.
         =================================================== */}
 
         <section className="mt-10 grid gap-5 md:grid-cols-2">
@@ -1010,6 +1069,8 @@ export default function TutorDashboardPage() {
         =================================================== */}
 
         <section className="mt-10">
+
+          {/* TITLE */}
 
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
@@ -1042,6 +1103,8 @@ export default function TutorDashboardPage() {
 
           {/* =================================================
               NO PROPOSALS
+
+              No course request button here.
           ================================================= */}
 
           {availableProposals.length ===
@@ -1066,6 +1129,10 @@ export default function TutorDashboardPage() {
             </div>
 
           ) : (
+
+            /* ===============================================
+               PROPOSALS
+            =============================================== */
 
             <div className="mt-6 grid gap-6 lg:grid-cols-3">
 
@@ -1104,6 +1171,39 @@ export default function TutorDashboardPage() {
 }
 
 /* =========================================================
+   MOBILE LINK
+========================================================= */
+
+function MobileLink({
+  href,
+  onClick,
+  className =
+    "text-slate-700",
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={
+        href
+      }
+      onClick={
+        onClick
+      }
+      className={
+        className
+      }
+    >
+      {children}
+    </Link>
+  );
+}
+
+/* =========================================================
    STAT CARD
 ========================================================= */
 
@@ -1118,7 +1218,9 @@ function StatCard({
 }) {
   return (
     <Link
-      href={href}
+      href={
+        href
+      }
       className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 hover:shadow-md"
     >
 
@@ -1145,7 +1247,8 @@ function StatCard({
 function ProposalCard({
   proposal,
 }: {
-  proposal: AvailableProposal;
+  proposal:
+    AvailableProposal;
 }) {
   return (
     <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -1153,7 +1256,9 @@ function ProposalCard({
       {/* COURSE */}
 
       <p className="font-semibold text-emerald-600">
-        {proposal.courseCode}
+        {
+          proposal.courseCode
+        }
       </p>
 
       {/* TITLE */}
@@ -1178,6 +1283,8 @@ function ProposalCard({
 
       <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
 
+        {/* BUDGET */}
+
         <div>
 
           <p className="text-sm text-slate-500">
@@ -1193,6 +1300,8 @@ function ProposalCard({
 
         </div>
 
+        {/* STUDENT */}
+
         <div className="text-right">
 
           <p className="text-sm text-slate-500">
@@ -1200,14 +1309,16 @@ function ProposalCard({
           </p>
 
           <p className="font-semibold text-slate-900">
-            {proposal.studentName}
+            {
+              proposal.studentName
+            }
           </p>
 
         </div>
 
       </div>
 
-      {/* BUTTON */}
+      {/* VIEW */}
 
       <Link
         href={`/tutor/proposals/${proposal.id}`}
@@ -1237,7 +1348,7 @@ function normalizeCourseCode(
 }
 
 /* =========================================================
-   MONEY FORMAT
+   MONEY
 ========================================================= */
 
 function formatMoney(

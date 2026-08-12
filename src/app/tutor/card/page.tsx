@@ -57,7 +57,9 @@ interface WithdrawalRequest {
   reviewedAt?: Timestamp;
 }
 
-type WalletSource = "users" | "tutors";
+type WalletSource =
+  | "users"
+  | "tutors";
 
 interface WalletInfo {
   source: WalletSource;
@@ -81,7 +83,10 @@ export default function TutorCardPage() {
   const [
     profile,
     setProfile,
-  ] = useState<TutorProfile | null>(null);
+  ] =
+    useState<TutorProfile | null>(
+      null
+    );
 
   /* =========================================================
      WALLET
@@ -101,16 +106,6 @@ export default function TutorCardPage() {
     totalWithdrawn,
     setTotalWithdrawn,
   ] = useState(0);
-
-  const [
-    walletSource,
-    setWalletSource,
-  ] = useState<WalletSource>("users");
-
-  const [
-    walletBalanceField,
-    setWalletBalanceField,
-  ] = useState("availableBalance");
 
   /* =========================================================
      WITHDRAW FORM
@@ -138,7 +133,10 @@ export default function TutorCardPage() {
   const [
     withdrawalRequests,
     setWithdrawalRequests,
-  ] = useState<WithdrawalRequest[]>([]);
+  ] =
+    useState<
+      WithdrawalRequest[]
+    >([]);
 
   /* =========================================================
      UI
@@ -182,23 +180,27 @@ export default function TutorCardPage() {
       | undefined;
 
     /*
-     * We keep both documents in memory.
-     *
-     * Your app may have balance inside:
+     * Current wallet:
      *
      * users/{uid}
      *
-     * OR older:
+     * Older fallback:
      *
      * tutors/{uid}
      */
 
     let userWalletData:
-      | Record<string, unknown>
+      | Record<
+          string,
+          unknown
+        >
       | null = null;
 
     let tutorWalletData:
-      | Record<string, unknown>
+      | Record<
+          string,
+          unknown
+        >
       | null = null;
 
     /* =======================================================
@@ -223,14 +225,6 @@ export default function TutorCardPage() {
       setTotalWithdrawn(
         walletInfo.totalWithdrawn
       );
-
-      setWalletSource(
-        walletInfo.source
-      );
-
-      setWalletBalanceField(
-        walletInfo.balanceField
-      );
     }
 
     /* =======================================================
@@ -242,13 +236,16 @@ export default function TutorCardPage() {
         auth,
         (user) => {
           if (!user) {
-            router.replace("/login");
+            router.replace(
+              "/login"
+            );
+
             return;
           }
 
           /* =================================================
              USERS/{UID}
-             PROFILE + POSSIBLE WALLET
+             CURRENT PROFILE + WALLET
           ================================================= */
 
           unsubscribeUser =
@@ -260,12 +257,16 @@ export default function TutorCardPage() {
               ),
 
               (snapshot) => {
-                if (!snapshot.exists()) {
+                if (
+                  !snapshot.exists()
+                ) {
                   setError(
                     "Your user profile could not be found."
                   );
 
-                  setLoading(false);
+                  setLoading(
+                    false
+                  );
 
                   return;
                 }
@@ -284,12 +285,16 @@ export default function TutorCardPage() {
                 ----------------------------------------- */
 
                 const roles =
-                  Array.isArray(data.roles)
+                  Array.isArray(
+                    data.roles
+                  )
                     ? data.roles.map(
                         (
                           role: unknown
                         ) =>
-                          String(role)
+                          String(
+                            role
+                          )
                             .trim()
                             .toLowerCase()
                       )
@@ -355,18 +360,24 @@ export default function TutorCardPage() {
                 });
 
                 /*
-                 * First attempt using users document.
+                 * IMPORTANT:
                  *
-                 * When tutors document arrives,
-                 * wallet will be checked again.
+                 * users/{uid} is the current
+                 * wallet source.
+                 *
+                 * availableBalance = 0 is valid.
                  */
 
                 updateWalletFromDocuments();
 
-                setLoading(false);
+                setLoading(
+                  false
+                );
               },
 
-              (profileError) => {
+              (
+                profileError
+              ) => {
                 console.error(
                   "User profile error:",
                   profileError
@@ -376,13 +387,15 @@ export default function TutorCardPage() {
                   "Unable to load your tutor profile."
                 );
 
-                setLoading(false);
+                setLoading(
+                  false
+                );
               }
             );
 
           /* =================================================
              TUTORS/{UID}
-             OLD / APP WALLET SUPPORT
+             LEGACY FALLBACK ONLY
           ================================================= */
 
           unsubscribeTutorWallet =
@@ -394,7 +407,9 @@ export default function TutorCardPage() {
               ),
 
               (snapshot) => {
-                if (snapshot.exists()) {
+                if (
+                  snapshot.exists()
+                ) {
                   tutorWalletData =
                     snapshot.data() as Record<
                       string,
@@ -406,23 +421,19 @@ export default function TutorCardPage() {
                 }
 
                 /*
-                 * Recheck because tutor balance
-                 * might actually be stored here.
+                 * This will use tutors/{uid}
+                 * only when users/{uid} has
+                 * no wallet fields at all.
                  */
 
                 updateWalletFromDocuments();
               },
 
-              (tutorWalletError) => {
-                /*
-                 * Do not crash page.
-                 *
-                 * Some Unitor accounts may
-                 * only use users/{uid}.
-                 */
-
+              (
+                tutorWalletError
+              ) => {
                 console.log(
-                  "Tutor wallet document not available:",
+                  "Legacy tutor wallet not available:",
                   tutorWalletError
                 );
               }
@@ -438,6 +449,7 @@ export default function TutorCardPage() {
                 firestore,
                 "withdrawRequests"
               ),
+
               where(
                 "tutorId",
                 "==",
@@ -560,12 +572,6 @@ export default function TutorCardPage() {
                   "Withdrawal history error:",
                   withdrawalError
                 );
-
-                /*
-                 * Do not replace wallet
-                 * error just because history
-                 * cannot load.
-                 */
               }
             );
         }
@@ -645,7 +651,10 @@ export default function TutorCardPage() {
       auth.currentUser;
 
     if (!user) {
-      router.replace("/login");
+      router.replace(
+        "/login"
+      );
+
       return;
     }
 
@@ -662,10 +671,14 @@ export default function TutorCardPage() {
     ======================================================= */
 
     const amount =
-      Number(withdrawAmount);
+      Number(
+        withdrawAmount
+      );
 
     if (
-      !Number.isFinite(amount) ||
+      !Number.isFinite(
+        amount
+      ) ||
       amount <= 0
     ) {
       setError(
@@ -713,7 +726,9 @@ export default function TutorCardPage() {
       return;
     }
 
-    setSubmitting(true);
+    setSubmitting(
+      true
+    );
 
     try {
       const usersRef =
@@ -745,9 +760,7 @@ export default function TutorCardPage() {
           transaction
         ) => {
           /*
-           * IMPORTANT:
-           *
-           * Read both documents before writing.
+           * Read both documents first.
            */
 
           const userSnapshot =
@@ -776,10 +789,9 @@ export default function TutorCardPage() {
                 >)
               : null;
 
-          /*
-           * Find exactly where the
-           * real balance currently lives.
-           */
+          /* -----------------------------------------
+             USE SAME WALLET LOGIC AS DISPLAY
+          ----------------------------------------- */
 
           const currentWallet =
             chooseWalletInfo(
@@ -811,7 +823,9 @@ export default function TutorCardPage() {
               ? tutorData
               : userData;
 
-          if (!walletData) {
+          if (
+            !walletData
+          ) {
             throw new Error(
               "Your wallet could not be found."
             );
@@ -824,11 +838,9 @@ export default function TutorCardPage() {
               ]
             );
 
-          /*
-           * =====================================
-           * RESERVE THE MONEY
-           * =====================================
-           */
+          /* =====================================
+             RESERVE MONEY
+          ===================================== */
 
           transaction.update(
             walletRef,
@@ -846,16 +858,9 @@ export default function TutorCardPage() {
             }
           );
 
-          /*
-           * =====================================
-           * CREATE WITHDRAW REQUEST
-           * =====================================
-           *
-           * We save where the balance
-           * came from so admin can later
-           * approve/reject the correct
-           * wallet document.
-           */
+          /* =====================================
+             CREATE REQUEST
+          ===================================== */
 
           transaction.set(
             requestRef,
@@ -902,9 +907,13 @@ export default function TutorCardPage() {
         }
       );
 
-      setWithdrawAmount("");
+      setWithdrawAmount(
+        ""
+      );
 
-      setBkashNumber("");
+      setBkashNumber(
+        ""
+      );
 
       setSuccess(
         "Withdrawal request submitted successfully. The amount is waiting for admin approval."
@@ -930,7 +939,9 @@ export default function TutorCardPage() {
         );
       }
     } finally {
-      setSubmitting(false);
+      setSubmitting(
+        false
+      );
     }
   }
 
@@ -940,7 +951,9 @@ export default function TutorCardPage() {
 
   async function handleLogout() {
     try {
-      await signOut(auth);
+      await signOut(
+        auth
+      );
 
       router.replace(
         "/login"
@@ -966,9 +979,11 @@ export default function TutorCardPage() {
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50">
+
         <p className="text-slate-600">
           Loading your wallet...
         </p>
+
       </main>
     );
   }
@@ -997,9 +1012,7 @@ export default function TutorCardPage() {
             Unitor Tutor
           </Link>
 
-          {/* =================================================
-              DESKTOP NAVIGATION
-          ================================================= */}
+          {/* DESKTOP NAVIGATION */}
 
           <nav className="hidden items-center gap-8 md:flex">
 
@@ -1033,9 +1046,7 @@ export default function TutorCardPage() {
 
           </nav>
 
-          {/* =================================================
-              DESKTOP RIGHT
-          ================================================= */}
+          {/* DESKTOP RIGHT */}
 
           <div className="hidden items-center gap-3 md:flex">
 
@@ -1086,9 +1097,7 @@ export default function TutorCardPage() {
 
           </div>
 
-          {/* =================================================
-              MOBILE BUTTON
-          ================================================= */}
+          {/* MOBILE BUTTON */}
 
           <button
             type="button"
@@ -1108,9 +1117,7 @@ export default function TutorCardPage() {
 
         </div>
 
-        {/* ===================================================
-            MOBILE MENU
-        =================================================== */}
+        {/* MOBILE MENU */}
 
         {mobileMenuOpen && (
 
@@ -1233,9 +1240,8 @@ export default function TutorCardPage() {
 
           <p className="mt-2 max-w-2xl leading-7 text-slate-600">
             View your tutoring earnings,
-            request a withdrawal, and
-            track your previous withdrawal
-            requests.
+            request a withdrawal, and track
+            your previous withdrawal requests.
           </p>
 
         </div>
@@ -1266,8 +1272,6 @@ export default function TutorCardPage() {
 
         <section className="relative mt-8 overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-500 p-7 text-white shadow-lg md:p-9">
 
-          {/* BLUR */}
-
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
           <div className="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl" />
@@ -1296,9 +1300,7 @@ export default function TutorCardPage() {
 
             </div>
 
-            {/* =================================================
-                AVAILABLE BALANCE
-            ================================================= */}
+            {/* AVAILABLE BALANCE */}
 
             <div className="mt-9">
 
@@ -1319,9 +1321,7 @@ export default function TutorCardPage() {
 
             </div>
 
-            {/* =================================================
-                DETAILS
-            ================================================= */}
+            {/* DETAILS */}
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
 
@@ -1408,8 +1408,7 @@ export default function TutorCardPage() {
                 </h2>
 
                 <p className="text-sm text-slate-500">
-                  Request payment through
-                  bKash
+                  Request payment through bKash
                 </p>
 
               </div>
@@ -1463,7 +1462,9 @@ export default function TutorCardPage() {
                   value={
                     withdrawAmount
                   }
-                  onChange={(event) =>
+                  onChange={(
+                    event
+                  ) =>
                     setWithdrawAmount(
                       event.target.value
                     )
@@ -1513,7 +1514,9 @@ export default function TutorCardPage() {
                 value={
                   bkashNumber
                 }
-                onChange={(event) =>
+                onChange={(
+                  event
+                ) =>
                   setBkashNumber(
                     event.target.value
                       .replace(
@@ -1615,8 +1618,6 @@ export default function TutorCardPage() {
               )}
 
             </div>
-
-            {/* EMPTY */}
 
             {withdrawalRequests.length ===
             0 ? (
@@ -1858,7 +1859,17 @@ function StatusBadge({
 }
 
 /* =========================================================
-   CHOOSE REAL WALLET
+   CHOOSE WALLET
+
+   IMPORTANT FIX:
+
+   users/{uid} is authoritative if it
+   contains any wallet balance field.
+
+   availableBalance = 0 is VALID.
+
+   Do NOT search tutors/{uid} just because
+   users/{uid} balance is zero.
 ========================================================= */
 
 function chooseWalletInfo(
@@ -1876,73 +1887,64 @@ function chooseWalletInfo(
       >
     | null
 ): WalletInfo {
-  const userWallet =
-    readWalletInfo(
+  /*
+   * CURRENT UNITOR WALLET
+   *
+   * Always use users/{uid} when
+   * it contains wallet fields.
+   */
+
+  if (
+    hasWalletFields(
+      userData
+    )
+  ) {
+    return readWalletInfo(
       "users",
       userData
     );
+  }
 
-  const tutorWallet =
-    readWalletInfo(
+  /*
+   * LEGACY FALLBACK ONLY
+   */
+
+  if (
+    hasWalletFields(
+      tutorData
+    )
+  ) {
+    return readWalletInfo(
       "tutors",
       tutorData
     );
-
-  /*
-   * IMPORTANT:
-   *
-   * If users has real money,
-   * use users.
-   */
-
-  if (
-    userWallet.balance >
-    0
-  ) {
-    return userWallet;
   }
 
   /*
-   * If users says 0 but tutors
-   * contains the balance your
-   * mobile app is showing,
-   * use tutors.
+   * No wallet fields found.
    */
 
-  if (
-    tutorWallet.balance >
-    0
-  ) {
-    return tutorWallet;
-  }
-
-  /*
-   * If both are 0, prefer the
-   * document which actually
-   * contains wallet fields.
-   */
-
-  if (
-    hasWalletFields(
-      userData
-    )
-  ) {
-    return userWallet;
-  }
-
-  if (
-    hasWalletFields(
-      tutorData
-    )
-  ) {
-    return tutorWallet;
-  }
-
-  return userWallet;
+  return readWalletInfo(
+    "users",
+    userData
+  );
 }
 
 /* =========================================================
    READ WALLET
+
+   IMPORTANT FIX:
+
+   Use the FIRST EXISTING balance field.
+
+   Priority:
+   1. availableBalance
+   2. totalBalance
+   3. balance
+   4. money
+   5. walletBalance
+
+   A value of 0 is valid.
 ========================================================= */
 
 function readWalletInfo(
@@ -1974,13 +1976,6 @@ function readWalletInfo(
     };
   }
 
-  /*
-   * IMPORTANT:
-   *
-   * Check all wallet field
-   * versions used by Unitor.
-   */
-
   const balanceFields = [
     "availableBalance",
     "totalBalance",
@@ -1996,56 +1991,38 @@ function readWalletInfo(
     0;
 
   /*
-   * First try to find a
-   * positive balance.
+   * IMPORTANT:
+   *
+   * Do NOT check:
+   *
+   * value > 0
+   *
+   * Because:
+   *
+   * availableBalance = 0
+   *
+   * is a real and valid balance.
    */
 
   for (
     const field of
     balanceFields
   ) {
-    const value =
-      toNumber(
-        data[field]
-      );
-
-    if (value > 0) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        data,
+        field
+      )
+    ) {
       balanceField =
         field;
 
       balance =
-        value;
+        toNumber(
+          data[field]
+        );
 
       break;
-    }
-  }
-
-  /*
-   * If balance is really 0,
-   * find whichever field exists.
-   */
-
-  if (balance === 0) {
-    for (
-      const field of
-      balanceFields
-    ) {
-      if (
-        Object.prototype.hasOwnProperty.call(
-          data,
-          field
-        )
-      ) {
-        balanceField =
-          field;
-
-        balance =
-          toNumber(
-            data[field]
-          );
-
-        break;
-      }
     }
   }
 
@@ -2100,14 +2077,18 @@ function hasWalletFields(
     return false;
   }
 
-  return [
+  const fields = [
     "availableBalance",
     "totalBalance",
     "balance",
     "money",
     "walletBalance",
-  ].some(
-    (field) =>
+  ];
+
+  return fields.some(
+    (
+      field
+    ) =>
       Object.prototype.hasOwnProperty.call(
         data,
         field
@@ -2130,6 +2111,22 @@ function toNumber(
       value
     )
       ? value
+      : 0;
+  }
+
+  if (
+    typeof value ===
+    "string"
+  ) {
+    const parsed =
+      Number(
+        value.trim()
+      );
+
+    return Number.isFinite(
+      parsed
+    )
+      ? parsed
       : 0;
   }
 
@@ -2193,11 +2190,20 @@ function formatDate(
     .toLocaleString(
       "en-BD",
       {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
+        day:
+          "numeric",
+
+        month:
+          "short",
+
+        year:
+          "numeric",
+
+        hour:
+          "numeric",
+
+        minute:
+          "2-digit",
       }
     );
 }

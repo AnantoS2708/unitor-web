@@ -89,6 +89,11 @@ export default function AdminDashboardPage() {
     setChatCount,
   ] = useState(0);
 
+  const [
+    pendingCourseRequestCount,
+    setPendingCourseRequestCount,
+  ] = useState(0);
+
   /* =========================================================
      PAYMENTS
   ========================================================= */
@@ -436,6 +441,48 @@ export default function AdminDashboardPage() {
             );
 
           /* =================================================
+             COURSE REQUESTS
+          ================================================= */
+
+          const unsubscribeCourseRequests =
+            onSnapshot(
+              collection(
+                firestore,
+                "courseRequests"
+              ),
+
+              (snapshot) => {
+                const pendingCount =
+                  snapshot.docs.filter(
+                    (
+                      requestDocument
+                    ) =>
+                      String(
+                        requestDocument.data()
+                          .status ??
+                          "pending"
+                      )
+                        .trim()
+                        .toLowerCase() ===
+                      "pending"
+                  ).length;
+
+                setPendingCourseRequestCount(
+                  pendingCount
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "course requests",
+                  snapshotError
+                );
+              }
+            );
+
+          /* =================================================
              SAVE UNSUBSCRIBERS
           ================================================= */
 
@@ -445,7 +492,8 @@ export default function AdminDashboardPage() {
             unsubscribeJobProposals,
             unsubscribeChats,
             unsubscribePayments,
-            unsubscribeWithdrawals
+            unsubscribeWithdrawals,
+            unsubscribeCourseRequests
           );
         }
       );
@@ -886,6 +934,20 @@ export default function AdminDashboardPage() {
               />
 
               <DashboardCard
+                title="Course requests"
+                value={
+                  pendingCourseRequestCount
+                }
+                description="Tutor course requests awaiting review"
+                icon="📖"
+                href="/admin/course-requests"
+                attention={
+                  pendingCourseRequestCount >
+                  0
+                }
+              />
+
+              <DashboardCard
                 title="Conversations"
                 value={
                   chatCount
@@ -1014,6 +1076,14 @@ export default function AdminDashboardPage() {
                     pendingWithdrawals.length
                   }
                   href="/admin/withdrawals"
+                />
+
+                <ActionItem
+                  title="Course requests"
+                  count={
+                    pendingCourseRequestCount
+                  }
+                  href="/admin/course-requests"
                 />
 
               </div>

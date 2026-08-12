@@ -1,443 +1,1905 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { onAuthStateChanged } from "firebase/auth";
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
 
 import {
-    addDoc,
-    collection,
-    onSnapshot,
-    query,
-    serverTimestamp,
-    where,
-    Timestamp,
+  collection,
+  doc,
+  onSnapshot,
+  runTransaction,
+  serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 
 import {
-    auth,
-    firestore,
+  auth,
+  firestore,
 } from "@/lib/firebase";
 
+/* =========================================================
+   ADMIN
+========================================================= */
 
-interface Withdrawal {
-    id:string;
-    amount:number;
-    paymentMethod:string;
-    accountNumber:string;
-    status:string;
-    createdAt?:Timestamp;
+const ADMIN_EMAIL =
+  "unitor.4dmin@gmail.com";
+
+/* =========================================================
+   TYPES
+========================================================= */
+
+interface WithdrawalRequest {
+  id: string;
+
+  tutorId: string;
+  tutorName: string;
+  tutorEmail: string;
+
+  amount: number;
+
+  bkashNumber: string;
+  method: string;
+
+  status: string;
+
+  walletCollection: string;
+  walletBalanceField: string;
+
+  createdAt?: Timestamp;
+  reviewedAt?: Timestamp;
+
+  reviewedBy?: string;
+  adminNote?: string;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
 
-export default function TutorWithdrawalsPage(){
+export default function AdminWithdrawalsPage() {
+  const router = useRouter();
 
-    const router = useRouter();
+  const [
+    withdrawalRequests,
+    setWithdrawalRequests,
+  ] =
+    useState<WithdrawalRequest[]>([]);
 
+  const [
+    checkingAdmin,
+    setCheckingAdmin,
+  ] = useState(true);
 
-    const [userId,setUserId]=useState("");
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-    const [balance,setBalance]=useState(0);
+  const [
+    error,
+    setError,
+  ] = useState("");
 
-    const [withdrawals,setWithdrawals]=useState<Withdrawal[]>([]);
+  const [
+    success,
+    setSuccess,
+  ] = useState("");
 
+  const [
+    processingId,
+    setProcessingId,
+  ] = useState("");
 
-    const [amount,setAmount]=useState("");
+  const [
+    filter,
+    setFilter,
+  ] = useState<
+    | "pending"
+    | "approved"
+    | "rejected"
+    | "all"
+  >("pending");
 
-    const [method,setMethod]=useState("bKash");
+  /* =========================================================
+     AUTH + WITHDRAWALS
+  ========================================================= */
 
-    const [account,setAccount]=useState("");
+  useEffect(() => {
+    let unsubscribeWithdrawals:
+      | (() => void)
+      | undefined;
 
+    const unsubscribeAuth =
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          const email =
+            user?.email
+              ?.trim()
+              .toLowerCase() ??
+            "";
 
-    const [loading,setLoading]=useState(true);
+          /* -----------------------------------------
+             ADMIN CHECK
+          ----------------------------------------- */
 
-    const [error,setError]=useState("");
-
-    const [success,setSuccess]=useState("");
-
-
-
-    useEffect(()=>{
-
-
-        const unsubscribeAuth =
-        onAuthStateChanged(auth,(user)=>{
-
-
-            if(!user){
-
-                router.replace("/login");
-
-                return;
-            }
-
-
-            setUserId(user.uid);
-
-
-
-            const withdrawalQuery =
-            query(
-                collection(
-                    firestore,
-                    "withdrawalRequests"
-                ),
-                where(
-                    "tutorId",
-                    "==",
-                    user.uid
-                )
+          if (
+            !user ||
+            email !== ADMIN_EMAIL
+          ) {
+            router.replace(
+              "/admin/login"
             );
 
+            return;
+          }
 
+          setCheckingAdmin(false);
+
+          /* =================================================
+             WITHDRAW REQUESTS
+          ================================================= */
+
+          unsubscribeWithdrawals =
             onSnapshot(
-                withdrawalQuery,
-                (snapshot)=>{
+              collection(
+                firestore,
+                "withdrawRequests"
+              ),
 
+              (snapshot) => {
+                const requests =
+                  snapshot.docs.map(
+                    (
+                      requestDocument
+                    ) => {
+                      const data =
+                        requestDocument.data();
 
-                    const list =
-                    snapshot.docs.map(doc=>({
+                      return {
+                        id:
+                          requestDocument.id,
 
-                        id:doc.id,
+                        tutorId:
+                          String(
+                            data.tutorId ??
+                              ""
+                          ),
 
-                        amount:Number(
-                            doc.data().amount??0
-                        ),
+                        tutorName:
+                          String(
+                            data.tutorName ??
+                              "Tutor"
+                          ),
 
-                        paymentMethod:
-                        doc.data().paymentMethod??"",
+                        tutorEmail:
+                          String(
+                            data.tutorEmail ??
+                              ""
+                          ),
 
-                        accountNumber:
-                        doc.data().accountNumber??"",
+                        amount:
+                          toNumber(
+                            data.amount
+                          ),
+
+                        bkashNumber:
+                          String(
+                            data.bkashNumber ??
+                              ""
+                          ),
+
+                        method:
+                          String(
+                            data.method ??
+                              "bkash"
+                          ),
 
                         status:
-                        doc.data().status??"pending",
+                          normalizeStatus(
+                            String(
+                              data.status ??
+                                "pending"
+                            )
+                          ),
+
+                        walletCollection:
+                          String(
+                            data.walletCollection ??
+                              ""
+                          ),
+
+                        walletBalanceField:
+                          String(
+                            data.walletBalanceField ??
+                              ""
+                          ),
 
                         createdAt:
-                        doc.data().createdAt
+                          data.createdAt instanceof
+                          Timestamp
+                            ? data.createdAt
+                            : undefined,
 
-                    }));
+                        reviewedAt:
+                          data.reviewedAt instanceof
+                          Timestamp
+                            ? data.reviewedAt
+                            : undefined,
 
+                        reviewedBy:
+                          String(
+                            data.reviewedBy ??
+                              ""
+                          ),
 
-                    setWithdrawals(list);
+                        adminNote:
+                          String(
+                            data.adminNote ??
+                              ""
+                          ),
+                      } as WithdrawalRequest;
+                    }
+                  );
 
-                    setLoading(false);
+                /* -----------------------------------------
+                   NEWEST FIRST
+                ----------------------------------------- */
 
-                }
+                requests.sort(
+                  (
+                    first,
+                    second
+                  ) => {
+                    const firstTime =
+                      first.createdAt
+                        ?.toMillis() ??
+                      0;
+
+                    const secondTime =
+                      second.createdAt
+                        ?.toMillis() ??
+                      0;
+
+                    return (
+                      secondTime -
+                      firstTime
+                    );
+                  }
+                );
+
+                setWithdrawalRequests(
+                  requests
+                );
+
+                setLoading(false);
+              },
+
+              (
+                withdrawalError
+              ) => {
+                console.error(
+                  "Withdrawal loading error:",
+                  withdrawalError
+                );
+
+                setError(
+                  "Unable to load withdrawal requests."
+                );
+
+                setLoading(false);
+              }
             );
-
-
-        });
-
-
-
-        return ()=>unsubscribeAuth();
-
-
-    },[router]);
-
-
-
-    const pendingAmount =
-    useMemo(()=>{
-
-        return withdrawals
-        .filter(
-            item=>
-            item.status==="pending"
-            ||
-            item.status==="paid"
-        )
-        .reduce(
-            (sum,item)=>
-            sum+item.amount,
-            0
-        );
-
-    },[withdrawals]);
-
-
-
-    async function submitWithdrawal(
-        e:FormEvent
-    ){
-
-        e.preventDefault();
-
-
-        const withdrawAmount =
-        Number(amount);
-
-
-
-        if(withdrawAmount<=0){
-
-            setError(
-                "Enter valid amount"
-            );
-
-            return;
         }
+      );
 
+    return () => {
+      unsubscribeAuth();
 
+      unsubscribeWithdrawals?.();
+    };
+  }, [router]);
 
-        if(!account){
+  /* =========================================================
+     FILTERS
+  ========================================================= */
 
-            setError(
-                "Enter account number"
+  const pendingRequests =
+    useMemo(
+      () =>
+        withdrawalRequests.filter(
+          (request) =>
+            normalizeStatus(
+              request.status
+            ) === "pending"
+        ),
+      [withdrawalRequests]
+    );
+
+  const approvedRequests =
+    useMemo(
+      () =>
+        withdrawalRequests.filter(
+          (request) => {
+            const status =
+              normalizeStatus(
+                request.status
+              );
+
+            return (
+              status ===
+                "approved" ||
+              status ===
+                "paid"
             );
+          }
+        ),
+      [withdrawalRequests]
+    );
 
-            return;
-        }
+  const rejectedRequests =
+    useMemo(
+      () =>
+        withdrawalRequests.filter(
+          (request) =>
+            normalizeStatus(
+              request.status
+            ) === "rejected"
+        ),
+      [withdrawalRequests]
+    );
 
+  const displayedRequests =
+    useMemo(() => {
+      if (
+        filter === "all"
+      ) {
+        return withdrawalRequests;
+      }
 
+      if (
+        filter ===
+        "approved"
+      ) {
+        return approvedRequests;
+      }
 
-        try{
+      if (
+        filter ===
+        "rejected"
+      ) {
+        return rejectedRequests;
+      }
 
+      return pendingRequests;
+    }, [
+      filter,
+      withdrawalRequests,
+      pendingRequests,
+      approvedRequests,
+      rejectedRequests,
+    ]);
 
-            await addDoc(
-                collection(
-                    firestore,
-                    "withdrawalRequests"
-                ),
-                {
+  /* =========================================================
+     APPROVE
+  ========================================================= */
 
-                    tutorId:userId,
+  async function handleApprove(
+    request:
+      WithdrawalRequest
+  ) {
+    setError("");
+    setSuccess("");
 
-                    amount:withdrawAmount,
+    const admin =
+      auth.currentUser;
 
-                    currency:"BDT",
+    if (!admin) {
+      router.replace(
+        "/admin/login"
+      );
 
-                    paymentMethod:method,
-
-                    accountNumber:account,
-
-
-                    status:"pending",
-
-
-                    requestedAt:
-                    serverTimestamp(),
-
-                    createdAt:
-                    serverTimestamp()
-
-                }
-            );
-
-
-
-            setSuccess(
-                "Withdrawal request submitted"
-            );
-
-
-            setAmount("");
-
-            setAccount("");
-
-
-
-        }
-        catch(error){
-
-            console.error(error);
-
-            setError(
-                "Unable to submit request"
-            );
-
-        }
-
-
+      return;
     }
 
+    if (
+      normalizeStatus(
+        request.status
+      ) !== "pending"
+    ) {
+      setError(
+        "This withdrawal request has already been reviewed."
+      );
 
+      return;
+    }
 
+    const confirmed =
+      window.confirm(
+        `Have you already sent ৳${formatMoney(
+          request.amount
+        )} to ${request.bkashNumber}?\n\nOnly click OK after sending the bKash payment.`
+      );
 
-return (
+    if (!confirmed) {
+      return;
+    }
 
-<main className="min-h-screen bg-slate-50">
+    setProcessingId(
+      request.id
+    );
 
+    try {
+      const requestRef =
+        doc(
+          firestore,
+          "withdrawRequests",
+          request.id
+        );
 
-<header className="bg-white border-b">
+      const userWalletRef =
+        doc(
+          firestore,
+          "users",
+          request.tutorId
+        );
 
-<div className="max-w-5xl mx-auto px-6 py-4 flex justify-between">
+      const oldTutorWalletRef =
+        doc(
+          firestore,
+          "tutors",
+          request.tutorId
+        );
 
-<Link
-href="/tutor/dashboard"
-className="text-2xl font-bold text-emerald-600"
->
-Unitor Tutor
-</Link>
+      await runTransaction(
+        firestore,
+        async (
+          transaction
+        ) => {
+          /* -----------------------------------
+             ALL READS FIRST
+          ----------------------------------- */
 
+          const requestSnapshot =
+            await transaction.get(
+              requestRef
+            );
 
-<Link
-href="/tutor/earnings"
->
-← Earnings
-</Link>
+          const userSnapshot =
+            await transaction.get(
+              userWalletRef
+            );
 
+          const tutorSnapshot =
+            await transaction.get(
+              oldTutorWalletRef
+            );
 
-</div>
+          /* -----------------------------------
+             REQUEST CHECK
+          ----------------------------------- */
 
-</header>
+          if (
+            !requestSnapshot.exists()
+          ) {
+            throw new Error(
+              "Withdrawal request was not found."
+            );
+          }
 
+          const requestData =
+            requestSnapshot.data();
 
+          const currentStatus =
+            normalizeStatus(
+              String(
+                requestData.status ??
+                  ""
+              )
+            );
 
-<div className="max-w-5xl mx-auto px-6 py-10">
+          if (
+            currentStatus !==
+            "pending"
+          ) {
+            throw new Error(
+              "This withdrawal request has already been reviewed."
+            );
+          }
 
+          const amount =
+            toNumber(
+              requestData.amount
+            );
 
-<h1 className="text-3xl font-bold text-slate-900">
-Withdraw Money
-</h1>
+          if (
+            amount <= 0
+          ) {
+            throw new Error(
+              "Invalid withdrawal amount."
+            );
+          }
 
+          /* -----------------------------------
+             FIND CORRECT WALLET
+          ----------------------------------- */
 
-<p className="mt-2 text-slate-600">
-Request your tutoring earnings withdrawal.
-</p>
+          const wallet =
+            resolveWalletForRequest({
+              requestData:
+                requestData as Record<
+                  string,
+                  unknown
+                >,
 
+              userData:
+                userSnapshot.exists()
+                  ? (userSnapshot.data() as Record<
+                      string,
+                      unknown
+                    >)
+                  : null,
 
+              tutorData:
+                tutorSnapshot.exists()
+                  ? (tutorSnapshot.data() as Record<
+                      string,
+                      unknown
+                    >)
+                  : null,
 
-<section className="mt-8 bg-white rounded-2xl p-6 shadow-sm">
+              userRef:
+                userWalletRef,
 
-<p className="text-sm text-slate-500">
-Available Balance
-</p>
+              tutorRef:
+                oldTutorWalletRef,
+            });
 
+          if (
+            !wallet.data
+          ) {
+            throw new Error(
+              "Tutor wallet could not be found."
+            );
+          }
 
-<h2 className="mt-2 text-4xl font-bold text-emerald-600">
-৳ {balance}
-</h2>
+          const currentPending =
+            toNumber(
+              wallet.data[
+                "pendingWithdrawalAmount"
+              ]
+            );
 
+          const currentWithdrawn =
+            toNumber(
+              wallet.data[
+                "totalWithdrawn"
+              ]
+            );
 
-</section>
+          /* -----------------------------------
+             UPDATE WALLET
+          ----------------------------------- */
 
+          transaction.update(
+            wallet.ref,
+            {
+              pendingWithdrawalAmount:
+                Math.max(
+                  0,
+                  currentPending -
+                    amount
+                ),
 
+              totalWithdrawn:
+                currentWithdrawn +
+                amount,
 
+              walletUpdatedAt:
+                serverTimestamp(),
+            }
+          );
 
-<section className="mt-8 bg-white rounded-2xl p-6 shadow-sm">
+          /* -----------------------------------
+             APPROVE REQUEST
+          ----------------------------------- */
 
+          transaction.update(
+            requestRef,
+            {
+              status:
+                "approved",
 
-<h2 className="text-xl font-bold">
-Request Withdrawal
-</h2>
+              reviewedAt:
+                serverTimestamp(),
 
+              reviewedBy:
+                admin.uid,
 
+              adminNote:
+                "bKash payment sent and withdrawal approved.",
+            }
+          );
+        }
+      );
 
-<form
-onSubmit={submitWithdrawal}
-className="mt-6 space-y-5"
->
+      setSuccess(
+        `৳${formatMoney(
+          request.amount
+        )} withdrawal for ${request.tutorName} was approved successfully.`
+      );
+    } catch (
+      approveError
+    ) {
+      console.error(
+        "Approve withdrawal error:",
+        approveError
+      );
 
+      if (
+        approveError instanceof
+        Error
+      ) {
+        setError(
+          approveError.message
+        );
+      } else {
+        setError(
+          "Unable to approve the withdrawal request."
+        );
+      }
+    } finally {
+      setProcessingId("");
+    }
+  }
 
-<input
-type="number"
-placeholder="Amount"
-value={amount}
-onChange={
-e=>setAmount(e.target.value)
+  /* =========================================================
+     REJECT
+  ========================================================= */
+
+  async function handleReject(
+    request:
+      WithdrawalRequest
+  ) {
+    setError("");
+    setSuccess("");
+
+    const admin =
+      auth.currentUser;
+
+    if (!admin) {
+      router.replace(
+        "/admin/login"
+      );
+
+      return;
+    }
+
+    if (
+      normalizeStatus(
+        request.status
+      ) !== "pending"
+    ) {
+      setError(
+        "This withdrawal request has already been reviewed."
+      );
+
+      return;
+    }
+
+    const confirmed =
+      window.confirm(
+        `Reject ${request.tutorName}'s withdrawal request of ৳${formatMoney(
+          request.amount
+        )}?\n\nThe reserved money will be returned to the tutor's available balance.`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setProcessingId(
+      request.id
+    );
+
+    try {
+      const requestRef =
+        doc(
+          firestore,
+          "withdrawRequests",
+          request.id
+        );
+
+      const userWalletRef =
+        doc(
+          firestore,
+          "users",
+          request.tutorId
+        );
+
+      const oldTutorWalletRef =
+        doc(
+          firestore,
+          "tutors",
+          request.tutorId
+        );
+
+      await runTransaction(
+        firestore,
+        async (
+          transaction
+        ) => {
+          /* -----------------------------------
+             ALL READS FIRST
+          ----------------------------------- */
+
+          const requestSnapshot =
+            await transaction.get(
+              requestRef
+            );
+
+          const userSnapshot =
+            await transaction.get(
+              userWalletRef
+            );
+
+          const tutorSnapshot =
+            await transaction.get(
+              oldTutorWalletRef
+            );
+
+          /* -----------------------------------
+             REQUEST CHECK
+          ----------------------------------- */
+
+          if (
+            !requestSnapshot.exists()
+          ) {
+            throw new Error(
+              "Withdrawal request was not found."
+            );
+          }
+
+          const requestData =
+            requestSnapshot.data();
+
+          const currentStatus =
+            normalizeStatus(
+              String(
+                requestData.status ??
+                  ""
+              )
+            );
+
+          if (
+            currentStatus !==
+            "pending"
+          ) {
+            throw new Error(
+              "This withdrawal request has already been reviewed."
+            );
+          }
+
+          const amount =
+            toNumber(
+              requestData.amount
+            );
+
+          if (
+            amount <= 0
+          ) {
+            throw new Error(
+              "Invalid withdrawal amount."
+            );
+          }
+
+          /* -----------------------------------
+             FIND CORRECT WALLET
+          ----------------------------------- */
+
+          const wallet =
+            resolveWalletForRequest({
+              requestData:
+                requestData as Record<
+                  string,
+                  unknown
+                >,
+
+              userData:
+                userSnapshot.exists()
+                  ? (userSnapshot.data() as Record<
+                      string,
+                      unknown
+                    >)
+                  : null,
+
+              tutorData:
+                tutorSnapshot.exists()
+                  ? (tutorSnapshot.data() as Record<
+                      string,
+                      unknown
+                    >)
+                  : null,
+
+              userRef:
+                userWalletRef,
+
+              tutorRef:
+                oldTutorWalletRef,
+            });
+
+          if (
+            !wallet.data
+          ) {
+            throw new Error(
+              "Tutor wallet could not be found."
+            );
+          }
+
+          const currentBalance =
+            toNumber(
+              wallet.data[
+                wallet.balanceField
+              ]
+            );
+
+          const currentPending =
+            toNumber(
+              wallet.data[
+                "pendingWithdrawalAmount"
+              ]
+            );
+
+          /* -----------------------------------
+             RETURN RESERVED MONEY
+          ----------------------------------- */
+
+          transaction.update(
+            wallet.ref,
+            {
+              [wallet.balanceField]:
+                currentBalance +
+                amount,
+
+              pendingWithdrawalAmount:
+                Math.max(
+                  0,
+                  currentPending -
+                    amount
+                ),
+
+              walletUpdatedAt:
+                serverTimestamp(),
+            }
+          );
+
+          /* -----------------------------------
+             REJECT REQUEST
+          ----------------------------------- */
+
+          transaction.update(
+            requestRef,
+            {
+              status:
+                "rejected",
+
+              reviewedAt:
+                serverTimestamp(),
+
+              reviewedBy:
+                admin.uid,
+
+              adminNote:
+                "Withdrawal rejected. Reserved amount returned to tutor wallet.",
+            }
+          );
+        }
+      );
+
+      setSuccess(
+        `Withdrawal request rejected. ৳${formatMoney(
+          request.amount
+        )} was returned to ${request.tutorName}'s wallet.`
+      );
+    } catch (
+      rejectError
+    ) {
+      console.error(
+        "Reject withdrawal error:",
+        rejectError
+      );
+
+      if (
+        rejectError instanceof
+        Error
+      ) {
+        setError(
+          rejectError.message
+        );
+      } else {
+        setError(
+          "Unable to reject the withdrawal request."
+        );
+      }
+    } finally {
+      setProcessingId("");
+    }
+  }
+
+  /* =========================================================
+     ADMIN CHECK
+  ========================================================= */
+
+  if (
+    checkingAdmin
+  ) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-100">
+
+        <p className="text-slate-600">
+          Checking administrator access...
+        </p>
+
+      </main>
+    );
+  }
+
+  /* =========================================================
+     UI
+  ========================================================= */
+
+  return (
+    <main className="min-h-screen bg-slate-100">
+
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
+      <header className="border-b border-slate-800 bg-slate-900 text-white">
+
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+
+          <Link
+            href="/admin/dashboard"
+            className="text-2xl font-bold text-emerald-400"
+          >
+            Unitor Admin
+          </Link>
+
+          {/* ONLY DASHBOARD BUTTON */}
+
+          <Link
+            href="/admin/dashboard"
+            className="text-sm font-medium text-slate-300 transition hover:text-white"
+          >
+            ← Dashboard
+          </Link>
+
+        </div>
+
+      </header>
+
+      {/* =====================================================
+          CONTENT
+      ===================================================== */}
+
+      <div className="mx-auto max-w-7xl px-6 py-10">
+
+        {/* ===================================================
+            TITLE
+        =================================================== */}
+
+        <div>
+
+          <p className="font-semibold text-emerald-600">
+            Payment management
+          </p>
+
+          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            Withdrawal Requests
+          </h1>
+
+          <p className="mt-3 max-w-3xl text-slate-600">
+            Review tutor withdrawal
+            requests and send the payment
+            manually to the tutor&apos;s
+            bKash number before approving
+            the request.
+          </p>
+
+        </div>
+
+        {/* ===================================================
+            ERROR
+        =================================================== */}
+
+        {error && (
+
+          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">
+            {error}
+          </div>
+
+        )}
+
+        {/* ===================================================
+            SUCCESS
+        =================================================== */}
+
+        {success && (
+
+          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-medium text-emerald-700">
+            ✓ {success}
+          </div>
+
+        )}
+
+        {/* ===================================================
+            SUMMARY CARDS
+        =================================================== */}
+
+        <section className="mt-8 grid gap-5 md:grid-cols-3">
+
+          <SummaryCard
+            label="Pending"
+            value={
+              pendingRequests.length
+            }
+            status="pending"
+          />
+
+          <SummaryCard
+            label="Approved"
+            value={
+              approvedRequests.length
+            }
+            status="approved"
+          />
+
+          <SummaryCard
+            label="Rejected"
+            value={
+              rejectedRequests.length
+            }
+            status="rejected"
+          />
+
+        </section>
+
+        {/* ===================================================
+            FILTER BUTTONS
+        =================================================== */}
+
+        <div className="mt-7 flex flex-wrap gap-3">
+
+          <FilterButton
+            label={`Pending (${pendingRequests.length})`}
+            active={
+              filter ===
+              "pending"
+            }
+            onClick={() =>
+              setFilter(
+                "pending"
+              )
+            }
+          />
+
+          <FilterButton
+            label={`Approved (${approvedRequests.length})`}
+            active={
+              filter ===
+              "approved"
+            }
+            onClick={() =>
+              setFilter(
+                "approved"
+              )
+            }
+          />
+
+          <FilterButton
+            label={`Rejected (${rejectedRequests.length})`}
+            active={
+              filter ===
+              "rejected"
+            }
+            onClick={() =>
+              setFilter(
+                "rejected"
+              )
+            }
+          />
+
+          <FilterButton
+            label={`All (${withdrawalRequests.length})`}
+            active={
+              filter ===
+              "all"
+            }
+            onClick={() =>
+              setFilter(
+                "all"
+              )
+            }
+          />
+
+        </div>
+
+        {/* ===================================================
+            REQUEST CONTENT
+        =================================================== */}
+
+        <section className="mt-7">
+
+          {loading ? (
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-16 text-center shadow-sm">
+
+              <p className="text-slate-500">
+                Loading withdrawal
+                requests...
+              </p>
+
+            </div>
+
+          ) : displayedRequests.length ===
+            0 ? (
+
+            <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
+
+              <div className="text-4xl">
+                💳
+              </div>
+
+              <h2 className="mt-5 text-xl font-bold text-slate-900">
+
+                {filter ===
+                  "pending" &&
+                  "No pending withdrawal requests"}
+
+                {filter ===
+                  "approved" &&
+                  "No approved withdrawal requests"}
+
+                {filter ===
+                  "rejected" &&
+                  "No rejected withdrawal requests"}
+
+                {filter ===
+                  "all" &&
+                  "No withdrawal requests"}
+
+              </h2>
+
+            </div>
+
+          ) : (
+
+            <div className="space-y-5">
+
+              {displayedRequests.map(
+                (request) => (
+
+                  <WithdrawalCard
+                    key={
+                      request.id
+                    }
+                    request={
+                      request
+                    }
+                    processing={
+                      processingId ===
+                      request.id
+                    }
+                    onApprove={() =>
+                      handleApprove(
+                        request
+                      )
+                    }
+                    onReject={() =>
+                      handleReject(
+                        request
+                      )
+                    }
+                  />
+
+                )
+              )}
+
+            </div>
+
+          )}
+
+        </section>
+
+      </div>
+
+    </main>
+  );
 }
-className="w-full border rounded-lg p-3"
-/>
 
+/* =========================================================
+   SUMMARY CARD
+========================================================= */
 
+function SummaryCard({
+  label,
+  value,
+  status,
+}: {
+  label: string;
+  value: number;
+  status:
+    | "pending"
+    | "approved"
+    | "rejected";
+}) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
-<select
-value={method}
-onChange={
-e=>setMethod(e.target.value)
-}
-className="w-full border rounded-lg p-3"
->
+      <span
+        className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${
+          status ===
+          "pending"
+            ? "bg-amber-50 text-amber-700"
+            : status ===
+                "approved"
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-red-50 text-red-700"
+        }`}
+      >
+        {label}
+      </span>
 
-<option>
-bKash
-</option>
+      <p className="mt-6 text-3xl font-bold text-slate-900">
+        {value}
+      </p>
 
-<option>
-Nagad
-</option>
-
-</select>
-
-
-
-<input
-placeholder="Account Number"
-value={account}
-onChange={
-e=>setAccount(e.target.value)
-}
-className="w-full border rounded-lg p-3"
-/>
-
-
-
-
-<button
-className="w-full bg-emerald-600 text-white rounded-lg py-3 font-semibold"
->
-Submit Withdrawal
-</button>
-
-
-</form>
-
-
-</section>
-
-
-
-<section className="mt-8 bg-white rounded-2xl p-6">
-
-<h2 className="text-xl font-bold">
-Withdrawal History
-</h2>
-
-
-{
-withdrawals.map(item=>(
-
-<div
-key={item.id}
-className="border-b py-4"
->
-
-<p>
-৳ {item.amount}
-</p>
-
-<p className="text-sm text-slate-500">
-{item.paymentMethod}
-:
-{item.accountNumber}
-</p>
-
-
-<span>
-{item.status}
-</span>
-
-
-</div>
-
-))
+    </article>
+  );
 }
 
+/* =========================================================
+   FILTER BUTTON
+========================================================= */
 
-</section>
+function FilterButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={
+        onClick
+      }
+      className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${
+        active
+          ? "border-slate-900 bg-slate-900 text-white"
+          : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
 
+/* =========================================================
+   WITHDRAWAL CARD
+========================================================= */
 
+function WithdrawalCard({
+  request,
+  processing,
+  onApprove,
+  onReject,
+}: {
+  request:
+    WithdrawalRequest;
 
-</div>
+  processing:
+    boolean;
 
+  onApprove:
+    () => void;
 
-</main>
+  onReject:
+    () => void;
+}) {
+  const status =
+    normalizeStatus(
+      request.status
+    );
 
-);
+  const approved =
+    status ===
+      "approved" ||
+    status ===
+      "paid";
 
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
+      {/* TOP */}
+
+      <div className="flex flex-col justify-between gap-5 border-b border-slate-100 pb-5 sm:flex-row sm:items-start">
+
+        <div className="flex items-start gap-4">
+
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+
+            {request.tutorName
+              .charAt(0)
+              .toUpperCase() ||
+              "T"}
+
+          </div>
+
+          <div>
+
+            <div className="flex flex-wrap items-center gap-2">
+
+              <h2 className="text-lg font-bold text-slate-900">
+                {request.tutorName}
+              </h2>
+
+              <StatusBadge
+                status={
+                  status
+                }
+              />
+
+            </div>
+
+            <p className="mt-1 text-sm text-slate-500">
+              {request.tutorEmail ||
+                "No email provided"}
+            </p>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Requested{" "}
+              {formatDate(
+                request.createdAt
+              )}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div className="sm:text-right">
+
+          <p className="text-xs text-slate-500">
+            Withdrawal Amount
+          </p>
+
+          <p className="mt-1 text-3xl font-bold text-slate-900">
+            ৳
+            {formatMoney(
+              request.amount
+            )}
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* DETAILS */}
+
+      <div className="mt-5 grid gap-4 md:grid-cols-3">
+
+        <InfoBox
+          label="Payment Method"
+          value="bKash"
+        />
+
+        <InfoBox
+          label="bKash Number"
+          value={
+            request.bkashNumber ||
+            "Not provided"
+          }
+          highlight
+        />
+
+        <InfoBox
+          label="Request ID"
+          value={
+            request.id
+          }
+        />
+
+      </div>
+
+      {/* REVIEWED */}
+
+      {status !==
+        "pending" && (
+
+        <div className="mt-5 rounded-xl bg-slate-50 p-4">
+
+          <p className="text-sm text-slate-600">
+
+            <span className="font-semibold text-slate-800">
+              Status:
+            </span>{" "}
+
+            {approved
+              ? "Approved"
+              : "Rejected"}
+
+          </p>
+
+          {request.reviewedAt && (
+
+            <p className="mt-1 text-sm text-slate-600">
+
+              <span className="font-semibold text-slate-800">
+                Reviewed:
+              </span>{" "}
+
+              {formatDate(
+                request.reviewedAt
+              )}
+
+            </p>
+
+          )}
+
+          {request.adminNote && (
+
+            <p className="mt-1 text-sm text-slate-600">
+
+              <span className="font-semibold text-slate-800">
+                Note:
+              </span>{" "}
+
+              {
+                request.adminNote
+              }
+
+            </p>
+
+          )}
+
+        </div>
+
+      )}
+
+      {/* ACTIONS */}
+
+      {status ===
+        "pending" && (
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+
+          <button
+            type="button"
+            onClick={
+              onReject
+            }
+            disabled={
+              processing
+            }
+            className="rounded-xl border border-red-300 bg-white px-6 py-3 font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {processing
+              ? "Processing..."
+              : "Reject"}
+          </button>
+
+          <button
+            type="button"
+            onClick={
+              onApprove
+            }
+            disabled={
+              processing
+            }
+            className="rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            {processing
+              ? "Processing..."
+              : "Payment Sent • Approve"}
+          </button>
+
+        </div>
+
+      )}
+
+    </article>
+  );
+}
+
+/* =========================================================
+   INFO BOX
+========================================================= */
+
+function InfoBox({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-xl border p-4 ${
+        highlight
+          ? "border-emerald-200 bg-emerald-50"
+          : "border-slate-100 bg-slate-50"
+      }`}
+    >
+
+      <p className="text-xs text-slate-500">
+        {label}
+      </p>
+
+      <p
+        className={`mt-2 break-all font-semibold ${
+          highlight
+            ? "text-emerald-700"
+            : "text-slate-900"
+        }`}
+      >
+        {value}
+      </p>
+
+    </div>
+  );
+}
+
+/* =========================================================
+   STATUS BADGE
+========================================================= */
+
+function StatusBadge({
+  status,
+}: {
+  status: string;
+}) {
+  if (
+    status ===
+      "approved" ||
+    status ===
+      "paid"
+  ) {
+    return (
+      <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+        Approved
+      </span>
+    );
+  }
+
+  if (
+    status ===
+    "rejected"
+  ) {
+    return (
+      <span className="rounded-lg bg-red-50 px-3 py-1 text-xs font-bold text-red-700">
+        Rejected
+      </span>
+    );
+  }
+
+  return (
+    <span className="rounded-lg bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
+      Pending
+    </span>
+  );
+}
+
+/* =========================================================
+   RESOLVE WALLET
+========================================================= */
+
+function resolveWalletForRequest({
+  requestData,
+  userData,
+  tutorData,
+  userRef,
+  tutorRef,
+}: {
+  requestData:
+    Record<
+      string,
+      unknown
+    >;
+
+  userData:
+    | Record<
+        string,
+        unknown
+      >
+    | null;
+
+  tutorData:
+    | Record<
+        string,
+        unknown
+      >
+    | null;
+
+  userRef: ReturnType<
+    typeof doc
+  >;
+
+  tutorRef: ReturnType<
+    typeof doc
+  >;
+}) {
+  const savedCollection =
+    String(
+      requestData[
+        "walletCollection"
+      ] ?? ""
+    )
+      .trim()
+      .toLowerCase();
+
+  const savedField =
+    String(
+      requestData[
+        "walletBalanceField"
+      ] ?? ""
+    ).trim();
+
+  /* NEW REQUEST -> SAVED LOCATION */
+
+  if (
+    savedCollection ===
+      "tutors" &&
+    tutorData
+  ) {
+    return {
+      ref:
+        tutorRef,
+
+      data:
+        tutorData,
+
+      balanceField:
+        savedField ||
+        detectBalanceField(
+          tutorData
+        ),
+    };
+  }
+
+  if (
+    savedCollection ===
+      "users" &&
+    userData
+  ) {
+    return {
+      ref:
+        userRef,
+
+      data:
+        userData,
+
+      balanceField:
+        savedField ||
+        detectBalanceField(
+          userData
+        ),
+    };
+  }
+
+  /* OLD REQUEST */
+
+  const userPending =
+    toNumber(
+      userData?.[
+        "pendingWithdrawalAmount"
+      ]
+    );
+
+  const tutorPending =
+    toNumber(
+      tutorData?.[
+        "pendingWithdrawalAmount"
+      ]
+    );
+
+  if (
+    tutorData &&
+    tutorPending >
+      userPending
+  ) {
+    return {
+      ref:
+        tutorRef,
+
+      data:
+        tutorData,
+
+      balanceField:
+        detectBalanceField(
+          tutorData
+        ),
+    };
+  }
+
+  if (userData) {
+    return {
+      ref:
+        userRef,
+
+      data:
+        userData,
+
+      balanceField:
+        detectBalanceField(
+          userData
+        ),
+    };
+  }
+
+  if (tutorData) {
+    return {
+      ref:
+        tutorRef,
+
+      data:
+        tutorData,
+
+      balanceField:
+        detectBalanceField(
+          tutorData
+        ),
+    };
+  }
+
+  return {
+    ref:
+      userRef,
+
+    data:
+      null,
+
+    balanceField:
+      "availableBalance",
+  };
+}
+
+/* =========================================================
+   DETECT BALANCE FIELD
+========================================================= */
+
+function detectBalanceField(
+  data:
+    Record<
+      string,
+      unknown
+    >
+) {
+  const fields = [
+    "availableBalance",
+    "totalBalance",
+    "balance",
+    "money",
+    "walletBalance",
+  ];
+
+  for (
+    const field of
+    fields
+  ) {
+    if (
+      toNumber(
+        data[field]
+      ) > 0
+    ) {
+      return field;
+    }
+  }
+
+  for (
+    const field of
+    fields
+  ) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        data,
+        field
+      )
+    ) {
+      return field;
+    }
+  }
+
+  return "availableBalance";
+}
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function normalizeStatus(
+  status: string
+) {
+  return status
+    .trim()
+    .toLowerCase();
+}
+
+function toNumber(
+  value: unknown
+) {
+  if (
+    typeof value ===
+    "number"
+  ) {
+    return Number.isFinite(
+      value
+    )
+      ? value
+      : 0;
+  }
+
+  const parsed =
+    Number(value);
+
+  return Number.isFinite(
+    parsed
+  )
+    ? parsed
+    : 0;
+}
+
+function formatMoney(
+  amount: number
+) {
+  return new Intl.NumberFormat(
+    "en-BD",
+    {
+      maximumFractionDigits:
+        2,
+    }
+  ).format(
+    Number.isFinite(
+      amount
+    )
+      ? amount
+      : 0
+  );
+}
+
+function formatDate(
+  timestamp?: Timestamp
+) {
+  if (!timestamp) {
+    return "Recently";
+  }
+
+  return timestamp
+    .toDate()
+    .toLocaleString(
+      "en-BD",
+      {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }
+    );
 }

@@ -1,20 +1,39 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
 import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
+
 import {
   collection,
   onSnapshot,
 } from "firebase/firestore";
 
-import { auth, firestore } from "@/lib/firebase";
+import {
+  auth,
+  firestore,
+} from "@/lib/firebase";
 
-const ADMIN_EMAIL = "unitor.4dmin@gmail.com";
+/* =========================================================
+   ADMIN
+========================================================= */
+
+const ADMIN_EMAIL =
+  "unitor.4dmin@gmail.com";
+
+/* =========================================================
+   TYPES
+========================================================= */
 
 interface UserRecord {
   id: string;
@@ -35,220 +54,405 @@ interface WithdrawalRecord {
   status: string;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
+
 export default function AdminDashboardPage() {
   const router = useRouter();
 
-  const [users, setUsers] = useState<UserRecord[]>([]);
-  const [proposalCount, setProposalCount] = useState(0);
-  const [jobProposalCount, setJobProposalCount] =
-    useState(0);
-  const [chatCount, setChatCount] = useState(0);
+  /* =========================================================
+     USERS
+  ========================================================= */
 
-  const [payments, setPayments] = useState<
-    PaymentRecord[]
-  >([]);
+  const [
+    users,
+    setUsers,
+  ] = useState<UserRecord[]>([]);
 
-  const [withdrawals, setWithdrawals] = useState<
-    WithdrawalRecord[]
-  >([]);
+  /* =========================================================
+     COUNTS
+  ========================================================= */
 
-  const [checkingAdmin, setCheckingAdmin] =
-    useState(true);
+  const [
+    proposalCount,
+    setProposalCount,
+  ] = useState(0);
 
-  const [loadingData, setLoadingData] =
-    useState(true);
+  const [
+    jobProposalCount,
+    setJobProposalCount,
+  ] = useState(0);
 
-  const [error, setError] = useState("");
+  const [
+    chatCount,
+    setChatCount,
+  ] = useState(0);
+
+  /* =========================================================
+     PAYMENTS
+  ========================================================= */
+
+  const [
+    payments,
+    setPayments,
+  ] = useState<PaymentRecord[]>([]);
+
+  /* =========================================================
+     WITHDRAWALS
+  ========================================================= */
+
+  const [
+    withdrawals,
+    setWithdrawals,
+  ] =
+    useState<WithdrawalRecord[]>([]);
+
+  /* =========================================================
+     UI
+  ========================================================= */
+
+  const [
+    checkingAdmin,
+    setCheckingAdmin,
+  ] = useState(true);
+
+  const [
+    loadingData,
+    setLoadingData,
+  ] = useState(true);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  /* =========================================================
+     FIREBASE LISTENERS
+  ========================================================= */
 
   useEffect(() => {
-    const unsubscribers: Array<() => void> = [];
+    const unsubscribers:
+      Array<() => void> = [];
 
-    const unsubscribeAuth = onAuthStateChanged(
-      auth,
-      (user) => {
-        const email =
-          user?.email?.toLowerCase() ?? "";
+    const unsubscribeAuth =
+      onAuthStateChanged(
+        auth,
+        (user) => {
+          const email =
+            user?.email
+              ?.trim()
+              .toLowerCase() ??
+            "";
 
-        if (!user || email !== ADMIN_EMAIL) {
-          router.replace("/admin/login");
-          return;
-        }
+          /* -----------------------------------------
+             ADMIN SECURITY
+          ----------------------------------------- */
 
-        setCheckingAdmin(false);
+          if (
+            !user ||
+            email !== ADMIN_EMAIL
+          ) {
+            router.replace(
+              "/admin/login"
+            );
 
-        /*
-         * USERS
-         */
-        const unsubscribeUsers = onSnapshot(
-          collection(firestore, "users"),
-          (snapshot) => {
-            const userList = snapshot.docs.map(
-              (userDocument) => {
-                const data = userDocument.data();
+            return;
+          }
 
-                return {
-                  id: userDocument.id,
+          setCheckingAdmin(false);
 
-                  roles: Array.isArray(data.roles)
-                    ? data.roles
-                    : [],
+          /* =================================================
+             USERS
+          ================================================= */
 
-                  tutorStatus:
-                    data.tutorStatus ?? "",
-                } as UserRecord;
+          const unsubscribeUsers =
+            onSnapshot(
+              collection(
+                firestore,
+                "users"
+              ),
+
+              (snapshot) => {
+                const userList =
+                  snapshot.docs.map(
+                    (
+                      userDocument
+                    ) => {
+                      const data =
+                        userDocument.data();
+
+                      const roles =
+                        Array.isArray(
+                          data.roles
+                        )
+                          ? data.roles.map(
+                              (
+                                role: unknown
+                              ) =>
+                                String(
+                                  role
+                                )
+                                  .trim()
+                                  .toLowerCase()
+                            )
+                          : [];
+
+                      return {
+                        id:
+                          userDocument.id,
+
+                        roles,
+
+                        tutorStatus:
+                          String(
+                            data.tutorStatus ??
+                              ""
+                          )
+                            .trim()
+                            .toLowerCase(),
+                      } as UserRecord;
+                    }
+                  );
+
+                setUsers(
+                  userList
+                );
+
+                setLoadingData(
+                  false
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "users",
+                  snapshotError
+                );
               }
             );
 
-            setUsers(userList);
-            setLoadingData(false);
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "users",
-              snapshotError
+          /* =================================================
+             STUDENT PROPOSALS
+          ================================================= */
+
+          const unsubscribeProposals =
+            onSnapshot(
+              collection(
+                firestore,
+                "proposals"
+              ),
+
+              (snapshot) => {
+                setProposalCount(
+                  snapshot.size
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "proposals",
+                  snapshotError
+                );
+              }
             );
-          }
-        );
 
-        /*
-         * STUDENT PROPOSALS
-         */
-        const unsubscribeProposals = onSnapshot(
-          collection(firestore, "proposals"),
-          (snapshot) => {
-            setProposalCount(snapshot.size);
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "proposals",
-              snapshotError
+          /* =================================================
+             JOB PROPOSALS
+          ================================================= */
+
+          const unsubscribeJobProposals =
+            onSnapshot(
+              collection(
+                firestore,
+                "jobProposals"
+              ),
+
+              (snapshot) => {
+                setJobProposalCount(
+                  snapshot.size
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "job proposals",
+                  snapshotError
+                );
+              }
             );
-          }
-        );
 
-        /*
-         * TUTOR JOB APPLICATIONS
-         */
-        const unsubscribeJobProposals = onSnapshot(
-          collection(firestore, "jobProposals"),
-          (snapshot) => {
-            setJobProposalCount(snapshot.size);
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "job proposals",
-              snapshotError
+          /* =================================================
+             CHATS
+          ================================================= */
+
+          const unsubscribeChats =
+            onSnapshot(
+              collection(
+                firestore,
+                "chats"
+              ),
+
+              (snapshot) => {
+                setChatCount(
+                  snapshot.size
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "chats",
+                  snapshotError
+                );
+              }
             );
-          }
-        );
 
-        /*
-         * CHATS
-         */
-        const unsubscribeChats = onSnapshot(
-          collection(firestore, "chats"),
-          (snapshot) => {
-            setChatCount(snapshot.size);
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "chats",
-              snapshotError
+          /* =================================================
+             PAYMENTS
+          ================================================= */
+
+          const unsubscribePayments =
+            onSnapshot(
+              collection(
+                firestore,
+                "payments"
+              ),
+
+              (snapshot) => {
+                const paymentList =
+                  snapshot.docs.map(
+                    (
+                      paymentDocument
+                    ) => {
+                      const data =
+                        paymentDocument.data();
+
+                      return {
+                        id:
+                          paymentDocument.id,
+
+                        amount:
+                          toNumber(
+                            data.amount
+                          ),
+
+                        platformFee:
+                          toNumber(
+                            data.platformFee
+                          ),
+
+                        status:
+                          String(
+                            data.status ??
+                              "pending_admin_approval"
+                          )
+                            .trim()
+                            .toLowerCase(),
+                      } as PaymentRecord;
+                    }
+                  );
+
+                setPayments(
+                  paymentList
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "payments",
+                  snapshotError
+                );
+              }
             );
-          }
-        );
 
-        /*
-         * PAYMENTS
-         */
-        const unsubscribePayments = onSnapshot(
-          collection(firestore, "payments"),
-          (snapshot) => {
-            const paymentList =
-              snapshot.docs.map(
-                (paymentDocument) => {
-                  const data =
-                    paymentDocument.data();
+          /* =================================================
+             WITHDRAWALS
 
-                  return {
-                    id: paymentDocument.id,
+             IMPORTANT:
+             Uses withdrawRequests
+             SAME COLLECTION AS TUTOR WALLET
+             AND ADMIN WITHDRAWAL PAGE
+          ================================================= */
 
-                    amount: Number(
-                      data.amount ?? 0
-                    ),
+          const unsubscribeWithdrawals =
+            onSnapshot(
+              collection(
+                firestore,
+                "withdrawRequests"
+              ),
 
-                    platformFee: Number(
-                      data.platformFee ?? 0
-                    ),
+              (snapshot) => {
+                const withdrawalList =
+                  snapshot.docs.map(
+                    (
+                      withdrawalDocument
+                    ) => {
+                      const data =
+                        withdrawalDocument.data();
 
-                    status:
-                      data.status ??
-                      "pending_admin_approval",
-                  } as PaymentRecord;
-                }
-              );
+                      return {
+                        id:
+                          withdrawalDocument.id,
 
-            setPayments(paymentList);
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "payments",
-              snapshotError
+                        amount:
+                          toNumber(
+                            data.amount
+                          ),
+
+                        status:
+                          String(
+                            data.status ??
+                              "pending"
+                          )
+                            .trim()
+                            .toLowerCase(),
+                      } as WithdrawalRecord;
+                    }
+                  );
+
+                setWithdrawals(
+                  withdrawalList
+                );
+              },
+
+              (
+                snapshotError
+              ) => {
+                handleLoadingError(
+                  "withdrawals",
+                  snapshotError
+                );
+              }
             );
-          }
-        );
 
-        /*
-         * WITHDRAWALS
-         */
-        const unsubscribeWithdrawals = onSnapshot(
-          collection(
-            firestore,
-            "withdrawalRequests"
-          ),
-          (snapshot) => {
-            const withdrawalList =
-              snapshot.docs.map(
-                (withdrawalDocument) => {
-                  const data =
-                    withdrawalDocument.data();
+          /* =================================================
+             SAVE UNSUBSCRIBERS
+          ================================================= */
 
-                  return {
-                    id:
-                      withdrawalDocument.id,
+          unsubscribers.push(
+            unsubscribeUsers,
+            unsubscribeProposals,
+            unsubscribeJobProposals,
+            unsubscribeChats,
+            unsubscribePayments,
+            unsubscribeWithdrawals
+          );
+        }
+      );
 
-                    amount: Number(
-                      data.amount ?? 0
-                    ),
-
-                    status:
-                      data.status ?? "pending",
-                  } as WithdrawalRecord;
-                }
-              );
-
-            setWithdrawals(
-              withdrawalList
-            );
-          },
-          (snapshotError) => {
-            handleLoadingError(
-              "withdrawals",
-              snapshotError
-            );
-          }
-        );
-
-        unsubscribers.push(
-          unsubscribeUsers,
-          unsubscribeProposals,
-          unsubscribeJobProposals,
-          unsubscribeChats,
-          unsubscribePayments,
-          unsubscribeWithdrawals
-        );
-      }
-    );
+    /* =======================================================
+       ERROR HANDLER
+    ======================================================= */
 
     function handleLoadingError(
       section: string,
@@ -263,183 +467,244 @@ export default function AdminDashboardPage() {
         "Some dashboard information could not be loaded."
       );
 
-      setLoadingData(false);
+      setLoadingData(
+        false
+      );
     }
+
+    /* =======================================================
+       CLEANUP
+    ======================================================= */
 
     return () => {
       unsubscribeAuth();
 
       unsubscribers.forEach(
-        (unsubscribe) =>
-          unsubscribe()
+        (
+          unsubscribe
+        ) => {
+          unsubscribe();
+        }
       );
     };
   }, [router]);
 
-  /*
-   * STUDENT COUNT
-   */
-  const studentCount = useMemo(
-    () =>
-      users.filter(
-        (user) =>
-          user.roles.includes(
-            "student"
-          )
-      ).length,
-    [users]
-  );
+  /* =========================================================
+     STUDENTS
+  ========================================================= */
 
-  /*
-   * APPROVED TUTOR COUNT
-   *
-   * A tutor is counted here if the account
-   * currently has the tutor role.
-   */
-  const tutorCount = useMemo(
-    () =>
-      users.filter(
-        (user) =>
-          user.roles.includes(
-            "tutor"
-          )
-      ).length,
-    [users]
-  );
+  const studentCount =
+    useMemo(
+      () =>
+        users.filter(
+          (user) =>
+            user.roles.includes(
+              "student"
+            )
+        ).length,
 
-  /*
-   * PENDING TUTOR APPLICATIONS
-   *
-   * IMPORTANT:
-   * Do NOT require roles.includes("tutor").
-   *
-   * A student receives the tutor role only AFTER
-   * admin approval.
-   */
-  const pendingTutorCount = useMemo(
-    () =>
-      users.filter(
-        (user) =>
-          user.tutorStatus
-            .trim()
-            .toLowerCase() ===
-          "pending"
-      ).length,
-    [users]
-  );
+      [users]
+    );
 
-  /*
-   * PENDING PAYMENTS
-   *
-   * Supports old website statuses and the
-   * Flutter-compatible status.
-   */
-  const pendingPayments = useMemo(
-    () =>
-      payments.filter(
-        (payment) => {
-          const status =
-            payment.status
-              .trim()
-              .toLowerCase();
+  /* =========================================================
+     TUTORS
+  ========================================================= */
 
-          return (
-            status ===
-              "pending_admin_approval" ||
-            status === "pending" ||
-            status === "submitted"
-          );
-        }
-      ),
-    [payments]
-  );
+  const tutorCount =
+    useMemo(
+      () =>
+        users.filter(
+          (user) =>
+            user.roles.includes(
+              "tutor"
+            )
+        ).length,
 
-  /*
-   * SUCCESSFUL PAYMENTS
-   */
-  const successfulPayments = useMemo(
-    () =>
-      payments.filter(
-        (payment) =>
-          payment.status
-            .trim()
-            .toLowerCase() ===
-          "successful"
-      ),
-    [payments]
-  );
+      [users]
+    );
 
-  /*
-   * TOTAL SUCCESSFUL PAYMENT VALUE
-   */
-  const totalPaymentAmount = useMemo(
-    () =>
-      successfulPayments.reduce(
-        (
-          total,
-          payment
-        ) =>
-          total +
-          payment.amount,
-        0
-      ),
-    [successfulPayments]
-  );
+  /* =========================================================
+     PENDING TUTOR APPLICATIONS
+  ========================================================= */
 
-  /*
-   * PLATFORM FEES
-   */
-  const totalPlatformFees = useMemo(
-    () =>
-      successfulPayments.reduce(
-        (
-          total,
-          payment
-        ) =>
-          total +
-          payment.platformFee,
-        0
-      ),
-    [successfulPayments]
-  );
+  const pendingTutorCount =
+    useMemo(
+      () =>
+        users.filter(
+          (user) =>
+            user.tutorStatus ===
+            "pending"
+        ).length,
 
-  /*
-   * PENDING WITHDRAWALS
-   */
-  const pendingWithdrawals = useMemo(
-    () =>
-      withdrawals.filter(
-        (withdrawal) =>
-          withdrawal.status
-            .trim()
-            .toLowerCase() ===
-          "pending"
-      ),
-    [withdrawals]
-  );
+      [users]
+    );
+
+  /* =========================================================
+     PENDING PAYMENTS
+  ========================================================= */
+
+  const pendingPayments =
+    useMemo(
+      () =>
+        payments.filter(
+          (payment) => {
+            const status =
+              payment.status;
+
+            return (
+              status ===
+                "pending_admin_approval" ||
+              status ===
+                "pending" ||
+              status ===
+                "submitted"
+            );
+          }
+        ),
+
+      [payments]
+    );
+
+  /* =========================================================
+     SUCCESSFUL PAYMENTS
+  ========================================================= */
+
+  const successfulPayments =
+    useMemo(
+      () =>
+        payments.filter(
+          (payment) => {
+            const status =
+              payment.status;
+
+            return (
+              status ===
+                "successful" ||
+              status ===
+                "approved" ||
+              status ===
+                "completed"
+            );
+          }
+        ),
+
+      [payments]
+    );
+
+  /* =========================================================
+     SUCCESSFUL PAYMENT VALUE
+  ========================================================= */
+
+  const totalPaymentAmount =
+    useMemo(
+      () =>
+        successfulPayments.reduce(
+          (
+            total,
+            payment
+          ) =>
+            total +
+            payment.amount,
+
+          0
+        ),
+
+      [successfulPayments]
+    );
+
+  /* =========================================================
+     PLATFORM EARNINGS
+  ========================================================= */
+
+  const totalPlatformFees =
+    useMemo(
+      () =>
+        successfulPayments.reduce(
+          (
+            total,
+            payment
+          ) =>
+            total +
+            payment.platformFee,
+
+          0
+        ),
+
+      [successfulPayments]
+    );
+
+  /* =========================================================
+     PENDING WITHDRAWALS
+  ========================================================= */
+
+  const pendingWithdrawals =
+    useMemo(
+      () =>
+        withdrawals.filter(
+          (withdrawal) =>
+            withdrawal.status ===
+            "pending"
+        ),
+
+      [withdrawals]
+    );
+
+  /* =========================================================
+     LOGOUT
+  ========================================================= */
 
   async function handleLogout() {
-    await signOut(auth);
+    try {
+      await signOut(
+        auth
+      );
 
-    router.replace(
-      "/admin/login"
-    );
+      router.replace(
+        "/admin/login"
+      );
+    } catch (
+      logoutError
+    ) {
+      console.error(
+        "Admin logout error:",
+        logoutError
+      );
+
+      setError(
+        "Unable to log out. Please try again."
+      );
+    }
   }
 
-  if (checkingAdmin) {
+  /* =========================================================
+     CHECKING ADMIN
+  ========================================================= */
+
+  if (
+    checkingAdmin
+  ) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-100">
+
         <p className="text-slate-600">
-          Checking administrator access...
+          Checking administrator
+          access...
         </p>
+
       </main>
     );
   }
 
+  /* =========================================================
+     UI
+  ========================================================= */
+
   return (
     <main className="min-h-screen bg-slate-100">
 
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <header className="border-b border-slate-800 bg-slate-900 text-white">
 
@@ -465,7 +730,7 @@ export default function AdminDashboardPage() {
             onClick={
               handleLogout
             }
-            className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
           >
             Log out
           </button>
@@ -474,7 +739,13 @@ export default function AdminDashboardPage() {
 
       </header>
 
+      {/* =====================================================
+          MAIN
+      ===================================================== */}
+
       <div className="mx-auto max-w-7xl px-6 py-10">
+
+        {/* TITLE */}
 
         <div>
 
@@ -487,29 +758,44 @@ export default function AdminDashboardPage() {
           </h1>
 
           <p className="mt-3 text-slate-600">
-            Monitor and manage the Unitor platform.
+            Monitor and manage the
+            Unitor platform.
           </p>
 
         </div>
 
+        {/* ERROR */}
+
         {error && (
-          <p className="mt-6 rounded-lg bg-red-50 p-4 text-red-600">
+
+          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
             {error}
-          </p>
+          </div>
+
         )}
 
+        {/* ===================================================
+            LOADING
+        =================================================== */}
+
         {loadingData ? (
+
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
 
             <p className="text-slate-600">
-              Loading dashboard information...
+              Loading dashboard
+              information...
             </p>
 
           </section>
+
         ) : (
+
           <>
 
-            {/* MAIN CARDS */}
+            {/* =================================================
+                MAIN CARDS
+            ================================================= */}
 
             <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
@@ -581,6 +867,10 @@ export default function AdminDashboardPage() {
                 }
               />
 
+              {/* =============================================
+                  FIXED WITHDRAWAL CARD
+              ============================================= */}
+
               <DashboardCard
                 title="Pending withdrawals"
                 value={
@@ -607,14 +897,19 @@ export default function AdminDashboardPage() {
 
             </section>
 
-            {/* MONEY / USERS */}
+            {/* =================================================
+                MONEY / USERS
+            ================================================= */}
 
             <section className="mt-8 grid gap-6 lg:grid-cols-3">
+
+              {/* SUCCESSFUL PAYMENTS */}
 
               <article className="rounded-2xl bg-slate-900 p-7 text-white shadow-sm">
 
                 <p className="text-sm font-semibold text-slate-300">
-                  Successful payment volume
+                  Successful payment
+                  volume
                 </p>
 
                 <p className="mt-4 text-3xl font-bold text-emerald-400">
@@ -639,6 +934,8 @@ export default function AdminDashboardPage() {
 
               </article>
 
+              {/* PLATFORM EARNINGS */}
+
               <article className="rounded-2xl bg-white p-7 shadow-sm">
 
                 <p className="text-sm font-semibold text-slate-500">
@@ -652,10 +949,13 @@ export default function AdminDashboardPage() {
                 </p>
 
                 <p className="mt-2 text-sm text-slate-500">
-                  Commission collected by Unitor
+                  Commission collected
+                  by Unitor
                 </p>
 
               </article>
+
+              {/* TOTAL USERS */}
 
               <article className="rounded-2xl bg-white p-7 shadow-sm">
 
@@ -668,14 +968,17 @@ export default function AdminDashboardPage() {
                 </p>
 
                 <p className="mt-2 text-sm text-slate-500">
-                  All registered user documents
+                  All registered user
+                  documents
                 </p>
 
               </article>
 
             </section>
 
-            {/* REQUIRED ACTIONS */}
+            {/* =================================================
+                REQUIRED ACTIONS
+            ================================================= */}
 
             <section className="mt-8 rounded-2xl bg-white p-7 shadow-sm">
 
@@ -701,6 +1004,10 @@ export default function AdminDashboardPage() {
                   href="/admin/payments"
                 />
 
+                {/* ===========================================
+                    FIXED WITHDRAWAL ACTION
+                =========================================== */}
+
                 <ActionItem
                   title="Withdrawal requests"
                   count={
@@ -714,6 +1021,7 @@ export default function AdminDashboardPage() {
             </section>
 
           </>
+
         )}
 
       </div>
@@ -721,6 +1029,10 @@ export default function AdminDashboardPage() {
     </main>
   );
 }
+
+/* =========================================================
+   DASHBOARD CARD
+========================================================= */
 
 function DashboardCard({
   title,
@@ -760,9 +1072,11 @@ function DashboardCard({
         </div>
 
         {attention && (
+
           <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
             Action needed
           </span>
+
         )}
 
       </div>
@@ -782,6 +1096,10 @@ function DashboardCard({
     </Link>
   );
 }
+
+/* =========================================================
+   ACTION ITEM
+========================================================= */
 
 function ActionItem({
   title,
@@ -805,9 +1123,11 @@ function ActionItem({
         </p>
 
         <p className="mt-1 text-sm text-slate-500">
+
           {count === 0
             ? "No pending actions"
             : `${count} awaiting review`}
+
         </p>
 
       </div>
@@ -826,15 +1146,54 @@ function ActionItem({
   );
 }
 
+/* =========================================================
+   NUMBER HELPER
+========================================================= */
+
+function toNumber(
+  value: unknown
+) {
+  if (
+    typeof value ===
+    "number"
+  ) {
+    return Number.isFinite(
+      value
+    )
+      ? value
+      : 0;
+  }
+
+  const parsed =
+    Number(value);
+
+  return Number.isFinite(
+    parsed
+  )
+    ? parsed
+    : 0;
+}
+
+/* =========================================================
+   MONEY FORMAT
+========================================================= */
+
 function formatMoney(
   amount: number
 ) {
   return new Intl.NumberFormat(
     "en-BD",
     {
-      style: "currency",
-      currency: "BDT",
-      maximumFractionDigits: 2,
+      style:
+        "currency",
+
+      currency:
+        "BDT",
+
+      maximumFractionDigits:
+        2,
     }
-  ).format(amount);
+  ).format(
+    amount
+  );
 }

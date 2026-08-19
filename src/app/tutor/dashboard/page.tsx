@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -684,7 +685,7 @@ export default function TutorDashboardPage() {
             href="/tutor/dashboard"
             className="text-2xl font-bold text-unitor-primary"
           >
-            Unitor Tutor
+              <UnitorBrand label="Unitor Tutor" />
           </Link>
 
           {/* =================================================

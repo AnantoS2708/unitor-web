@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -1060,7 +1061,7 @@ return (
 href="/tutor/dashboard"
 className="text-2xl font-bold text-unitor-primary"
 >
-Unitor Wallet
+<UnitorBrand label="Unitor Wallet" />
 </Link>
 
 

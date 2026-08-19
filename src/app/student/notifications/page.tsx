@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -204,7 +205,7 @@ export default function StudentNotificationsPage() {
             href="/student/dashboard"
             className="text-2xl font-bold text-unitor-primary"
           >
-            Unitor
+              <UnitorBrand label="Unitor" />
           </Link>
 
           <Link

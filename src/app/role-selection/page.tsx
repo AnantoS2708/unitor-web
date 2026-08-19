@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { UnitorBrand } from "@/components/UnitorBrand";
 import { auth, firestore } from "@/lib/firebase";
 
 interface UserProfile {
@@ -109,7 +110,7 @@ export default function RoleSelectionPage() {
                     )}
 
                     <h1 className="text-3xl font-bold text-unitor-primary">
-                        Unitor
+                        <UnitorBrand label="Unitor" />
                     </h1>
 
                     <h2 className="mt-6 text-3xl font-bold text-unitor-black">

@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -460,7 +461,7 @@ export default function TutorCourseRequestPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <div>
             <p className="text-xl font-bold text-unitor-primary">
-              Unitor
+              <UnitorBrand label="Unitor" />
             </p>
 
             <p className="text-sm text-unitor-gray-dark">

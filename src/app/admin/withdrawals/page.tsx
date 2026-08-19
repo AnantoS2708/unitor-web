@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -973,7 +974,7 @@ export default function AdminWithdrawalsPage() {
             href="/admin/dashboard"
             className="text-2xl font-bold text-unitor-primary"
           >
-            Unitor Admin
+              <UnitorBrand label="Unitor Admin" />
           </Link>
 
           {/* ONLY DASHBOARD BUTTON */}

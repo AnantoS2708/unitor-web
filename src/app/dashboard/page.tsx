@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { UnitorBrand } from "@/components/UnitorBrand";
 import { auth, firestore } from "@/lib/firebase";
 
 interface UserProfile {
@@ -102,7 +103,7 @@ export default function DashboardPage() {
             <header className="border-b border-unitor-gray-light bg-white">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
                     <h1 className="text-2xl font-bold text-unitor-primary">
-                        Unitor
+                        <UnitorBrand label="Unitor" />
                     </h1>
 
                     <button

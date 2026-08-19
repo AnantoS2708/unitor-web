@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -1009,7 +1010,7 @@ export default function TutorCardPage() {
             href="/tutor/dashboard"
             className="text-2xl font-bold text-unitor-primary"
           >
-            Unitor Tutor
+              <UnitorBrand label="Unitor Tutor" />
           </Link>
 
           {/* DESKTOP NAVIGATION */}
@@ -1289,7 +1290,7 @@ export default function TutorCardPage() {
               <div className="text-right">
 
                 <p className="text-xl font-bold">
-                  Unitor
+                  <UnitorBrand label="Unitor" />
                 </p>
 
                 <p className="text-sm text-unitor-blue-light">

@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -105,7 +106,7 @@ export default function AdminLoginPage() {
             href="/"
             className="text-3xl font-bold text-unitor-primary"
           >
-            Unitor
+              <UnitorBrand label="Unitor" />
           </Link>
 
           <div className="mx-auto mt-6 flex h-16 w-16 items-center justify-center rounded-full bg-unitor-black text-3xl text-white">

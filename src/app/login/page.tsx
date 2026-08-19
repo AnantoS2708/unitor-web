@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 
 import { auth, firestore } from "@/lib/firebase";
@@ -88,7 +89,7 @@ export default function LoginPage() {
                     href="/"
                     className="text-2xl font-bold text-unitor-primary"
                 >
-                    Unitor
+                    <UnitorBrand label="Unitor" />
                 </Link>
 
                 <h1 className="mt-8 text-3xl font-bold text-unitor-black">

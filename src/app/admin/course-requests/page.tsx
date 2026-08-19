@@ -13,6 +13,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { auth, firestore } from "@/lib/firebase";
+import { UnitorBrand } from "@/components/UnitorBrand";
 
 const ADMIN_EMAIL = "unitor.4dmin@gmail.com";
 
@@ -235,7 +236,9 @@ export default function AdminCourseRequestsPage() {
       <header className="bg-unitor-black text-white shadow-lg">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-unitor-primary">Unitor Admin</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-unitor-primary">
+              <UnitorBrand label="Unitor Admin" size="small" />
+            </p>
             <h1 className="mt-1 text-xl font-bold">Course Requests</h1>
           </div>
           <Link href="/admin/dashboard" className="text-sm font-medium text-unitor-gray-light transition hover:text-white">

@@ -1,3 +1,4 @@
+import { UnitorBrand } from "@/components/UnitorBrand";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -10,7 +11,7 @@ export default function HomePage() {
                         href="/"
                         className="text-2xl font-bold text-unitor-primary"
                     >
-                        Unitor
+                        <UnitorBrand label="Unitor" />
                     </Link>
 
                     <nav className="hidden items-center gap-6 md:flex">
@@ -58,11 +59,7 @@ export default function HomePage() {
             <section className="px-6 py-20 sm:py-24">
                 <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
                     <div>
-                        <span className="inline-flex rounded-full bg-unitor-blue-light px-3 py-1 text-sm font-medium text-unitor-primary-hover">
-                            Peer-to-peer academic support
-                        </span>
-
-                        <h1 className="mt-6 max-w-2xl text-4xl font-bold leading-tight text-unitor-black sm:text-5xl lg:text-6xl">
+                        <h1 className="max-w-2xl text-4xl font-bold leading-tight text-unitor-black sm:text-5xl lg:text-6xl">
                             Get academic help from students who understand your
                             course.
                         </h1>
@@ -357,7 +354,7 @@ export default function HomePage() {
                             href="/"
                             className="text-xl font-bold text-unitor-primary"
                         >
-                            Unitor
+                            <UnitorBrand label="Unitor" />
                         </Link>
 
                         <p className="mt-2 text-sm text-unitor-gray-dark">

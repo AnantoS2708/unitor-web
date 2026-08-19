@@ -444,9 +444,9 @@ export default function TutorCourseRequestPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-slate-50">
+      <main className="min-h-screen bg-unitor-background">
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-unitor-gray-dark">
             Loading course requests...
           </p>
         </div>
@@ -455,22 +455,22 @@ export default function TutorCourseRequestPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-emerald-100 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-blue-light bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <div>
-            <p className="text-xl font-black text-emerald-600">
+            <p className="text-xl font-bold text-unitor-primary">
               Unitor
             </p>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-unitor-gray-dark">
               Tutor course requests
             </p>
           </div>
 
           <Link
             href="/tutor/dashboard"
-            className="rounded-xl border border-emerald-200 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
+            className="rounded-xl border border-unitor-blue-light bg-white px-4 py-2 text-sm font-medium text-unitor-primary-hover transition hover:bg-unitor-background"
           >
             ← Dashboard
           </Link>
@@ -479,16 +479,16 @@ export default function TutorCourseRequestPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <section className="rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
-            <p className="text-sm font-bold uppercase tracking-wider text-emerald-600">
+          <section className="rounded-3xl border border-unitor-blue-light bg-white p-6 shadow-sm">
+            <p className="text-sm font-bold uppercase tracking-wider text-unitor-primary">
               Request another course
             </p>
 
-            <h1 className="mt-2 text-2xl font-black text-slate-900">
+            <h1 className="mt-2 text-2xl font-bold text-unitor-black">
               Add a teaching course
             </h1>
 
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-unitor-gray-dark">
               The course will only be added
               after an admin approves your
               request.
@@ -501,7 +501,7 @@ export default function TutorCourseRequestPage() {
             )}
 
             {success && (
-              <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              <div className="mt-5 rounded-xl border border-unitor-blue-light bg-unitor-background px-4 py-3 text-sm text-unitor-primary-hover">
                 {success}
               </div>
             )}
@@ -513,7 +513,7 @@ export default function TutorCourseRequestPage() {
               <div>
                 <label
                   htmlFor="courseCode"
-                  className="mb-2 block text-sm font-bold text-slate-700"
+                  className="mb-2 block text-sm font-bold text-unitor-gray-dark"
                 >
                   Course code
                 </label>
@@ -529,17 +529,17 @@ export default function TutorCourseRequestPage() {
                   }
                   placeholder="CSE215"
                   maxLength={9}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                  className="w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none transition placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-4 focus:ring-unitor-blue-light"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="reason"
-                  className="mb-2 block text-sm font-bold text-slate-700"
+                  className="mb-2 block text-sm font-bold text-unitor-gray-dark"
                 >
                   Reason{" "}
-                  <span className="font-normal text-slate-400">
+                  <span className="font-normal text-unitor-gray-dark/70">
                     (optional)
                   </span>
                 </label>
@@ -555,14 +555,14 @@ export default function TutorCourseRequestPage() {
                   rows={4}
                   maxLength={500}
                   placeholder="Tell the admin why you want to teach this course."
-                  className="w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100"
+                  className="w-full resize-none rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none transition placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-4 focus:ring-unitor-blue-light"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full rounded-xl bg-emerald-600 px-5 py-3 font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-xl bg-unitor-primary px-5 py-3 font-bold text-white transition hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting
                   ? "Submitting..."
@@ -570,8 +570,8 @@ export default function TutorCourseRequestPage() {
               </button>
             </form>
 
-            <div className="mt-8 rounded-2xl bg-emerald-50 p-5">
-              <p className="text-sm font-bold text-emerald-800">
+            <div className="mt-8 rounded-2xl bg-unitor-background p-5">
+              <p className="text-sm font-bold text-unitor-black">
                 Approved courses
               </p>
 
@@ -583,7 +583,7 @@ export default function TutorCourseRequestPage() {
                     (course) => (
                       <span
                         key={course}
-                        className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-bold text-emerald-700"
+                        className="rounded-full border border-unitor-blue-light bg-white px-3 py-1.5 text-xs font-bold text-unitor-primary-hover"
                       >
                         {course}
                       </span>
@@ -591,31 +591,31 @@ export default function TutorCourseRequestPage() {
                   )}
                 </div>
               ) : (
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-unitor-gray-dark">
                   No approved courses yet.
                 </p>
               )}
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-3xl border border-unitor-gray-light bg-white p-6 shadow-sm">
             <div>
-              <p className="text-sm font-bold uppercase tracking-wider text-emerald-600">
+              <p className="text-sm font-bold uppercase tracking-wider text-unitor-primary">
                 Request history
               </p>
 
-              <h2 className="mt-2 text-2xl font-black text-slate-900">
+              <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                 Your requests
               </h2>
             </div>
 
             {requests.length === 0 ? (
-              <div className="mt-6 rounded-2xl border border-dashed border-slate-200 px-5 py-12 text-center">
-                <p className="font-semibold text-slate-700">
+              <div className="mt-6 rounded-2xl border border-dashed border-unitor-gray-light px-5 py-12 text-center">
+                <p className="font-medium text-unitor-gray-dark">
                   No course requests yet
                 </p>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-unitor-gray-dark">
                   Your submitted requests will
                   appear here.
                 </p>
@@ -625,15 +625,15 @@ export default function TutorCourseRequestPage() {
                 {requests.map((request) => (
                   <article
                     key={request.id}
-                    className="rounded-2xl border border-slate-200 p-5"
+                    className="rounded-2xl border border-unitor-gray-light p-5"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
-                        <p className="text-lg font-black text-slate-900">
+                        <p className="text-lg font-bold text-unitor-black">
                           {request.courseCode}
                         </p>
 
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-unitor-gray-dark">
                           {formatDate(
                             request.createdAt
                           )}
@@ -644,7 +644,7 @@ export default function TutorCourseRequestPage() {
                         className={
                           request.status ===
                           "approved"
-                            ? "rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700"
+                            ? "rounded-full bg-unitor-blue-light px-3 py-1 text-xs font-bold text-unitor-primary-hover"
                             : request.status ===
                                 "rejected"
                               ? "rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700"
@@ -656,7 +656,7 @@ export default function TutorCourseRequestPage() {
                     </div>
 
                     {request.reason && (
-                      <p className="mt-4 text-sm leading-6 text-slate-600">
+                      <p className="mt-4 text-sm leading-6 text-unitor-gray-dark">
                         {request.reason}
                       </p>
                     )}

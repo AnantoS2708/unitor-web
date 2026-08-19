@@ -217,8 +217,8 @@ export default function CreateProposalPage() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-slate-600">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+                <p className="text-unitor-gray-dark">
                     Preparing proposal form...
                 </p>
             </main>
@@ -226,19 +226,19 @@ export default function CreateProposalPage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50">
-            <header className="border-b border-slate-200 bg-white">
+        <main className="min-h-screen bg-unitor-background">
+            <header className="border-b border-unitor-gray-light bg-white">
                 <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
                     <Link
                         href="/student/dashboard"
-                        className="text-2xl font-bold text-emerald-600"
+                        className="text-2xl font-bold text-unitor-primary"
                     >
                         Unitor
                     </Link>
 
                     <Link
                         href="/student/dashboard"
-                        className="font-medium text-slate-600 hover:text-emerald-600"
+                        className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
                     >
                         ← Back to dashboard
                     </Link>
@@ -247,15 +247,15 @@ export default function CreateProposalPage() {
 
             <div className="mx-auto max-w-4xl px-6 py-10">
                 <div>
-                    <p className="font-semibold text-emerald-600">
+                    <p className="font-medium text-unitor-primary">
                         Student request
                     </p>
 
-                    <h1 className="mt-2 text-3xl font-bold text-slate-900">
+                    <h1 className="mt-2 text-3xl font-bold text-unitor-black">
                         Create a Proposal
                     </h1>
 
-                    <p className="mt-3 text-slate-600">
+                    <p className="mt-3 text-unitor-gray-dark">
                         Describe the academic support you need so suitable tutors
                         can apply.
                     </p>
@@ -380,7 +380,7 @@ export default function CreateProposalPage() {
                     <div className="mt-6">
                         <label
                             htmlFor="description"
-                            className="mb-2 block font-medium text-slate-700"
+                            className="mb-2 block font-medium text-unitor-gray-dark"
                         >
                             Description
                         </label>
@@ -397,14 +397,14 @@ export default function CreateProposalPage() {
                             rows={6}
                             required
                             placeholder="Explain the topics and type of academic guidance you need."
-                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                         />
                     </div>
 
                     <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                         <Link
                             href="/student/dashboard"
-                            className="rounded-lg border border-slate-300 px-6 py-3 text-center font-semibold text-slate-700 hover:bg-slate-50"
+                            className="rounded-lg border border-unitor-gray-light px-6 py-3 text-center font-medium text-unitor-gray-dark hover:bg-unitor-background"
                         >
                             Cancel
                         </Link>
@@ -412,7 +412,7 @@ export default function CreateProposalPage() {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {submitting
                                 ? "Creating proposal..."
@@ -444,7 +444,7 @@ function FormInput({
 }) {
     return (
         <div>
-            <label className="mb-2 block font-medium text-slate-700">
+            <label className="mb-2 block font-medium text-unitor-gray-dark">
                 {label}
             </label>
 
@@ -455,7 +455,7 @@ function FormInput({
                 required={required}
                 placeholder={placeholder}
                 onChange={(event) => onChange(event.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
             />
         </div>
     );

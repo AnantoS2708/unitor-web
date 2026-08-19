@@ -588,24 +588,24 @@ export default function TutorApplicationsPage() {
     ]);
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* HEADER */}
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Tutor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -618,15 +618,15 @@ export default function TutorApplicationsPage() {
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Tutor activity
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             My Applications
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Track tutoring proposals you have applied to and
             see whether the student selected you.
           </p>
@@ -738,7 +738,7 @@ export default function TutorApplicationsPage() {
         {loading && (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
 
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading your applications...
             </p>
 
@@ -762,18 +762,18 @@ export default function TutorApplicationsPage() {
                 📄
               </div>
 
-              <h2 className="mt-5 text-2xl font-bold text-slate-900">
+              <h2 className="mt-5 text-2xl font-bold text-unitor-black">
                 No applications found
               </h2>
 
-              <p className="mt-3 text-slate-600">
+              <p className="mt-3 text-unitor-gray-dark">
                 Applications matching this filter will
                 appear here.
               </p>
 
               <Link
                 href="/tutor/proposals"
-                className="mt-7 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                className="mt-7 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
               >
                 Browse proposals
               </Link>
@@ -821,22 +821,22 @@ function ApplicationCard({
     TutorApplication;
 }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
       <div className="flex flex-wrap items-start justify-between gap-4">
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             {application.courseCode ||
               "Course"}
           </p>
 
-          <h2 className="mt-2 text-xl font-bold text-slate-900">
+          <h2 className="mt-2 text-xl font-bold text-unitor-black">
             {application.proposalTitle}
           </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-unitor-gray-dark">
             Student:{" "}
             {application.studentName}
           </p>
@@ -851,13 +851,13 @@ function ApplicationCard({
 
       </div>
 
-      <div className="mt-6 rounded-xl bg-slate-50 p-5">
+      <div className="mt-6 rounded-xl bg-unitor-background p-5">
 
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-unitor-gray-dark">
           Your application message
         </p>
 
-        <p className="mt-2 line-clamp-4 leading-7 text-slate-700">
+        <p className="mt-2 line-clamp-4 leading-7 text-unitor-gray-dark">
           {application.description ||
             "No application message."}
         </p>
@@ -903,11 +903,11 @@ function ApplicationCard({
 
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-5 border-t border-slate-100 pt-5">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-5 border-t border-unitor-gray-soft pt-5">
 
         <div>
 
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-unitor-gray-dark">
             Payment status
           </p>
 
@@ -921,7 +921,7 @@ function ApplicationCard({
 
         {application.appliedAt && (
 
-          <p className="text-right text-xs text-slate-400">
+          <p className="text-right text-xs text-unitor-gray-dark/70">
             Applied{" "}
             {application.appliedAt
               .toDate()
@@ -943,7 +943,7 @@ function ApplicationCard({
 
         <Link
           href={`/tutor/proposals/${application.proposalId}`}
-          className="mt-6 block rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
+          className="mt-6 block rounded-lg border border-unitor-primary px-5 py-3 text-center font-medium text-unitor-primary hover:bg-unitor-background"
         >
           View Proposal
         </Link>
@@ -962,13 +962,13 @@ function SummaryCard({
   value: number;
 }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-5 shadow-sm">
 
-      <p className="text-sm font-medium text-slate-500">
+      <p className="text-sm font-medium text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-3 text-3xl font-bold text-slate-900">
+      <p className="mt-3 text-3xl font-bold text-unitor-black">
         {value}
       </p>
 
@@ -991,10 +991,10 @@ function FilterButton({
       onClick={
         onClick
       }
-      className={`rounded-full px-5 py-2 font-semibold transition ${
+      className={`rounded-full px-5 py-2 font-medium transition ${
         active
-          ? "bg-emerald-600 text-white"
-          : "border border-slate-300 bg-white text-slate-600 hover:border-emerald-600 hover:text-emerald-600"
+          ? "bg-unitor-primary text-white"
+          : "border border-unitor-gray-light bg-white text-unitor-gray-dark hover:border-unitor-primary hover:text-unitor-primary"
       }`}
     >
       {label}
@@ -1012,11 +1012,11 @@ function InformationItem({
   return (
     <div>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value ||
           "Not provided"}
       </p>
@@ -1050,7 +1050,7 @@ function ApplicationStatus({
       "approved"
   ) {
     classes =
-      "bg-emerald-50 text-emerald-700";
+      "bg-unitor-background text-unitor-primary-hover";
 
     label =
       normalizedStatus ===
@@ -1070,12 +1070,12 @@ function ApplicationStatus({
       "completed"
   ) {
     classes =
-      "bg-blue-50 text-blue-700";
+      "bg-unitor-background text-unitor-primary-hover";
   }
 
   return (
     <span
-      className={`rounded-full px-3 py-1 text-sm font-semibold capitalize ${classes}`}
+      className={`rounded-full px-3 py-1 text-sm font-medium capitalize ${classes}`}
     >
       {label}
     </span>
@@ -1105,7 +1105,7 @@ function PaymentStatus({
       "approved"
   ) {
     classes =
-      "bg-emerald-50 text-emerald-700";
+      "bg-unitor-background text-unitor-primary-hover";
 
     label = "Paid";
   } else if (
@@ -1131,7 +1131,7 @@ function PaymentStatus({
 
   return (
     <span
-      className={`mt-1 inline-block rounded-full px-3 py-1 text-sm font-semibold capitalize ${classes}`}
+      className={`mt-1 inline-block rounded-full px-3 py-1 text-sm font-medium capitalize ${classes}`}
     >
       {label.replaceAll(
         "_",

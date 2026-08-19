@@ -299,7 +299,7 @@ export default function AdminChatDetailsPage() {
             return {
                 label: "Unknown",
                 className:
-                    "bg-slate-100 text-slate-600",
+                    "bg-unitor-gray-soft text-unitor-gray-dark",
             };
         }
 
@@ -315,14 +315,14 @@ export default function AdminChatDetailsPage() {
             return {
                 label: "Active",
                 className:
-                    "bg-emerald-100 text-emerald-700",
+                    "bg-unitor-blue-light text-unitor-primary-hover",
             };
         }
 
         return {
             label: "Inactive",
             className:
-                "bg-slate-200 text-slate-700",
+                "bg-unitor-gray-light text-unitor-gray-dark",
         };
     }
 
@@ -382,10 +382,10 @@ export default function AdminChatDetailsPage() {
         chatLoading
     ) {
         return (
-            <main className="min-h-screen bg-slate-50 px-6 py-8">
+            <main className="min-h-screen bg-unitor-background px-6 py-8">
                 <div className="mx-auto max-w-5xl">
                     <div className="rounded-2xl bg-white p-8 shadow-sm">
-                        <p className="text-slate-600">
+                        <p className="text-unitor-gray-dark">
                             Loading chat...
                         </p>
                     </div>
@@ -401,23 +401,23 @@ export default function AdminChatDetailsPage() {
      */
     if (!chat) {
         return (
-            <main className="min-h-screen bg-slate-50 px-6 py-8">
+            <main className="min-h-screen bg-unitor-background px-6 py-8">
                 <div className="mx-auto max-w-5xl">
 
                     <Link
                         href="/admin/chats"
-                        className="text-sm font-semibold text-emerald-600 hover:underline"
+                        className="text-sm font-medium text-unitor-primary hover:underline"
                     >
                         ← Back to chats
                     </Link>
 
                     <div className="mt-6 rounded-2xl bg-white p-8 shadow-sm">
 
-                        <h1 className="text-xl font-bold text-slate-900">
+                        <h1 className="text-xl font-bold text-unitor-black">
                             Chat not found
                         </h1>
 
-                        <p className="mt-2 text-slate-600">
+                        <p className="mt-2 text-unitor-gray-dark">
                             This chat does not exist or
                             cannot be accessed.
                         </p>
@@ -433,7 +433,7 @@ export default function AdminChatDetailsPage() {
         getChatStatus();
 
     return (
-        <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6">
+        <main className="min-h-screen bg-unitor-background px-4 py-8 sm:px-6">
 
             <div className="mx-auto max-w-5xl">
 
@@ -443,7 +443,7 @@ export default function AdminChatDetailsPage() {
 
                     <Link
                         href="/admin/chats"
-                        className="text-sm font-semibold text-emerald-600 hover:underline"
+                        className="text-sm font-medium text-unitor-primary hover:underline"
                     >
                         ← Back to chats
                     </Link>
@@ -456,15 +456,15 @@ export default function AdminChatDetailsPage() {
 
                     <div>
 
-                        <p className="text-sm font-semibold text-emerald-600">
+                        <p className="text-sm font-medium text-unitor-primary">
                             Admin
                         </p>
 
-                        <h1 className="mt-1 text-3xl font-bold text-slate-900">
+                        <h1 className="mt-1 text-3xl font-bold text-unitor-black">
                             Chat details
                         </h1>
 
-                        <p className="mt-2 text-slate-600">
+                        <p className="mt-2 text-unitor-gray-dark">
                             Monitor the conversation
                             between the student and tutor.
                         </p>
@@ -472,7 +472,7 @@ export default function AdminChatDetailsPage() {
                     </div>
 
                     <span
-                        className={`inline-flex w-fit rounded-full px-4 py-2 text-sm font-semibold ${status.className}`}
+                        className={`inline-flex w-fit rounded-full px-4 py-2 text-sm font-medium ${status.className}`}
                     >
                         {status.label}
                     </span>
@@ -495,15 +495,15 @@ export default function AdminChatDetailsPage() {
 
                     <div className="rounded-2xl bg-white p-6 shadow-sm">
 
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                             Student
                         </p>
 
-                        <h2 className="mt-2 text-xl font-bold text-slate-900">
+                        <h2 className="mt-2 text-xl font-bold text-unitor-black">
                             {chat.studentName}
                         </h2>
 
-                        <p className="mt-1 break-all text-sm text-slate-500">
+                        <p className="mt-1 break-all text-sm text-unitor-gray-dark">
                             {chat.studentId}
                         </p>
 
@@ -513,15 +513,15 @@ export default function AdminChatDetailsPage() {
 
                     <div className="rounded-2xl bg-white p-6 shadow-sm">
 
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                             Tutor
                         </p>
 
-                        <h2 className="mt-2 text-xl font-bold text-slate-900">
+                        <h2 className="mt-2 text-xl font-bold text-unitor-black">
                             {chat.tutorName}
                         </h2>
 
-                        <p className="mt-1 break-all text-sm text-slate-500">
+                        <p className="mt-1 break-all text-sm text-unitor-gray-dark">
                             {chat.tutorId}
                         </p>
 
@@ -533,7 +533,7 @@ export default function AdminChatDetailsPage() {
 
                 <div className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
 
-                    <h2 className="text-lg font-bold text-slate-900">
+                    <h2 className="text-lg font-bold text-unitor-black">
                         Session information
                     </h2>
 
@@ -541,11 +541,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Chat ID
                             </p>
 
-                            <p className="mt-1 break-all text-sm font-medium text-slate-700">
+                            <p className="mt-1 break-all text-sm font-medium text-unitor-gray-dark">
                                 {chat.id}
                             </p>
 
@@ -553,11 +553,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Proposal ID
                             </p>
 
-                            <p className="mt-1 break-all text-sm font-medium text-slate-700">
+                            <p className="mt-1 break-all text-sm font-medium text-unitor-gray-dark">
                                 {chat.proposalId || "—"}
                             </p>
 
@@ -565,11 +565,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Job proposal ID
                             </p>
 
-                            <p className="mt-1 break-all text-sm font-medium text-slate-700">
+                            <p className="mt-1 break-all text-sm font-medium text-unitor-gray-dark">
                                 {chat.jobProposalId || "—"}
                             </p>
 
@@ -577,11 +577,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Payment ID
                             </p>
 
-                            <p className="mt-1 break-all text-sm font-medium text-slate-700">
+                            <p className="mt-1 break-all text-sm font-medium text-unitor-gray-dark">
                                 {chat.paymentId || "—"}
                             </p>
 
@@ -589,11 +589,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Created
                             </p>
 
-                            <p className="mt-1 text-sm font-medium text-slate-700">
+                            <p className="mt-1 text-sm font-medium text-unitor-gray-dark">
                                 {formatDate(
                                     chat.createdAt
                                 )}
@@ -603,11 +603,11 @@ export default function AdminChatDetailsPage() {
 
                         <div>
 
-                            <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                            <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark/70">
                                 Expires
                             </p>
 
-                            <p className="mt-1 text-sm font-medium text-slate-700">
+                            <p className="mt-1 text-sm font-medium text-unitor-gray-dark">
                                 {formatDate(
                                     chat.expiresAt
                                 )}
@@ -625,17 +625,17 @@ export default function AdminChatDetailsPage() {
 
                     {/* Header */}
 
-                    <div className="border-b border-slate-200 px-6 py-5">
+                    <div className="border-b border-unitor-gray-light px-6 py-5">
 
                         <div className="flex items-center justify-between">
 
                             <div>
 
-                                <h2 className="text-lg font-bold text-slate-900">
+                                <h2 className="text-lg font-bold text-unitor-black">
                                     Messages
                                 </h2>
 
-                                <p className="mt-1 text-sm text-slate-500">
+                                <p className="mt-1 text-sm text-unitor-gray-dark">
                                     {messages.length} message
                                     {messages.length !== 1
                                         ? "s"
@@ -644,7 +644,7 @@ export default function AdminChatDetailsPage() {
 
                             </div>
 
-                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                            <span className="rounded-full bg-unitor-gray-soft px-3 py-1 text-xs font-medium text-unitor-gray-dark">
                                 Read only
                             </span>
 
@@ -658,7 +658,7 @@ export default function AdminChatDetailsPage() {
 
                         {messagesLoading ? (
 
-                            <p className="py-10 text-center text-sm text-slate-500">
+                            <p className="py-10 text-center text-sm text-unitor-gray-dark">
                                 Loading messages...
                             </p>
 
@@ -666,11 +666,11 @@ export default function AdminChatDetailsPage() {
 
                             <div className="py-12 text-center">
 
-                                <p className="font-semibold text-slate-800">
+                                <p className="font-medium text-unitor-black">
                                     No messages yet
                                 </p>
 
-                                <p className="mt-2 text-sm text-slate-500">
+                                <p className="mt-2 text-sm text-unitor-gray-dark">
                                     The student and tutor
                                     have not sent any
                                     messages in this chat.
@@ -709,24 +709,24 @@ export default function AdminChatDetailsPage() {
                                                 <div
                                                     className={`max-w-[85%] rounded-2xl px-4 py-3 sm:max-w-[70%] ${
                                                         isStudent
-                                                            ? "bg-slate-100 text-slate-900"
-                                                            : "bg-emerald-50 text-slate-900"
+                                                            ? "bg-unitor-gray-soft text-unitor-black"
+                                                            : "bg-unitor-background text-unitor-black"
                                                     }`}
                                                 >
 
                                                     <div className="mb-2 flex flex-wrap items-center gap-2">
 
-                                                        <p className="text-xs font-bold text-slate-700">
+                                                        <p className="text-xs font-bold text-unitor-gray-dark">
                                                             {getSenderName(
                                                                 message.senderId
                                                             )}
                                                         </p>
 
                                                         <span
-                                                            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                                                            className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                                                                 isStudent
-                                                                    ? "bg-blue-100 text-blue-700"
-                                                                    : "bg-emerald-100 text-emerald-700"
+                                                                    ? "bg-unitor-blue-light text-unitor-primary-hover"
+                                                                    : "bg-unitor-blue-light text-unitor-primary-hover"
                                                             }`}
                                                         >
                                                             {
@@ -740,7 +740,7 @@ export default function AdminChatDetailsPage() {
                                                         {message.text}
                                                     </p>
 
-                                                    <p className="mt-2 text-[11px] text-slate-400">
+                                                    <p className="mt-2 text-[11px] text-unitor-gray-dark/70">
                                                         {formatDate(
                                                             message.sentAt
                                                         )}
@@ -765,7 +765,7 @@ export default function AdminChatDetailsPage() {
 
                 <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
 
-                    <p className="text-sm font-semibold text-amber-800">
+                    <p className="text-sm font-medium text-amber-800">
                         Admin monitoring
                     </p>
 

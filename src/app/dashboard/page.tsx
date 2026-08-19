@@ -70,25 +70,25 @@ export default function DashboardPage() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-slate-600">Loading your profile...</p>
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+                <p className="text-unitor-gray-dark">Loading your profile...</p>
             </main>
         );
     }
 
     if (error) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
                 <div className="w-full max-w-md rounded-xl bg-white p-8 text-center shadow">
                     <h1 className="text-xl font-bold text-red-600">
                         Profile error
                     </h1>
 
-                    <p className="mt-3 text-slate-600">{error}</p>
+                    <p className="mt-3 text-unitor-gray-dark">{error}</p>
 
                     <button
                         onClick={handleLogout}
-                        className="mt-6 rounded-lg bg-slate-900 px-5 py-2.5 font-medium text-white"
+                        className="mt-6 rounded-lg bg-unitor-black px-5 py-2.5 font-medium text-white"
                     >
                         Return to login
                     </button>
@@ -98,10 +98,10 @@ export default function DashboardPage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50">
-            <header className="border-b border-slate-200 bg-white">
+        <main className="min-h-screen bg-unitor-background">
+            <header className="border-b border-unitor-gray-light bg-white">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-                    <h1 className="text-2xl font-bold text-emerald-600">
+                    <h1 className="text-2xl font-bold text-unitor-primary">
                         Unitor
                     </h1>
 
@@ -124,21 +124,21 @@ export default function DashboardPage() {
                                 className="h-24 w-24 rounded-full object-cover"
                             />
                         ) : (
-                            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-600">
+                            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-unitor-blue-light text-3xl font-bold text-unitor-primary">
                                 {profile?.fullName?.charAt(0).toUpperCase() || "U"}
                             </div>
                         )}
 
                         <div>
-                            <p className="text-sm font-medium text-emerald-600">
+                            <p className="text-sm font-medium text-unitor-primary">
                                 Login successful
                             </p>
 
-                            <h2 className="mt-1 text-3xl font-bold text-slate-900">
+                            <h2 className="mt-1 text-3xl font-bold text-unitor-black">
                                 Welcome, {profile?.fullName}
                             </h2>
 
-                            <p className="mt-2 text-slate-600">
+                            <p className="mt-2 text-unitor-gray-dark">
                                 {profile?.universityEmail || firebaseUser?.email}
                             </p>
 
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                                 {profile?.roles?.map((role) => (
                                     <span
                                         key={role}
-                                        className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium capitalize text-emerald-700"
+                                        className="rounded-full bg-unitor-background px-3 py-1 text-sm font-medium capitalize text-unitor-primary-hover"
                                     >
                                         {role}
                                     </span>
@@ -158,7 +158,7 @@ export default function DashboardPage() {
 
                 <div className="mt-8 grid gap-6 md:grid-cols-2">
                     <section className="rounded-2xl bg-white p-6 shadow-sm">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-xl font-medium text-unitor-black">
                             Academic information
                         </h3>
 
@@ -183,7 +183,7 @@ export default function DashboardPage() {
                     </section>
 
                     <section className="rounded-2xl bg-white p-6 shadow-sm">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-xl font-medium text-unitor-black">
                             Account status
                         </h3>
 
@@ -218,9 +218,9 @@ function ProfileField({
     value?: string;
 }) {
     return (
-        <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
-            <dt className="text-slate-500">{label}</dt>
-            <dd className="text-right font-medium capitalize text-slate-900">
+        <div className="flex items-center justify-between gap-4 border-b border-unitor-gray-soft pb-3">
+            <dt className="text-unitor-gray-dark">{label}</dt>
+            <dd className="text-right font-medium capitalize text-unitor-black">
                 {value || "Not provided"}
             </dd>
         </div>

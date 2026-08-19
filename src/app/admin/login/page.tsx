@@ -89,8 +89,8 @@ export default function AdminLoginPage() {
 
   if (checkingAccount) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100">
-        <p className="text-slate-600">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft">
+        <p className="text-unitor-gray-dark">
           Checking administrator account...
         </p>
       </main>
@@ -98,25 +98,25 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-6 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft px-6 py-12">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <div className="text-center">
           <Link
             href="/"
-            className="text-3xl font-bold text-emerald-600"
+            className="text-3xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
-          <div className="mx-auto mt-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-900 text-3xl text-white">
+          <div className="mx-auto mt-6 flex h-16 w-16 items-center justify-center rounded-full bg-unitor-black text-3xl text-white">
             🛡️
           </div>
 
-          <h1 className="mt-5 text-3xl font-bold text-slate-900">
+          <h1 className="mt-5 text-3xl font-bold text-unitor-black">
             Admin login
           </h1>
 
-          <p className="mt-2 text-slate-600">
+          <p className="mt-2 text-unitor-gray-dark">
             Sign in to manage the Unitor platform.
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function AdminLoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="mb-2 block font-medium text-slate-700"
+              className="mb-2 block font-medium text-unitor-gray-dark"
             >
               Admin email
             </label>
@@ -142,14 +142,14 @@ export default function AdminLoginPage() {
               }
               autoComplete="email"
               required
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="mb-2 block font-medium text-slate-700"
+              className="mb-2 block font-medium text-unitor-gray-dark"
             >
               Password
             </label>
@@ -167,7 +167,7 @@ export default function AdminLoginPage() {
                 placeholder="Enter admin password"
                 autoComplete="current-password"
                 required
-                className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-20 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 pr-20 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
               />
 
               <button
@@ -175,7 +175,7 @@ export default function AdminLoginPage() {
                 onClick={() =>
                   setShowPassword((current) => !current)
                 }
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-emerald-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-unitor-primary"
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -191,7 +191,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-slate-900 px-5 py-3 font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-lg bg-unitor-black px-5 py-3 font-medium text-white hover:bg-unitor-black disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading
               ? "Signing in..."
@@ -199,10 +199,10 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 border-t border-slate-200 pt-6 text-center">
+        <div className="mt-6 border-t border-unitor-gray-light pt-6 text-center">
           <Link
             href="/login"
-            className="font-medium text-emerald-600 hover:underline"
+            className="font-medium text-unitor-primary hover:underline"
           >
             Return to student or tutor login
           </Link>

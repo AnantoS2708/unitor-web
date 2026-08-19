@@ -384,9 +384,9 @@ export default function StudentProfilePage() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-                <p className="text-slate-600">
+                <p className="text-unitor-gray-dark">
                     Loading your profile...
                 </p>
 
@@ -395,24 +395,24 @@ export default function StudentProfilePage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50">
+        <main className="min-h-screen bg-unitor-background">
 
             {/* HEADER */}
 
-            <header className="border-b border-slate-200 bg-white">
+            <header className="border-b border-unitor-gray-light bg-white">
 
                 <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
                     <Link
                         href="/student/dashboard"
-                        className="text-2xl font-bold text-emerald-600"
+                        className="text-2xl font-bold text-unitor-primary"
                     >
                         Unitor
                     </Link>
 
                     <Link
                         href="/student/dashboard"
-                        className="font-medium text-slate-600 hover:text-emerald-600"
+                        className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
                     >
                         ← Back to dashboard
                     </Link>
@@ -450,7 +450,7 @@ export default function StudentProfilePage() {
 
                                 ) : (
 
-                                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-600">
+                                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-unitor-blue-light text-3xl font-bold text-unitor-primary">
 
                                         {profile.fullName
                                             .charAt(0)
@@ -462,7 +462,7 @@ export default function StudentProfilePage() {
                                 )}
 
                                 <label
-                                    className={`text-sm font-semibold text-emerald-600 hover:underline ${
+                                    className={`text-sm font-medium text-unitor-primary hover:underline ${
                                         uploadingImage
                                             ? "cursor-not-allowed opacity-60"
                                             : "cursor-pointer"
@@ -492,13 +492,13 @@ export default function StudentProfilePage() {
 
                             <div>
 
-                                <h1 className="text-3xl font-bold text-slate-900">
+                                <h1 className="text-3xl font-bold text-unitor-black">
                                     {
                                         profile.fullName
                                     }
                                 </h1>
 
-                                <p className="mt-2 text-slate-600">
+                                <p className="mt-2 text-unitor-gray-dark">
                                     {
                                         profile.universityEmail
                                     }
@@ -512,7 +512,7 @@ export default function StudentProfilePage() {
                                                 key={
                                                     role
                                                 }
-                                                className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium capitalize text-emerald-700"
+                                                className="rounded-full bg-unitor-background px-3 py-1 text-sm font-medium capitalize text-unitor-primary-hover"
                                             >
                                                 {
                                                     role
@@ -523,7 +523,7 @@ export default function StudentProfilePage() {
 
                                     {tutorStatus ===
                                         "pending" && (
-                                        <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700">
+                                        <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-700">
                                             Tutor application pending
                                         </span>
                                     )}
@@ -550,7 +550,7 @@ export default function StudentProfilePage() {
                                 uploadingImage ||
                                 saving
                             }
-                            className="rounded-lg bg-emerald-600 px-5 py-2.5 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="rounded-lg bg-unitor-primary px-5 py-2.5 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {editing
                                 ? "Cancel editing"
@@ -564,7 +564,7 @@ export default function StudentProfilePage() {
                 {/* SUCCESS */}
 
                 {message && (
-                    <p className="mt-6 rounded-lg bg-emerald-50 p-4 text-emerald-700">
+                    <p className="mt-6 rounded-lg bg-unitor-background p-4 text-unitor-primary-hover">
                         {message}
                     </p>
                 )}
@@ -585,49 +585,49 @@ export default function StudentProfilePage() {
 
                         <div className="max-w-2xl">
 
-                            <p className="text-sm font-semibold text-emerald-600">
+                            <p className="text-sm font-medium text-unitor-primary">
                                 Tutor program
                             </p>
 
                             {isTutor ? (
                                 <>
-                                    <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                                    <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                                         You are an approved tutor
                                     </h2>
 
-                                    <p className="mt-3 leading-7 text-slate-600">
+                                    <p className="mt-3 leading-7 text-unitor-gray-dark">
                                         Your tutor account is active. You can access your tutor dashboard and view tutoring requests for the courses you are approved to teach.
                                     </p>
                                 </>
                             ) : tutorStatus ===
                               "pending" ? (
                                 <>
-                                    <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                                    <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                                         Tutor application pending
                                     </h2>
 
-                                    <p className="mt-3 leading-7 text-slate-600">
+                                    <p className="mt-3 leading-7 text-unitor-gray-dark">
                                         Your application has been submitted. An admin must verify and approve your tutor application before tutor features become available.
                                     </p>
                                 </>
                             ) : tutorStatus ===
                               "rejected" ? (
                                 <>
-                                    <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                                    <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                                         Tutor application was not approved
                                     </h2>
 
-                                    <p className="mt-3 leading-7 text-slate-600">
+                                    <p className="mt-3 leading-7 text-unitor-gray-dark">
                                         You may review your information and submit a new tutor application.
                                     </p>
                                 </>
                             ) : (
                                 <>
-                                    <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                                    <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                                         Want to be a tutor?
                                     </h2>
 
-                                    <p className="mt-3 leading-7 text-slate-600">
+                                    <p className="mt-3 leading-7 text-unitor-gray-dark">
                                         Apply to become a peer tutor. Choose the courses you are qualified to teach and submit your application for admin verification.
                                     </p>
                                 </>
@@ -641,7 +641,7 @@ export default function StudentProfilePage() {
 
                                 <Link
                                     href="/tutor/dashboard"
-                                    className="inline-flex rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                                    className="inline-flex rounded-xl bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                                 >
                                     Go to tutor dashboard
                                 </Link>
@@ -649,7 +649,7 @@ export default function StudentProfilePage() {
                             ) : tutorStatus ===
                               "pending" ? (
 
-                                <span className="inline-flex rounded-xl bg-amber-100 px-6 py-3 font-semibold text-amber-700">
+                                <span className="inline-flex rounded-xl bg-amber-100 px-6 py-3 font-medium text-amber-700">
                                     Waiting for approval
                                 </span>
 
@@ -657,7 +657,7 @@ export default function StudentProfilePage() {
 
                                 <Link
                                     href="/tutor/apply"
-                                    className="inline-flex rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                                    className="inline-flex rounded-xl bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                                 >
                                     {tutorStatus ===
                                     "rejected"
@@ -682,7 +682,7 @@ export default function StudentProfilePage() {
                     className="mt-8 rounded-2xl bg-white p-8 shadow-sm"
                 >
 
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <h2 className="text-2xl font-bold text-unitor-black">
                         Personal information
                     </h2>
 
@@ -813,7 +813,7 @@ export default function StudentProfilePage() {
 
                         <label
                             htmlFor="bio"
-                            className="mb-2 block font-medium text-slate-700"
+                            className="mb-2 block font-medium text-unitor-gray-dark"
                         >
                             Bio
                         </label>
@@ -836,7 +836,7 @@ export default function StudentProfilePage() {
                             }
                             rows={4}
                             placeholder="Tell other students a little about yourself"
-                            className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none disabled:bg-slate-50 disabled:text-slate-600 enabled:focus:border-emerald-600 enabled:focus:ring-2 enabled:focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black placeholder:text-unitor-gray-dark/70 outline-none disabled:bg-unitor-background disabled:text-unitor-gray-dark enabled:focus:border-unitor-primary enabled:focus:ring-2 enabled:focus:ring-unitor-blue-light"
                         />
 
                     </div>
@@ -851,7 +851,7 @@ export default function StudentProfilePage() {
                                     saving ||
                                     uploadingImage
                                 }
-                                className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {saving
                                     ? "Saving..."
@@ -886,7 +886,7 @@ function ProfileInput({
     return (
         <div>
 
-            <label className="mb-2 block font-medium text-slate-700">
+            <label className="mb-2 block font-medium text-unitor-gray-dark">
                 {label}
             </label>
 
@@ -901,7 +901,7 @@ function ProfileInput({
                         event.target.value
                     )
                 }
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none disabled:bg-slate-50 disabled:text-slate-600 enabled:focus:border-emerald-600 enabled:focus:ring-2 enabled:focus:ring-emerald-100"
+                className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none disabled:bg-unitor-background disabled:text-unitor-gray-dark enabled:focus:border-unitor-primary enabled:focus:ring-2 enabled:focus:ring-unitor-blue-light"
             />
 
         </div>

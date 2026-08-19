@@ -641,9 +641,9 @@ export default function TutorDashboardPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Loading tutor dashboard...
         </p>
 
@@ -668,13 +668,13 @@ export default function TutorDashboardPage() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-30 border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
@@ -682,7 +682,7 @@ export default function TutorDashboardPage() {
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Tutor
           </Link>
@@ -697,28 +697,28 @@ export default function TutorDashboardPage() {
 
             <Link
               href="/tutor/dashboard"
-              className="font-semibold text-emerald-600"
+              className="font-medium text-unitor-primary"
             >
               Dashboard
             </Link>
 
             <Link
               href="/tutor/proposals"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               Available Proposals
             </Link>
 
             <Link
               href="/tutor/messages"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               Messages
             </Link>
 
             <Link
               href="/tutor/card"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               My Card
             </Link>
@@ -738,7 +738,7 @@ export default function TutorDashboardPage() {
                   "/role-selection"
                 )
               }
-              className="rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-50"
+              className="rounded-lg border border-unitor-primary px-4 py-2 text-sm font-medium text-unitor-primary transition hover:bg-unitor-background"
             >
               Switch view
             </button>
@@ -758,12 +758,12 @@ export default function TutorDashboardPage() {
                   alt={
                     profile.fullName
                   }
-                  className="h-10 w-10 rounded-full border border-slate-200 object-cover"
+                  className="h-10 w-10 rounded-full border border-unitor-gray-light object-cover"
                 />
 
               ) : (
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary-hover">
 
                   {profile?.fullName
                     ?.charAt(0)
@@ -792,7 +792,7 @@ export default function TutorDashboardPage() {
                   !current
               )
             }
-            className="rounded-lg border border-slate-200 px-3 py-2 text-slate-700 md:hidden"
+            className="rounded-lg border border-unitor-gray-light px-3 py-2 text-unitor-gray-dark md:hidden"
             aria-label={
               mobileMenuOpen
                 ? "Close menu"
@@ -817,7 +817,7 @@ export default function TutorDashboardPage() {
 
         {mobileMenuOpen && (
 
-          <nav className="border-t border-slate-200 bg-white px-6 py-4 md:hidden">
+          <nav className="border-t border-unitor-gray-light bg-white px-6 py-4 md:hidden">
 
             <div className="flex flex-col gap-4">
 
@@ -828,7 +828,7 @@ export default function TutorDashboardPage() {
                     false
                   )
                 }
-                className="font-semibold text-emerald-600"
+                className="font-medium text-unitor-primary"
               >
                 Dashboard
               </MobileLink>
@@ -888,7 +888,7 @@ export default function TutorDashboardPage() {
                     "/role-selection"
                   );
                 }}
-                className="text-left font-medium text-emerald-600"
+                className="text-left font-medium text-unitor-primary"
               >
                 Switch to Student View
               </button>
@@ -935,9 +935,9 @@ export default function TutorDashboardPage() {
             Only Browse Available Proposals button here.
         =================================================== */}
 
-        <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-emerald-500 p-8 text-white shadow-sm md:p-10">
+        <section className="rounded-3xl bg-gradient-to-r from-unitor-primary-hover to-unitor-primary p-8 text-white shadow-sm md:p-10">
 
-          <p className="font-medium text-emerald-100">
+          <p className="font-medium text-unitor-blue-light">
             Tutor Dashboard
           </p>
 
@@ -946,7 +946,7 @@ export default function TutorDashboardPage() {
             {firstName}
           </h1>
 
-          <p className="mt-4 max-w-2xl leading-7 text-emerald-50">
+          <p className="mt-4 max-w-2xl leading-7 text-unitor-background">
             Browse academic proposals for
             the courses you are approved
             to teach and manage your
@@ -957,7 +957,7 @@ export default function TutorDashboardPage() {
 
             <Link
               href="/tutor/proposals"
-              className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 font-semibold text-emerald-700 transition hover:bg-emerald-50"
+              className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 font-medium text-unitor-primary-hover transition hover:bg-unitor-background"
             >
               Browse Available Proposals
             </Link>
@@ -972,7 +972,7 @@ export default function TutorDashboardPage() {
             THIS IS THE ONLY COURSE REQUEST BUTTON.
         =================================================== */}
 
-        <section className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+        <section className="mt-6 rounded-2xl border border-unitor-blue-light bg-unitor-background p-5">
 
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
 
@@ -980,7 +980,7 @@ export default function TutorDashboardPage() {
 
             <div>
 
-              <p className="text-sm font-semibold text-emerald-600">
+              <p className="text-sm font-medium text-unitor-primary">
                 Your approved teaching courses
               </p>
 
@@ -1001,7 +1001,7 @@ export default function TutorDashboardPage() {
                         key={
                           course
                         }
-                        className="rounded-full border border-emerald-100 bg-white px-4 py-2 text-sm font-bold text-emerald-700 shadow-sm"
+                        className="rounded-full border border-unitor-blue-light bg-white px-4 py-2 text-sm font-bold text-unitor-primary-hover shadow-sm"
                       >
                         {course}
                       </span>
@@ -1013,7 +1013,7 @@ export default function TutorDashboardPage() {
 
               ) : (
 
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-unitor-gray-dark">
                   No courses have been
                   approved for your tutor
                   account.
@@ -1029,7 +1029,7 @@ export default function TutorDashboardPage() {
 
             <Link
               href="/tutor/course-request"
-              className="inline-flex shrink-0 items-center justify-center rounded-xl border border-emerald-600 bg-white px-5 py-3 font-semibold text-emerald-600 shadow-sm transition hover:bg-emerald-600 hover:text-white"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl border border-unitor-primary bg-white px-5 py-3 font-medium text-unitor-primary shadow-sm transition hover:bg-unitor-primary hover:text-white"
             >
               + Request Extra Course
             </Link>
@@ -1076,15 +1076,15 @@ export default function TutorDashboardPage() {
 
             <div>
 
-              <p className="font-semibold text-emerald-600">
+              <p className="font-medium text-unitor-primary">
                 Latest opportunities
               </p>
 
-              <h2 className="mt-1 text-2xl font-bold text-slate-900">
+              <h2 className="mt-1 text-2xl font-bold text-unitor-black">
                 Available Proposals
               </h2>
 
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-unitor-gray-dark">
                 Only proposals matching
                 your approved courses
                 appear here.
@@ -1094,7 +1094,7 @@ export default function TutorDashboardPage() {
 
             <Link
               href="/tutor/proposals"
-              className="font-semibold text-emerald-600 hover:underline"
+              className="font-medium text-unitor-primary hover:underline"
             >
               View all →
             </Link>
@@ -1110,17 +1110,17 @@ export default function TutorDashboardPage() {
           {availableProposals.length ===
           0 ? (
 
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+            <div className="mt-6 rounded-2xl border border-unitor-gray-light bg-white p-10 text-center shadow-sm">
 
               <div className="text-4xl">
                 📚
               </div>
 
-              <h3 className="mt-4 font-bold text-slate-900">
+              <h3 className="mt-4 font-bold text-unitor-black">
                 No proposals available
               </h3>
 
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-unitor-gray-dark">
                 No proposals are currently
                 available for your approved
                 courses.
@@ -1178,7 +1178,7 @@ function MobileLink({
   href,
   onClick,
   className =
-    "text-slate-700",
+    "text-unitor-gray-dark",
   children,
 }: {
   href: string;
@@ -1221,18 +1221,18 @@ function StatCard({
       href={
         href
       }
-      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 hover:shadow-md"
+      className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-unitor-primary hover:shadow-md"
     >
 
-      <p className="text-slate-500">
+      <p className="text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-3 text-4xl font-bold text-slate-900">
+      <p className="mt-3 text-4xl font-bold text-unitor-black">
         {value}
       </p>
 
-      <p className="mt-4 font-medium text-emerald-600">
+      <p className="mt-4 font-medium text-unitor-primary">
         View details →
       </p>
 
@@ -1251,11 +1251,11 @@ function ProposalCard({
     AvailableProposal;
 }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
       {/* COURSE */}
 
-      <p className="font-semibold text-emerald-600">
+      <p className="font-medium text-unitor-primary">
         {
           proposal.courseCode
         }
@@ -1263,7 +1263,7 @@ function ProposalCard({
 
       {/* TITLE */}
 
-      <h3 className="mt-2 text-xl font-bold text-slate-900">
+      <h3 className="mt-2 text-xl font-bold text-unitor-black">
 
         {proposal.title ||
           "Untitled proposal"}
@@ -1272,7 +1272,7 @@ function ProposalCard({
 
       {/* DESCRIPTION */}
 
-      <p className="mt-3 line-clamp-3 leading-7 text-slate-600">
+      <p className="mt-3 line-clamp-3 leading-7 text-unitor-gray-dark">
 
         {proposal.description ||
           "No description provided."}
@@ -1281,17 +1281,17 @@ function ProposalCard({
 
       {/* DETAILS */}
 
-      <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5">
+      <div className="mt-5 flex items-center justify-between border-t border-unitor-gray-soft pt-5">
 
         {/* BUDGET */}
 
         <div>
 
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-unitor-gray-dark">
             Budget
           </p>
 
-          <p className="font-bold text-slate-900">
+          <p className="font-bold text-unitor-black">
             ৳
             {formatMoney(
               proposal.budget
@@ -1304,11 +1304,11 @@ function ProposalCard({
 
         <div className="text-right">
 
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-unitor-gray-dark">
             Student
           </p>
 
-          <p className="font-semibold text-slate-900">
+          <p className="font-medium text-unitor-black">
             {
               proposal.studentName
             }
@@ -1322,7 +1322,7 @@ function ProposalCard({
 
       <Link
         href={`/tutor/proposals/${proposal.id}`}
-        className="mt-6 block rounded-lg bg-emerald-600 px-4 py-3 text-center font-semibold text-white transition hover:bg-emerald-700"
+        className="mt-6 block rounded-lg bg-unitor-primary px-4 py-3 text-center font-medium text-white transition hover:bg-unitor-primary-hover"
       >
         View Proposal
       </Link>

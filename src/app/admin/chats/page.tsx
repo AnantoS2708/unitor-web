@@ -1054,7 +1054,7 @@ export default function AdminChatsPage() {
                     "Closed",
 
                 className:
-                    "bg-slate-200 text-slate-700",
+                    "bg-unitor-gray-light text-unitor-gray-dark",
             };
         }
 
@@ -1077,7 +1077,7 @@ export default function AdminChatsPage() {
                 "Active",
 
             className:
-                "bg-emerald-100 text-emerald-700",
+                "bg-unitor-blue-light text-unitor-primary-hover",
         };
     }
 
@@ -1091,11 +1091,11 @@ export default function AdminChatsPage() {
         loading
     ) {
         return (
-            <main className="min-h-screen bg-slate-50 p-6">
+            <main className="min-h-screen bg-unitor-background p-6">
 
                 <div className="mx-auto max-w-7xl">
 
-                    <p className="text-slate-600">
+                    <p className="text-unitor-gray-dark">
                         Loading chats...
                     </p>
 
@@ -1106,7 +1106,7 @@ export default function AdminChatsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50 px-6 py-8">
+        <main className="min-h-screen bg-unitor-background px-6 py-8">
 
             <div className="mx-auto max-w-7xl">
 
@@ -1116,15 +1116,15 @@ export default function AdminChatsPage() {
 
                     <div>
 
-                        <p className="text-sm font-semibold text-emerald-600">
+                        <p className="text-sm font-medium text-unitor-primary">
                             Admin
                         </p>
 
-                        <h1 className="mt-1 text-3xl font-bold text-slate-900">
+                        <h1 className="mt-1 text-3xl font-bold text-unitor-black">
                             Session management
                         </h1>
 
-                        <p className="mt-2 max-w-3xl text-slate-600">
+                        <p className="mt-2 max-w-3xl text-unitor-gray-dark">
                             Monitor tutoring sessions. Sessions are not
                             automatically closed after a fixed time. Admin can
                             review overdue sessions and close them when needed.
@@ -1134,7 +1134,7 @@ export default function AdminChatsPage() {
 
                     <Link
                         href="/admin/dashboard"
-                        className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                        className="inline-flex rounded-lg border border-unitor-gray-light bg-white px-4 py-2 text-sm font-medium text-unitor-gray-dark hover:bg-unitor-background"
                     >
                         Back to dashboard
                     </Link>
@@ -1150,7 +1150,7 @@ export default function AdminChatsPage() {
                         count={
                             chats.length
                         }
-                        styleName="text-slate-900"
+                        styleName="text-unitor-black"
                     />
 
                     <DashboardCard
@@ -1158,7 +1158,7 @@ export default function AdminChatsPage() {
                         count={
                             activeCount
                         }
-                        styleName="text-emerald-600"
+                        styleName="text-unitor-primary"
                     />
 
                     <DashboardCard
@@ -1174,7 +1174,7 @@ export default function AdminChatsPage() {
                         count={
                             closedCount
                         }
-                        styleName="text-slate-700"
+                        styleName="text-unitor-gray-dark"
                     />
 
                     <DashboardCard
@@ -1182,20 +1182,20 @@ export default function AdminChatsPage() {
                         count={
                             reviewPendingCount
                         }
-                        styleName="text-blue-600"
+                        styleName="text-unitor-primary"
                     />
 
                 </div>
 
                 {/* INFORMATION */}
 
-                <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+                <div className="mb-6 rounded-2xl border border-unitor-blue-light bg-unitor-background p-5">
 
-                    <h2 className="font-bold text-blue-900">
+                    <h2 className="font-bold text-unitor-black">
                         How session closing works
                     </h2>
 
-                    <p className="mt-2 text-sm leading-6 text-blue-800">
+                    <p className="mt-2 text-sm leading-6 text-unitor-primary-hover">
                         Students can end their sessions themselves. If a
                         tutoring session remains active after its agreed end
                         date and time, it will be marked as overdue here.
@@ -1208,7 +1208,7 @@ export default function AdminChatsPage() {
 
                 {success && (
 
-                    <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700">
+                    <div className="mb-6 rounded-xl border border-unitor-blue-light bg-unitor-background p-4 text-unitor-primary-hover">
                         {success}
                     </div>
 
@@ -1243,7 +1243,7 @@ export default function AdminChatsPage() {
                                 )
                             }
                             placeholder="Search student, tutor, proposal or payment..."
-                            className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                         />
 
                         <select
@@ -1257,7 +1257,7 @@ export default function AdminChatsPage() {
                                     event.target.value as ChatFilter
                                 )
                             }
-                            className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-700 outline-none focus:border-emerald-600"
+                            className="rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-gray-dark outline-none focus:border-unitor-primary"
                         >
 
                             <option value="all">
@@ -1295,11 +1295,11 @@ export default function AdminChatsPage() {
 
                         <div className="p-10 text-center">
 
-                            <p className="font-semibold text-slate-800">
+                            <p className="font-medium text-unitor-black">
                                 No sessions found
                             </p>
 
-                            <p className="mt-2 text-sm text-slate-500">
+                            <p className="mt-2 text-sm text-unitor-gray-dark">
                                 No tutoring sessions match this filter.
                             </p>
 
@@ -1311,7 +1311,7 @@ export default function AdminChatsPage() {
 
                             <table className="min-w-full">
 
-                                <thead className="bg-slate-100">
+                                <thead className="bg-unitor-gray-soft">
 
                                     <tr>
 
@@ -1347,7 +1347,7 @@ export default function AdminChatsPage() {
 
                                 </thead>
 
-                                <tbody className="divide-y divide-slate-200">
+                                <tbody className="divide-y divide-unitor-gray-light">
 
                                     {filteredChats.map(
                                         (
@@ -1373,7 +1373,7 @@ export default function AdminChatsPage() {
                                                     key={
                                                         chat.id
                                                     }
-                                                    className={`hover:bg-slate-50 ${
+                                                    className={`hover:bg-unitor-background ${
                                                         isOverdue(
                                                             chat
                                                         )
@@ -1386,13 +1386,13 @@ export default function AdminChatsPage() {
 
                                                     <td className="px-5 py-5">
 
-                                                        <p className="font-semibold text-slate-900">
+                                                        <p className="font-medium text-unitor-black">
                                                             {
                                                                 chat.studentName
                                                             }
                                                         </p>
 
-                                                        <p className="mt-1 max-w-[180px] truncate text-xs text-slate-500">
+                                                        <p className="mt-1 max-w-[180px] truncate text-xs text-unitor-gray-dark">
                                                             {
                                                                 chat.studentId
                                                             }
@@ -1404,13 +1404,13 @@ export default function AdminChatsPage() {
 
                                                     <td className="px-5 py-5">
 
-                                                        <p className="font-semibold text-slate-900">
+                                                        <p className="font-medium text-unitor-black">
                                                             {
                                                                 chat.tutorName
                                                             }
                                                         </p>
 
-                                                        <p className="mt-1 max-w-[180px] truncate text-xs text-slate-500">
+                                                        <p className="mt-1 max-w-[180px] truncate text-xs text-unitor-gray-dark">
                                                             {
                                                                 chat.tutorId
                                                             }
@@ -1423,7 +1423,7 @@ export default function AdminChatsPage() {
                                                     <td className="px-5 py-5">
 
                                                         <span
-                                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${status.className}`}
+                                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${status.className}`}
                                                         >
                                                             {
                                                                 status.label
@@ -1434,7 +1434,7 @@ export default function AdminChatsPage() {
                                                             chat
                                                         ) && (
 
-                                                            <p className="mt-2 text-xs font-semibold text-amber-700">
+                                                            <p className="mt-2 text-xs font-medium text-amber-700">
                                                                 ⚠ Needs admin review
                                                             </p>
 
@@ -1443,7 +1443,7 @@ export default function AdminChatsPage() {
                                                         {!chat.isActive &&
                                                             chat.endedReason && (
 
-                                                            <p className="mt-2 text-xs text-slate-500">
+                                                            <p className="mt-2 text-xs text-unitor-gray-dark">
                                                                 {
                                                                     formatEndReason(
                                                                         chat.endedReason
@@ -1459,7 +1459,7 @@ export default function AdminChatsPage() {
 
                                                     <td className="whitespace-nowrap px-5 py-5">
 
-                                                        <p className="text-sm font-medium text-slate-700">
+                                                        <p className="text-sm font-medium text-unitor-gray-dark">
 
                                                             {scheduledEnd
                                                                 ? scheduledEnd.toLocaleString()
@@ -1469,7 +1469,7 @@ export default function AdminChatsPage() {
 
                                                         {!scheduledEnd && (
 
-                                                            <p className="mt-1 text-xs text-slate-400">
+                                                            <p className="mt-1 text-xs text-unitor-gray-dark/70">
                                                                 No agreed end time found
                                                             </p>
 
@@ -1485,11 +1485,11 @@ export default function AdminChatsPage() {
 
                                                             <div>
 
-                                                                <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                                                <span className="inline-flex rounded-full bg-unitor-blue-light px-3 py-1 text-xs font-medium text-unitor-primary-hover">
                                                                     Reviewed
                                                                 </span>
 
-                                                                <p className="mt-2 text-sm font-semibold text-amber-500">
+                                                                <p className="mt-2 text-sm font-medium text-amber-500">
                                                                     {"★".repeat(
                                                                         Math.max(
                                                                             0,
@@ -1505,7 +1505,7 @@ export default function AdminChatsPage() {
 
                                                         ) : (
 
-                                                            <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                                            <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
                                                                 Not reviewed
                                                             </span>
 
@@ -1517,12 +1517,12 @@ export default function AdminChatsPage() {
 
                                                     <td className="max-w-xs px-5 py-5">
 
-                                                        <p className="max-w-[220px] truncate text-sm text-slate-700">
+                                                        <p className="max-w-[220px] truncate text-sm text-unitor-gray-dark">
                                                             {chat.lastMessage ||
                                                                 "No messages yet"}
                                                         </p>
 
-                                                        <p className="mt-1 text-xs text-slate-500">
+                                                        <p className="mt-1 text-xs text-unitor-gray-dark">
                                                             {
                                                                 formatTimestamp(
                                                                     chat.lastMessageAt
@@ -1540,7 +1540,7 @@ export default function AdminChatsPage() {
 
                                                             <Link
                                                                 href={`/admin/chats/${chat.id}`}
-                                                                className="inline-flex justify-center rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+                                                                className="inline-flex justify-center rounded-lg border border-unitor-gray-light px-3 py-2 text-sm font-medium text-unitor-gray-dark hover:bg-unitor-gray-soft"
                                                             >
                                                                 View chat
                                                             </Link>
@@ -1558,12 +1558,12 @@ export default function AdminChatsPage() {
                                                                         closingChatId ===
                                                                         chat.id
                                                                     }
-                                                                    className={`rounded-lg px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60 ${
+                                                                    className={`rounded-lg px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60 ${
                                                                         isOverdue(
                                                                             chat
                                                                         )
                                                                             ? "bg-red-600 hover:bg-red-700"
-                                                                            : "bg-slate-700 hover:bg-slate-800"
+                                                                            : "bg-unitor-gray-dark hover:bg-unitor-black"
                                                                     }`}
                                                                 >
                                                                     {closingChatId ===
@@ -1615,7 +1615,7 @@ function DashboardCard({
     return (
         <div className="rounded-2xl bg-white p-5 shadow-sm">
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-unitor-gray-dark">
                 {title}
             </p>
 
@@ -1641,7 +1641,7 @@ function TableHeading({
         React.ReactNode;
 }) {
     return (
-        <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+        <th className="px-5 py-4 text-left text-xs font-medium uppercase tracking-wide text-unitor-gray-dark">
             {children}
         </th>
     );

@@ -287,19 +287,19 @@ export default function TutorApplicationsPage() {
   }, [proposalId, router]);
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link
             href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href={`/student/proposals/${proposalId}`}
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Proposal details
           </Link>
@@ -308,16 +308,16 @@ export default function TutorApplicationsPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div>
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             {proposal?.courseCode || "Proposal"}
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Tutor Applications
           </h1>
 
           {proposal && (
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               Tutors who applied for “{proposal.title}”
             </p>
           )}
@@ -325,7 +325,7 @@ export default function TutorApplicationsPage() {
 
         {loading && (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading tutor applications...
             </p>
           </section>
@@ -343,11 +343,11 @@ export default function TutorApplicationsPage() {
             <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
               <div className="text-5xl">🎓</div>
 
-              <h2 className="mt-5 text-2xl font-bold text-slate-900">
+              <h2 className="mt-5 text-2xl font-bold text-unitor-black">
                 No tutor applications yet
               </h2>
 
-              <p className="mt-3 text-slate-600">
+              <p className="mt-3 text-unitor-gray-dark">
                 Tutor applications will appear here in
                 real time.
               </p>
@@ -380,7 +380,7 @@ function ApplicationCard({
       .toUpperCase() || "T";
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
       <div className="flex items-start gap-4">
         {application.tutor.profileImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -390,7 +390,7 @@ function ApplicationCard({
             className="h-16 w-16 flex-shrink-0 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-600">
+          <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-unitor-blue-light text-2xl font-bold text-unitor-primary">
             {tutorInitial}
           </div>
         )}
@@ -398,11 +398,11 @@ function ApplicationCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-unitor-black">
                 {application.tutor.fullName}
               </h2>
 
-              <p className="mt-1 text-slate-500">
+              <p className="mt-1 text-unitor-gray-dark">
                 {application.tutor.major ||
                   "Major not provided"}
               </p>
@@ -414,7 +414,7 @@ function ApplicationCard({
           </div>
 
           {application.tutor.tutorStatus && (
-            <p className="mt-2 text-sm font-medium capitalize text-emerald-600">
+            <p className="mt-2 text-sm font-medium capitalize text-unitor-primary">
               Tutor status:{" "}
               {application.tutor.tutorStatus}
             </p>
@@ -423,17 +423,17 @@ function ApplicationCard({
       </div>
 
       {application.tutor.bio && (
-        <p className="mt-5 leading-7 text-slate-600">
+        <p className="mt-5 leading-7 text-unitor-gray-dark">
           {application.tutor.bio}
         </p>
       )}
 
-      <div className="mt-6 rounded-xl bg-slate-50 p-5">
-        <p className="text-sm text-slate-500">
+      <div className="mt-6 rounded-xl bg-unitor-background p-5">
+        <p className="text-sm text-unitor-gray-dark">
           Tutor&apos;s message
         </p>
 
-        <p className="mt-2 leading-7 text-slate-800">
+        <p className="mt-2 leading-7 text-unitor-black">
           {application.description ||
             "No application message provided."}
         </p>
@@ -469,7 +469,7 @@ function ApplicationCard({
       </div>
 
       {application.appliedAt && (
-        <p className="mt-6 border-t border-slate-100 pt-4 text-xs text-slate-400">
+        <p className="mt-6 border-t border-unitor-gray-soft pt-4 text-xs text-unitor-gray-dark/70">
           Applied{" "}
           {application.appliedAt
             .toDate()
@@ -487,7 +487,7 @@ function ApplicationCard({
         !application.paymentId && (
             <Link
             href={`/student/payments/new/${application.id}`}
-            className="mt-6 block w-full rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-700"
+            className="mt-6 block w-full rounded-lg bg-unitor-primary px-5 py-3 text-center font-medium text-white hover:bg-unitor-primary-hover"
             >
             Select Tutor and Continue to Payment
             </Link>
@@ -505,11 +505,11 @@ function InformationItem({
 }) {
   return (
     <div>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value || "Not provided"}
       </p>
     </div>
@@ -530,7 +530,7 @@ function ApplicationStatus({
     normalizedStatus === "accepted" ||
     normalizedStatus === "approved"
   ) {
-    classes = "bg-emerald-50 text-emerald-700";
+    classes = "bg-unitor-background text-unitor-primary-hover";
   } else if (
     normalizedStatus === "rejected" ||
     normalizedStatus === "cancelled"
@@ -539,12 +539,12 @@ function ApplicationStatus({
   } else if (
     normalizedStatus === "completed"
   ) {
-    classes = "bg-blue-50 text-blue-700";
+    classes = "bg-unitor-background text-unitor-primary-hover";
   }
 
   return (
     <span
-      className={`rounded-full px-3 py-1 text-sm font-semibold capitalize ${classes}`}
+      className={`rounded-full px-3 py-1 text-sm font-medium capitalize ${classes}`}
     >
       {status || "applied"}
     </span>

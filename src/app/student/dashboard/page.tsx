@@ -60,8 +60,8 @@ export default function StudentDashboardPage() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-slate-600">Loading student dashboard...</p>
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+                <p className="text-unitor-gray-dark">Loading student dashboard...</p>
             </main>
         );
     }
@@ -73,13 +73,13 @@ export default function StudentDashboardPage() {
     const firstName = profile?.fullName?.split(" ")[0] || "Student";
 
     return (
-        <main className="min-h-screen bg-slate-50">
+        <main className="min-h-screen bg-unitor-background">
             {/* Top navigation */}
-            <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+            <header className="sticky top-0 z-30 border-b border-unitor-gray-light bg-white">
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                     <Link
                         href="/student/dashboard"
-                        className="text-2xl font-bold text-emerald-600"
+                        className="text-2xl font-bold text-unitor-primary"
                     >
                         Unitor
                     </Link>
@@ -87,35 +87,35 @@ export default function StudentDashboardPage() {
                     <nav className="hidden items-center gap-7 md:flex">
                         <Link
                             href="/student/dashboard"
-                            className="font-semibold text-emerald-600"
+                            className="font-medium text-unitor-primary"
                         >
                             Dashboard
                         </Link>
 
                         <Link
                             href="/student/proposals"
-                            className="text-slate-600 hover:text-emerald-600"
+                            className="text-unitor-gray-dark hover:text-unitor-primary"
                         >
                             Proposals
                         </Link>
 
                         <Link
                             href="/student/messages"
-                            className="text-slate-600 hover:text-emerald-600"
+                            className="text-unitor-gray-dark hover:text-unitor-primary"
                         >
                             Messages
                         </Link>
 
                         <Link
                             href="/student/notifications"
-                            className="text-slate-600 hover:text-emerald-600"
+                            className="text-unitor-gray-dark hover:text-unitor-primary"
                         >
                             Notifications
                         </Link>
 
                         <Link 
                             href="/student/payments"
-                            className="text-slate-600 hover:text-emerald-600">
+                            className="text-unitor-gray-dark hover:text-unitor-primary">
                         Payments
                         </Link>
 
@@ -125,7 +125,7 @@ export default function StudentDashboardPage() {
                         {tutorApproved && (
                             <button
                                 onClick={() => router.push("/role-selection")}
-                                className="rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-50"
+                                className="rounded-lg border border-unitor-primary px-4 py-2 text-sm font-medium text-unitor-primary hover:bg-unitor-background"
                             >
                                 Switch view
                             </button>
@@ -140,7 +140,7 @@ export default function StudentDashboardPage() {
                                     className="h-10 w-10 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-600">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary">
                                     {profile?.fullName?.charAt(0).toUpperCase() || "U"}
                                 </div>
                             )}
@@ -149,7 +149,7 @@ export default function StudentDashboardPage() {
 
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="rounded-lg border border-slate-200 px-3 py-2 md:hidden"
+                        className="rounded-lg border border-unitor-gray-light px-3 py-2 md:hidden"
                         aria-label="Open navigation"
                     >
                         ☰
@@ -157,7 +157,7 @@ export default function StudentDashboardPage() {
                 </div>
 
                 {mobileMenuOpen && (
-                    <nav className="border-t border-slate-200 bg-white px-6 py-4 md:hidden">
+                    <nav className="border-t border-unitor-gray-light bg-white px-6 py-4 md:hidden">
                         <div className="flex flex-col gap-4">
                             <Link href="/student/dashboard">Dashboard</Link>
                             <Link href="/student/proposals">Proposals</Link>
@@ -168,7 +168,7 @@ export default function StudentDashboardPage() {
                             {tutorApproved && (
                                 <button
                                     onClick={() => router.push("/role-selection")}
-                                    className="text-left font-medium text-emerald-600"
+                                    className="text-left font-medium text-unitor-primary"
                                 >
                                     Switch view
                                 </button>
@@ -187,8 +187,8 @@ export default function StudentDashboardPage() {
 
             <div className="mx-auto max-w-7xl px-6 py-10">
                 {/* Welcome section */}
-                <section className="rounded-3xl bg-gradient-to-r from-emerald-600 to-emerald-500 p-8 text-white shadow-sm md:p-10">
-                    <p className="font-medium text-emerald-100">
+                <section className="rounded-3xl bg-gradient-to-r from-unitor-primary to-unitor-primary p-8 text-white shadow-sm md:p-10">
+                    <p className="font-medium text-unitor-blue-light">
                         Student Dashboard
                     </p>
 
@@ -196,14 +196,14 @@ export default function StudentDashboardPage() {
                         Welcome back, {firstName}
                     </h1>
 
-                    <p className="mt-4 max-w-2xl leading-7 text-emerald-50">
+                    <p className="mt-4 max-w-2xl leading-7 text-unitor-background">
                         Create a proposal, connect with peer tutors and continue
                         your academic learning journey.
                     </p>
 
                     <Link
                         href="/student/proposals/create"
-                        className="mt-7 inline-block rounded-lg bg-white px-6 py-3 font-semibold text-emerald-600 hover:bg-emerald-50"
+                        className="mt-7 inline-block rounded-lg bg-white px-6 py-3 font-medium text-unitor-primary hover:bg-unitor-background"
                     >
                         Create a proposal
                     </Link>
@@ -211,7 +211,7 @@ export default function StudentDashboardPage() {
 
                 {/* Quick actions */}
                 <section className="mt-10">
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <h2 className="text-2xl font-bold text-unitor-black">
                         Quick actions
                     </h2>
 
@@ -249,7 +249,7 @@ export default function StudentDashboardPage() {
                 {/* Account overview */}
                 <section className="mt-10 grid gap-6 md:grid-cols-2">
                     <div className="rounded-2xl bg-white p-7 shadow-sm">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold text-unitor-black">
                             Academic profile
                         </h2>
 
@@ -269,7 +269,7 @@ export default function StudentDashboardPage() {
                     </div>
 
                     <div className="rounded-2xl bg-white p-7 shadow-sm">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold text-unitor-black">
                             Account information
                         </h2>
 
@@ -319,17 +319,17 @@ function DashboardCard({
     return (
         <Link
             href={href}
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-500 hover:shadow-md"
+            className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-unitor-primary hover:shadow-md"
         >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-2xl">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-unitor-background text-2xl">
                 {icon}
             </div>
 
-            <h3 className="mt-5 text-lg font-bold text-slate-900">
+            <h3 className="mt-5 text-lg font-bold text-unitor-black">
                 {title}
             </h3>
 
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-unitor-gray-dark">
                 {description}
             </p>
         </Link>
@@ -344,10 +344,10 @@ function InformationRow({
     value?: string;
 }) {
     return (
-        <div className="flex items-center justify-between gap-5 border-b border-slate-100 pb-3">
-            <span className="text-slate-500">{label}</span>
+        <div className="flex items-center justify-between gap-5 border-b border-unitor-gray-soft pb-3">
+            <span className="text-unitor-gray-dark">{label}</span>
 
-            <span className="text-right font-medium text-slate-900">
+            <span className="text-right font-medium text-unitor-black">
                 {value || "Not provided"}
             </span>
         </div>

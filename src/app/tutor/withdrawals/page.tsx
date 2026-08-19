@@ -1050,15 +1050,15 @@ loadingPayments ||
 loadingWithdrawals;
 
 return (
-<main className="min-h-screen bg-slate-50">
+<main className="min-h-screen bg-unitor-background">
 
-<header className="border-b border-slate-200 bg-white">
+<header className="border-b border-unitor-gray-light bg-white">
 
 <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
 <Link
 href="/tutor/dashboard"
-className="text-2xl font-bold text-emerald-600"
+className="text-2xl font-bold text-unitor-primary"
 >
 Unitor Wallet
 </Link>
@@ -1066,7 +1066,7 @@ Unitor Wallet
 
 <Link
 href="/tutor/dashboard"
-className="font-medium text-slate-600 hover:text-emerald-600"
+className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
 >
 ← Dashboard
 </Link>
@@ -1081,17 +1081,17 @@ className="font-medium text-slate-600 hover:text-emerald-600"
 <div className="mx-auto max-w-7xl px-6 py-10">
 
 
-<p className="font-semibold text-emerald-600">
+<p className="font-medium text-unitor-primary">
 Tutor financial account
 </p>
 
 
-<h1 className="mt-2 text-3xl font-bold text-slate-900">
+<h1 className="mt-2 text-3xl font-bold text-unitor-black">
 Tutor Wallet
 </h1>
 
 
-<p className="mt-3 text-slate-600">
+<p className="mt-3 text-unitor-gray-dark">
 View payments, earnings and withdraw your money.
 </p>
 
@@ -1110,7 +1110,7 @@ View payments, earnings and withdraw your money.
 
 {success && (
 
-<div className="mt-6 rounded-xl bg-emerald-50 p-4 text-emerald-700">
+<div className="mt-6 rounded-xl bg-unitor-background p-4 text-unitor-primary-hover">
 {success}
 </div>
 
@@ -1180,12 +1180,12 @@ color="amber"
 <section className="rounded-2xl bg-white p-8 shadow-sm lg:col-span-2">
 
 
-<h2 className="text-2xl font-bold text-slate-900">
+<h2 className="text-2xl font-bold text-unitor-black">
 Withdraw money
 </h2>
 
 
-<p className="mt-2 text-sm text-slate-600">
+<p className="mt-2 text-sm text-unitor-gray-dark">
 Request your available earnings.
 </p>
 
@@ -1249,7 +1249,7 @@ submitting ||
 availableBalance<=0 ||
 hasPendingWithdrawal
 }
-className="w-full rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white disabled:opacity-50"
+className="w-full rounded-lg bg-unitor-primary px-5 py-3 font-medium text-white disabled:opacity-50"
 >
 
 {
@@ -1415,10 +1415,10 @@ color:
 const style={
 
 emerald:
-"bg-emerald-50 text-emerald-700",
+"bg-green-50 text-green-700",
 
 blue:
-"bg-blue-50 text-blue-700",
+"bg-unitor-background text-unitor-primary-hover",
 
 purple:
 "bg-purple-50 text-purple-700",
@@ -1434,7 +1434,7 @@ return (
 
 <div className="rounded-2xl bg-white p-6 shadow-sm">
 
-<span className={`rounded-lg px-3 py-1 text-sm font-semibold ${style[color]}`}>
+<span className={`rounded-lg px-3 py-1 text-sm font-medium ${style[color]}`}>
 
 {title}
 
@@ -1485,7 +1485,7 @@ Student payment
 </h3>
 
 
-<p className="text-sm text-slate-500">
+<p className="text-sm text-unitor-gray-dark">
 Status: {payment.status}
 </p>
 
@@ -1493,7 +1493,7 @@ Status: {payment.status}
 {
 payment.tutorBalanceCredited &&
 
-<p className="text-xs text-emerald-600">
+<p className="text-xs text-unitor-primary">
 Added to wallet
 </p>
 
@@ -1507,12 +1507,12 @@ Added to wallet
 <div className="text-right">
 
 
-<p className="text-xl font-bold text-emerald-600">
+<p className="text-xl font-bold text-unitor-primary">
 +{formatMoney(payment.tutorEarning)}
 </p>
 
 
-<p className="text-xs text-slate-400">
+<p className="text-xs text-unitor-gray-dark/70">
 After 10% fee
 </p>
 
@@ -1578,7 +1578,7 @@ return (
 
 
 
-<p className="mt-2 text-sm text-slate-500">
+<p className="mt-2 text-sm text-unitor-gray-dark">
 
 bKash:
 {withdrawal.bkashNumber}
@@ -1590,7 +1590,7 @@ bKash:
 {
 withdrawal.tutorTransactionId &&
 
-<p className="text-sm text-emerald-600">
+<p className="text-sm text-unitor-primary">
 
 Transaction:
 {withdrawal.tutorTransactionId}
@@ -1642,4 +1642,3 @@ return timestamp
 .toLocaleString();
 
 }
-

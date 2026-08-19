@@ -862,24 +862,24 @@ export default function AdminPaymentsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-unitor-gray-soft">
 
       {/* HEADER */}
 
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
           <Link
             href="/admin/dashboard"
-            className="text-2xl font-bold text-emerald-400"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Admin
           </Link>
 
           <Link
             href="/admin/dashboard"
-            className="font-medium text-slate-300 hover:text-white"
+            className="font-medium text-unitor-gray-light hover:text-white"
           >
             ← Dashboard
           </Link>
@@ -890,15 +890,15 @@ export default function AdminPaymentsPage() {
 
       <div className="mx-auto max-w-7xl px-6 py-10">
 
-        <p className="font-semibold text-emerald-600">
+        <p className="font-medium text-unitor-primary">
           Financial management
         </p>
 
-        <h1 className="mt-2 text-3xl font-bold text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold text-unitor-black">
           Payment verification
         </h1>
 
-        <p className="mt-3 text-slate-600">
+        <p className="mt-3 text-unitor-gray-dark">
           Verify student bKash transactions before opening tutoring sessions.
         </p>
 
@@ -941,7 +941,7 @@ export default function AdminPaymentsPage() {
         )}
 
         {success && (
-          <p className="mt-6 rounded-lg bg-emerald-50 p-4 text-emerald-700">
+          <p className="mt-6 rounded-lg bg-unitor-background p-4 text-unitor-primary-hover">
             {success}
           </p>
         )}
@@ -971,11 +971,11 @@ export default function AdminPaymentsPage() {
                     filterValue
                   )
                 }
-                className={`rounded-lg px-4 py-2 text-sm font-semibold capitalize ${
+                className={`rounded-lg px-4 py-2 text-sm font-medium capitalize ${
                   filter ===
                   filterValue
-                    ? "bg-slate-900 text-white"
-                    : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                    ? "bg-unitor-primary text-white"
+                    : "border border-unitor-gray-light bg-white text-unitor-gray-dark hover:bg-unitor-background"
                 }`}
               >
                 {
@@ -992,7 +992,7 @@ export default function AdminPaymentsPage() {
         {loading ? (
           <div className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
 
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading payments...
             </p>
 
@@ -1005,7 +1005,7 @@ export default function AdminPaymentsPage() {
               💳
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No{" "}
               {filter ===
               "all"
@@ -1018,7 +1018,7 @@ export default function AdminPaymentsPage() {
         ) : (
           <section className="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm">
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-unitor-gray-soft">
 
               {filteredPayments.map(
                 (
@@ -1037,7 +1037,7 @@ export default function AdminPaymentsPage() {
 
                         <div className="flex flex-wrap items-center gap-3">
 
-                          <h2 className="font-bold text-slate-900">
+                          <h2 className="font-bold text-unitor-black">
                             {
                               payment.studentName
                             }
@@ -1051,20 +1051,20 @@ export default function AdminPaymentsPage() {
 
                         </div>
 
-                        <p className="mt-2 text-sm text-slate-600">
+                        <p className="mt-2 text-sm text-unitor-gray-dark">
                           Tutor:{" "}
                           {
                             payment.tutorName
                           }
                         </p>
 
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-unitor-gray-dark">
                           Transaction ID:{" "}
                           {payment.transactionId ||
                             "Not provided"}
                         </p>
 
-                        <p className="mt-1 text-sm text-slate-400">
+                        <p className="mt-1 text-sm text-unitor-gray-dark/70">
                           {formatDate(
                             payment.submittedAt ??
                               payment.createdAt
@@ -1075,7 +1075,7 @@ export default function AdminPaymentsPage() {
 
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
 
-                        <p className="text-xl font-bold text-slate-900">
+                        <p className="text-xl font-bold text-unitor-black">
                           {formatMoney(
                             payment.amount
                           )}
@@ -1088,7 +1088,7 @@ export default function AdminPaymentsPage() {
                               payment
                             )
                           }
-                          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                          className="rounded-lg border border-unitor-gray-light px-4 py-2 text-sm font-medium text-unitor-gray-dark"
                         >
                           View
                         </button>
@@ -1108,7 +1108,7 @@ export default function AdminPaymentsPage() {
                                 updatingId ===
                                 payment.id
                               }
-                              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                              className="rounded-lg bg-unitor-primary px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
                             >
                               {updatingId ===
                               payment.id
@@ -1127,7 +1127,7 @@ export default function AdminPaymentsPage() {
                                 updatingId ===
                                 payment.id
                               }
-                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
                             >
                               Reject
                             </button>
@@ -1158,7 +1158,7 @@ export default function AdminPaymentsPage() {
 
             <div className="flex items-center justify-between">
 
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-unitor-black">
                 Payment details
               </h2>
 
@@ -1169,7 +1169,7 @@ export default function AdminPaymentsPage() {
                     null
                   )
                 }
-                className="text-3xl text-slate-500"
+                className="text-3xl text-unitor-gray-dark"
               >
                 ×
               </button>
@@ -1254,7 +1254,7 @@ export default function AdminPaymentsPage() {
                     updatingId ===
                     selectedPayment.id
                   }
-                  className="flex-1 rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white disabled:opacity-60"
+                  className="flex-1 rounded-lg bg-unitor-primary px-5 py-3 font-medium text-white disabled:opacity-60"
                 >
                   Approve
                 </button>
@@ -1270,7 +1270,7 @@ export default function AdminPaymentsPage() {
                     updatingId ===
                     selectedPayment.id
                   }
-                  className="flex-1 rounded-lg bg-red-600 px-5 py-3 font-semibold text-white disabled:opacity-60"
+                  className="flex-1 rounded-lg bg-red-600 px-5 py-3 font-medium text-white disabled:opacity-60"
                 >
                   Reject
                 </button>
@@ -1350,7 +1350,7 @@ function PaymentStatus({
   const style =
     cleanStatus ===
     "successful"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : cleanStatus ===
           "rejected"
         ? "bg-red-100 text-red-700"
@@ -1358,7 +1358,7 @@ function PaymentStatus({
 
   return (
     <span
-      className={`rounded-full px-3 py-1 text-xs font-semibold ${style}`}
+      className={`rounded-full px-3 py-1 text-xs font-medium ${style}`}
     >
       {displayPaymentStatus(
         status
@@ -1384,7 +1384,7 @@ function StatusCard({
       "bg-amber-50 text-amber-700",
 
     emerald:
-      "bg-emerald-50 text-emerald-700",
+      "bg-green-50 text-green-700",
 
     red:
       "bg-red-50 text-red-700",
@@ -1394,12 +1394,12 @@ function StatusCard({
     <article className="rounded-2xl bg-white p-6 shadow-sm">
 
       <span
-        className={`rounded-lg px-3 py-1 text-sm font-semibold ${styles[color]}`}
+        className={`rounded-lg px-3 py-1 text-sm font-medium ${styles[color]}`}
       >
         {title}
       </span>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {count}
       </p>
 
@@ -1415,13 +1415,13 @@ function Detail({
   value?: string;
 }) {
   return (
-    <div className="flex justify-between gap-6 border-b border-slate-100 pb-3">
+    <div className="flex justify-between gap-6 border-b border-unitor-gray-soft pb-3">
 
-      <span className="text-slate-500">
+      <span className="text-unitor-gray-dark">
         {label}
       </span>
 
-      <span className="break-all text-right font-semibold text-slate-900">
+      <span className="break-all text-right font-medium text-unitor-black">
         {value ||
           "Not provided"}
       </span>

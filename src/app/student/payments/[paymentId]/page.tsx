@@ -201,8 +201,8 @@ export default function PaymentStatusPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-600">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+        <p className="text-unitor-gray-dark">
           Loading payment status...
         </p>
       </main>
@@ -211,19 +211,19 @@ export default function PaymentStatusPage() {
 
   if (error || !payment) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold text-red-600">
             Payment unavailable
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             {error}
           </p>
 
           <Link
             href="/student/payments"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white"
+            className="mt-6 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white"
           >
             Return to payments
           </Link>
@@ -233,19 +233,19 @@ export default function PaymentStatusPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link
             href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/student/payments"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Payment history
           </Link>
@@ -259,7 +259,7 @@ export default function PaymentStatusPage() {
         />
 
         <section className="mt-6 rounded-2xl bg-white p-7 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-unitor-black">
             Payment Information
           </h2>
 
@@ -316,7 +316,7 @@ export default function PaymentStatusPage() {
         </section>
 
         <section className="mt-6 rounded-2xl bg-white p-7 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-unitor-black">
             Payment Breakdown
           </h2>
 
@@ -341,7 +341,7 @@ export default function PaymentStatusPage() {
         {payment.proposalId && (
           <Link
             href={`/student/proposals/${payment.proposalId}`}
-            className="mt-6 block w-full rounded-lg border border-emerald-600 px-6 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
+            className="mt-6 block w-full rounded-lg border border-unitor-primary px-6 py-3 text-center font-medium text-unitor-primary hover:bg-unitor-background"
           >
             View Related Proposal
           </Link>
@@ -366,8 +366,8 @@ function PaymentResult({
     normalizedStatus === "approved"
   ) {
     return (
-      <section className="rounded-2xl bg-emerald-600 p-8 text-center text-white shadow-sm">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-3xl text-emerald-600">
+      <section className="rounded-2xl bg-unitor-primary p-8 text-center text-white shadow-sm">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white text-3xl text-unitor-primary">
           ✓
         </div>
 
@@ -375,19 +375,19 @@ function PaymentResult({
           Payment Approved
         </h1>
 
-        <p className="mt-3 text-emerald-50">
+        <p className="mt-3 text-unitor-background">
           Your payment was verified successfully.
         </p>
 
         {chatId ? (
           <>
-            <p className="mt-2 text-sm text-emerald-100">
+            <p className="mt-2 text-sm text-unitor-blue-light">
               Opening your tutor conversation...
             </p>
 
             <Link
               href={`/student/messages/${chatId}`}
-              className="mt-6 inline-block rounded-lg bg-white px-6 py-3 font-semibold text-emerald-600"
+              className="mt-6 inline-block rounded-lg bg-white px-6 py-3 font-medium text-unitor-primary"
             >
               Open Chat Now
             </Link>
@@ -453,14 +453,14 @@ function InformationRow({
   mono?: boolean;
 }) {
   return (
-    <div className="flex flex-col justify-between gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center">
-      <span className="text-slate-500">
+    <div className="flex flex-col justify-between gap-2 border-b border-unitor-gray-soft pb-4 sm:flex-row sm:items-center">
+      <span className="text-unitor-gray-dark">
         {label}
       </span>
 
       <span
-        className={`break-all font-semibold text-slate-900 ${
-          mono ? "font-mono text-sm" : ""
+        className={`break-all font-medium text-unitor-black ${
+          mono ? "font-sans text-sm" : ""
         }`}
       >
         {value || "Not available"}
@@ -477,12 +477,12 @@ function AmountItem({
   value: number;
 }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-5 text-center">
-      <p className="text-sm text-slate-500">
+    <div className="rounded-xl bg-unitor-background p-5 text-center">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-2 text-xl font-bold text-slate-900">
+      <p className="mt-2 text-xl font-bold text-unitor-black">
         ৳{value}
       </p>
     </div>

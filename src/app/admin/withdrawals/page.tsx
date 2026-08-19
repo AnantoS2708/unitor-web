@@ -944,9 +944,9 @@ export default function AdminWithdrawalsPage() {
     checkingAdmin
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Checking administrator access...
         </p>
 
@@ -959,19 +959,19 @@ export default function AdminWithdrawalsPage() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-unitor-gray-soft">
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
 
           <Link
             href="/admin/dashboard"
-            className="text-2xl font-bold text-emerald-400"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Admin
           </Link>
@@ -980,7 +980,7 @@ export default function AdminWithdrawalsPage() {
 
           <Link
             href="/admin/dashboard"
-            className="text-sm font-medium text-slate-300 transition hover:text-white"
+            className="text-sm font-medium text-unitor-gray-light transition hover:text-white"
           >
             ← Dashboard
           </Link>
@@ -1001,15 +1001,15 @@ export default function AdminWithdrawalsPage() {
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Payment management
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Withdrawal Requests
           </h1>
 
-          <p className="mt-3 max-w-3xl text-slate-600">
+          <p className="mt-3 max-w-3xl text-unitor-gray-dark">
             Review tutor withdrawal
             requests and send the payment
             manually to the tutor&apos;s
@@ -1037,7 +1037,7 @@ export default function AdminWithdrawalsPage() {
 
         {success && (
 
-          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-medium text-emerald-700">
+          <div className="mt-6 rounded-xl border border-unitor-blue-light bg-unitor-background p-4 text-sm font-medium text-unitor-primary-hover">
             ✓ {success}
           </div>
 
@@ -1143,9 +1143,9 @@ export default function AdminWithdrawalsPage() {
 
           {loading ? (
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-16 text-center shadow-sm">
+            <div className="rounded-2xl border border-unitor-gray-light bg-white p-16 text-center shadow-sm">
 
-              <p className="text-slate-500">
+              <p className="text-unitor-gray-dark">
                 Loading withdrawal
                 requests...
               </p>
@@ -1155,13 +1155,13 @@ export default function AdminWithdrawalsPage() {
           ) : displayedRequests.length ===
             0 ? (
 
-            <div className="rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm">
+            <div className="rounded-2xl border border-unitor-gray-light bg-white px-6 py-16 text-center shadow-sm">
 
               <div className="text-4xl">
                 💳
               </div>
 
-              <h2 className="mt-5 text-xl font-bold text-slate-900">
+              <h2 className="mt-5 text-xl font-bold text-unitor-black">
 
                 {filter ===
                   "pending" &&
@@ -1245,7 +1245,7 @@ function SummaryCard({
     | "rejected";
 }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
       <span
         className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${
@@ -1254,14 +1254,14 @@ function SummaryCard({
             ? "bg-amber-50 text-amber-700"
             : status ===
                 "approved"
-              ? "bg-emerald-50 text-emerald-700"
+              ? "bg-green-50 text-green-700"
               : "bg-red-50 text-red-700"
         }`}
       >
         {label}
       </span>
 
-      <p className="mt-6 text-3xl font-bold text-slate-900">
+      <p className="mt-6 text-3xl font-bold text-unitor-black">
         {value}
       </p>
 
@@ -1288,10 +1288,10 @@ function FilterButton({
       onClick={
         onClick
       }
-      className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${
+      className={`rounded-lg border px-4 py-2 text-sm font-medium transition ${
         active
-          ? "border-slate-900 bg-slate-900 text-white"
-          : "border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+          ? "border-unitor-black bg-unitor-black text-white"
+          : "border-unitor-gray-light bg-white text-unitor-gray-dark hover:border-unitor-gray-dark/70 hover:bg-unitor-background"
       }`}
     >
       {label}
@@ -1333,15 +1333,15 @@ function WithdrawalCard({
       "paid";
 
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
       {/* TOP */}
 
-      <div className="flex flex-col justify-between gap-5 border-b border-slate-100 pb-5 sm:flex-row sm:items-start">
+      <div className="flex flex-col justify-between gap-5 border-b border-unitor-gray-soft pb-5 sm:flex-row sm:items-start">
 
         <div className="flex items-start gap-4">
 
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary-hover">
 
             {request.tutorName
               .charAt(0)
@@ -1354,7 +1354,7 @@ function WithdrawalCard({
 
             <div className="flex flex-wrap items-center gap-2">
 
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-unitor-black">
                 {request.tutorName}
               </h2>
 
@@ -1366,12 +1366,12 @@ function WithdrawalCard({
 
             </div>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               {request.tutorEmail ||
                 "No email provided"}
             </p>
 
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-unitor-gray-dark/70">
               Requested{" "}
               {formatDate(
                 request.createdAt
@@ -1384,11 +1384,11 @@ function WithdrawalCard({
 
         <div className="sm:text-right">
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-unitor-gray-dark">
             Withdrawal Amount
           </p>
 
-          <p className="mt-1 text-3xl font-bold text-slate-900">
+          <p className="mt-1 text-3xl font-bold text-unitor-black">
             ৳
             {formatMoney(
               request.amount
@@ -1431,11 +1431,11 @@ function WithdrawalCard({
       {status !==
         "pending" && (
 
-        <div className="mt-5 rounded-xl bg-slate-50 p-4">
+        <div className="mt-5 rounded-xl bg-unitor-background p-4">
 
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-unitor-gray-dark">
 
-            <span className="font-semibold text-slate-800">
+            <span className="font-medium text-unitor-black">
               Status:
             </span>{" "}
 
@@ -1447,9 +1447,9 @@ function WithdrawalCard({
 
           {request.reviewedAt && (
 
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
 
-              <span className="font-semibold text-slate-800">
+              <span className="font-medium text-unitor-black">
                 Reviewed:
               </span>{" "}
 
@@ -1463,9 +1463,9 @@ function WithdrawalCard({
 
           {request.adminNote && (
 
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
 
-              <span className="font-semibold text-slate-800">
+              <span className="font-medium text-unitor-black">
                 Note:
               </span>{" "}
 
@@ -1496,7 +1496,7 @@ function WithdrawalCard({
             disabled={
               processing
             }
-            className="rounded-xl border border-red-300 bg-white px-6 py-3 font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl border border-red-300 bg-white px-6 py-3 font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {processing
               ? "Processing..."
@@ -1511,7 +1511,7 @@ function WithdrawalCard({
             disabled={
               processing
             }
-            className="rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+            className="rounded-xl bg-unitor-primary px-6 py-3 font-medium text-white transition hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:bg-unitor-gray-light"
           >
             {processing
               ? "Processing..."
@@ -1543,20 +1543,20 @@ function InfoBox({
     <div
       className={`rounded-xl border p-4 ${
         highlight
-          ? "border-emerald-200 bg-emerald-50"
-          : "border-slate-100 bg-slate-50"
+          ? "border-unitor-blue-light bg-unitor-background"
+          : "border-unitor-gray-soft bg-unitor-background"
       }`}
     >
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-unitor-gray-dark">
         {label}
       </p>
 
       <p
-        className={`mt-2 break-all font-semibold ${
+        className={`mt-2 break-all font-medium ${
           highlight
-            ? "text-emerald-700"
-            : "text-slate-900"
+            ? "text-unitor-primary-hover"
+            : "text-unitor-black"
         }`}
       >
         {value}
@@ -1582,7 +1582,7 @@ function StatusBadge({
       "paid"
   ) {
     return (
-      <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+      <span className="rounded-lg bg-unitor-background px-3 py-1 text-xs font-bold text-unitor-primary-hover">
         Approved
       </span>
     );

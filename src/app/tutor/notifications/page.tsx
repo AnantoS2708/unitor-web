@@ -155,19 +155,19 @@ export default function TutorNotificationsPage() {
   ).length;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -177,15 +177,15 @@ export default function TutorNotificationsPage() {
       <div className="mx-auto max-w-4xl px-6 py-10">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="font-semibold text-emerald-600">
+            <p className="font-medium text-unitor-primary">
               Updates
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold text-unitor-black">
               Notifications
             </h1>
 
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               Check application, payment and session updates.
             </p>
           </div>
@@ -194,7 +194,7 @@ export default function TutorNotificationsPage() {
             <button
               type="button"
               onClick={markAllAsRead}
-              className="rounded-lg border border-emerald-600 px-4 py-2 font-semibold text-emerald-600 hover:bg-emerald-50"
+              className="rounded-lg border border-unitor-primary px-4 py-2 font-medium text-unitor-primary hover:bg-unitor-background"
             >
               Mark all as read
             </button>
@@ -202,7 +202,7 @@ export default function TutorNotificationsPage() {
         </div>
 
         {unreadCount > 0 && (
-          <p className="mt-6 text-sm font-semibold text-emerald-700">
+          <p className="mt-6 text-sm font-medium text-unitor-primary-hover">
             {unreadCount} unread{" "}
             {unreadCount === 1 ? "notification" : "notifications"}
           </p>
@@ -210,7 +210,7 @@ export default function TutorNotificationsPage() {
 
         {loading && (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading notifications...
             </p>
           </section>
@@ -226,18 +226,18 @@ export default function TutorNotificationsPage() {
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
             <div className="text-5xl">🔔</div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No notifications
             </h2>
 
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               Your tutor updates will appear here.
             </p>
           </section>
         )}
 
         {!loading && notifications.length > 0 && (
-          <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="mt-8 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
             {notifications.map((notification) => (
               <button
                 key={notification.id}
@@ -245,10 +245,10 @@ export default function TutorNotificationsPage() {
                 onClick={() =>
                   handleNotificationClick(notification)
                 }
-                className={`flex w-full gap-4 border-b border-slate-100 p-5 text-left transition last:border-b-0 hover:bg-slate-50 ${
+                className={`flex w-full gap-4 border-b border-unitor-gray-soft p-5 text-left transition last:border-b-0 hover:bg-unitor-background ${
                   notification.isRead
                     ? "bg-white"
-                    : "bg-emerald-50/60"
+                    : "bg-unitor-background/60"
                 }`}
               >
                 <div
@@ -262,9 +262,9 @@ export default function TutorNotificationsPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-4">
                     <h2
-                      className={`text-base text-slate-900 ${
+                      className={`text-base text-unitor-black ${
                         notification.isRead
-                          ? "font-semibold"
+                          ? "font-medium"
                           : "font-bold"
                       }`}
                     >
@@ -272,22 +272,22 @@ export default function TutorNotificationsPage() {
                     </h2>
 
                     {!notification.isRead && (
-                      <span className="mt-2 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-500" />
+                      <span className="mt-2 h-2.5 w-2.5 flex-shrink-0 rounded-full bg-unitor-primary" />
                     )}
                   </div>
 
-                  <p className="mt-1 leading-6 text-slate-600">
+                  <p className="mt-1 leading-6 text-unitor-gray-dark">
                     {notification.message}
                   </p>
 
-                  <p className="mt-2 text-xs text-slate-400">
+                  <p className="mt-2 text-xs text-unitor-gray-dark/70">
                     {formatNotificationTime(
                       notification.createdAt
                     )}
                   </p>
                 </div>
 
-                <span className="self-center text-xl text-slate-400">
+                <span className="self-center text-xl text-unitor-gray-dark/70">
                   ›
                 </span>
               </button>
@@ -358,10 +358,10 @@ function getNotificationIcon(type: string) {
 function getNotificationIconStyle(type: string) {
   switch (type.toLowerCase()) {
     case "payment":
-      return "bg-blue-100 text-blue-700";
+      return "bg-unitor-blue-light text-unitor-primary-hover";
 
     case "chat":
-      return "bg-emerald-100 text-emerald-700";
+      return "bg-unitor-blue-light text-unitor-primary-hover";
 
     case "session_completed":
       return "bg-green-100 text-green-700";
@@ -373,7 +373,7 @@ function getNotificationIconStyle(type: string) {
       return "bg-purple-100 text-purple-700";
 
     default:
-      return "bg-slate-100 text-slate-700";
+      return "bg-unitor-gray-soft text-unitor-gray-dark";
   }
 }
 

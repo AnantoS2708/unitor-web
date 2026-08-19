@@ -978,9 +978,9 @@ export default function TutorCardPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Loading your wallet...
         </p>
 
@@ -993,13 +993,13 @@ export default function TutorCardPage() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-30 border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
@@ -1007,7 +1007,7 @@ export default function TutorCardPage() {
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Tutor
           </Link>
@@ -1018,28 +1018,28 @@ export default function TutorCardPage() {
 
             <Link
               href="/tutor/dashboard"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               Dashboard
             </Link>
 
             <Link
               href="/tutor/proposals"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               Available Proposals
             </Link>
 
             <Link
               href="/tutor/messages"
-              className="text-slate-600 transition hover:text-emerald-600"
+              className="text-unitor-gray-dark transition hover:text-unitor-primary"
             >
               Messages
             </Link>
 
             <Link
               href="/tutor/card"
-              className="font-semibold text-emerald-600"
+              className="font-medium text-unitor-primary"
             >
               My Card
             </Link>
@@ -1057,7 +1057,7 @@ export default function TutorCardPage() {
                   "/role-selection"
                 )
               }
-              className="rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-50"
+              className="rounded-lg border border-unitor-primary px-4 py-2 text-sm font-medium text-unitor-primary transition hover:bg-unitor-background"
             >
               Switch view
             </button>
@@ -1077,12 +1077,12 @@ export default function TutorCardPage() {
                   alt={
                     profile.fullName
                   }
-                  className="h-10 w-10 rounded-full border border-slate-200 object-cover"
+                  className="h-10 w-10 rounded-full border border-unitor-gray-light object-cover"
                 />
 
               ) : (
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary-hover">
 
                   {profile?.fullName
                     ?.charAt(0)
@@ -1109,7 +1109,7 @@ export default function TutorCardPage() {
                   !current
               )
             }
-            className="rounded-lg border border-slate-200 px-3 py-2 text-slate-700 md:hidden"
+            className="rounded-lg border border-unitor-gray-light px-3 py-2 text-unitor-gray-dark md:hidden"
             aria-label="Open menu"
           >
             ☰
@@ -1121,7 +1121,7 @@ export default function TutorCardPage() {
 
         {mobileMenuOpen && (
 
-          <nav className="border-t border-slate-200 bg-white px-6 py-4 md:hidden">
+          <nav className="border-t border-unitor-gray-light bg-white px-6 py-4 md:hidden">
 
             <div className="flex flex-col gap-4">
 
@@ -1160,7 +1160,7 @@ export default function TutorCardPage() {
 
               <Link
                 href="/tutor/card"
-                className="font-semibold text-emerald-600"
+                className="font-medium text-unitor-primary"
                 onClick={() =>
                   setMobileMenuOpen(
                     false
@@ -1188,7 +1188,7 @@ export default function TutorCardPage() {
                     "/role-selection"
                   )
                 }
-                className="text-left font-medium text-emerald-600"
+                className="text-left font-medium text-unitor-primary"
               >
                 Switch to Student View
               </button>
@@ -1221,7 +1221,7 @@ export default function TutorCardPage() {
 
         <Link
           href="/tutor/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+          className="inline-flex items-center gap-2 text-sm font-medium text-unitor-primary hover:text-unitor-primary-hover"
         >
           ← Back to Dashboard
         </Link>
@@ -1230,15 +1230,15 @@ export default function TutorCardPage() {
 
         <div className="mt-5">
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Tutor Wallet
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-slate-900">
+          <h1 className="mt-1 text-3xl font-bold text-unitor-black">
             My Card
           </h1>
 
-          <p className="mt-2 max-w-2xl leading-7 text-slate-600">
+          <p className="mt-2 max-w-2xl leading-7 text-unitor-gray-dark">
             View your tutoring earnings,
             request a withdrawal, and track
             your previous withdrawal requests.
@@ -1260,7 +1260,7 @@ export default function TutorCardPage() {
 
         {success && (
 
-          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-medium text-emerald-700">
+          <div className="mt-6 rounded-xl border border-unitor-blue-light bg-unitor-background p-4 text-sm font-medium text-unitor-primary-hover">
             ✓ {success}
           </div>
 
@@ -1270,11 +1270,11 @@ export default function TutorCardPage() {
             WALLET CARD
         =================================================== */}
 
-        <section className="relative mt-8 overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-500 p-7 text-white shadow-lg md:p-9">
+        <section className="relative mt-8 overflow-hidden rounded-3xl border border-unitor-primary/20 bg-gradient-to-br from-unitor-primary-hover via-unitor-primary to-unitor-primary p-7 text-white shadow-lg md:p-9">
 
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
-          <div className="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-emerald-300/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-unitor-blue-light/20 blur-3xl" />
 
           <div className="relative z-10">
 
@@ -1292,7 +1292,7 @@ export default function TutorCardPage() {
                   Unitor
                 </p>
 
-                <p className="text-sm text-emerald-100">
+                <p className="text-sm text-unitor-blue-light">
                   Tutor Wallet
                 </p>
 
@@ -1304,7 +1304,7 @@ export default function TutorCardPage() {
 
             <div className="mt-9">
 
-              <p className="text-sm font-medium text-emerald-100">
+              <p className="text-sm font-medium text-unitor-blue-light">
                 Available Balance
               </p>
 
@@ -1315,7 +1315,7 @@ export default function TutorCardPage() {
                 )}
               </p>
 
-              <p className="mt-2 text-sm text-emerald-100">
+              <p className="mt-2 text-sm text-unitor-blue-light">
                 Available to withdraw
               </p>
 
@@ -1356,21 +1356,21 @@ export default function TutorCardPage() {
             90% INFORMATION
         =================================================== */}
 
-        <section className="mt-5 rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+        <section className="mt-5 rounded-2xl border border-unitor-blue-light bg-unitor-background p-5">
 
           <div className="flex items-start gap-3">
 
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 font-bold text-emerald-700">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-unitor-blue-light font-bold text-unitor-primary-hover">
               ✓
             </div>
 
             <div>
 
-              <p className="font-semibold text-slate-900">
+              <p className="font-medium text-unitor-black">
                 You receive 90% of the student payment
               </p>
 
-              <p className="mt-1 text-sm leading-6 text-slate-600">
+              <p className="mt-1 text-sm leading-6 text-unitor-gray-dark">
                 Unitor keeps a 10% platform
                 commission. Your 90% share is
                 added to your tutor wallet after
@@ -1393,21 +1393,21 @@ export default function TutorCardPage() {
               WITHDRAW
           ================================================= */}
 
-          <section className="h-fit rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="h-fit rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
             <div className="flex items-center gap-3">
 
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-xl font-bold text-emerald-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-unitor-blue-light text-xl font-bold text-unitor-primary-hover">
                 ৳
               </div>
 
               <div>
 
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-unitor-black">
                   Withdraw Money
                 </h2>
 
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-unitor-gray-dark">
                   Request payment through bKash
                 </p>
 
@@ -1424,13 +1424,13 @@ export default function TutorCardPage() {
 
               {/* AVAILABLE */}
 
-              <div className="mb-6 rounded-xl bg-emerald-50 p-4">
+              <div className="mb-6 rounded-xl bg-unitor-background p-4">
 
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-unitor-gray-dark">
                   Available to withdraw
                 </p>
 
-                <p className="mt-1 text-2xl font-bold text-emerald-600">
+                <p className="mt-1 text-2xl font-bold text-unitor-primary">
                   ৳
                   {formatMoney(
                     walletBalance
@@ -1443,14 +1443,14 @@ export default function TutorCardPage() {
 
               <label
                 htmlFor="withdrawAmount"
-                className="block text-sm font-semibold text-slate-700"
+                className="block text-sm font-medium text-unitor-gray-dark"
               >
                 Withdrawal Amount
               </label>
 
               <div className="relative mt-2">
 
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-unitor-gray-dark">
                   ৳
                 </span>
 
@@ -1470,7 +1470,7 @@ export default function TutorCardPage() {
                     )
                   }
                   placeholder="Enter amount"
-                  className="w-full rounded-xl border border-slate-300 bg-white py-3 pl-9 pr-4 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                  className="w-full rounded-xl border border-unitor-gray-light bg-white py-3 pl-9 pr-4 text-unitor-black outline-none transition placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                 />
 
               </div>
@@ -1493,7 +1493,7 @@ export default function TutorCardPage() {
                   walletBalance <=
                   0
                 }
-                className="mt-2 text-sm font-semibold text-emerald-600 disabled:cursor-not-allowed disabled:text-slate-400"
+                className="mt-2 text-sm font-medium text-unitor-primary disabled:cursor-not-allowed disabled:text-unitor-gray-dark/70"
               >
                 Withdraw full balance
               </button>
@@ -1502,7 +1502,7 @@ export default function TutorCardPage() {
 
               <label
                 htmlFor="bkashNumber"
-                className="mt-6 block text-sm font-semibold text-slate-700"
+                className="mt-6 block text-sm font-medium text-unitor-gray-dark"
               >
                 bKash Number
               </label>
@@ -1530,10 +1530,10 @@ export default function TutorCardPage() {
                   )
                 }
                 placeholder="01XXXXXXXXX"
-                className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+                className="mt-2 w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none transition placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
               />
 
-              <p className="mt-2 text-xs leading-5 text-slate-500">
+              <p className="mt-2 text-xs leading-5 text-unitor-gray-dark">
                 Enter the bKash number
                 where you want to receive
                 your payment.
@@ -1543,7 +1543,7 @@ export default function TutorCardPage() {
 
               <div className="mt-6 rounded-xl border border-amber-100 bg-amber-50 p-4">
 
-                <p className="text-sm font-semibold text-amber-800">
+                <p className="text-sm font-medium text-amber-800">
                   How withdrawal works
                 </p>
 
@@ -1568,7 +1568,7 @@ export default function TutorCardPage() {
                   walletBalance <=
                     0
                 }
-                className="mt-6 w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                className="mt-6 w-full rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white transition hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:bg-unitor-gray-light"
               >
 
                 {submitting
@@ -1588,17 +1588,17 @@ export default function TutorCardPage() {
               HISTORY
           ================================================= */}
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
-            <div className="flex flex-col justify-between gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-center">
+            <div className="flex flex-col justify-between gap-3 border-b border-unitor-gray-soft pb-5 sm:flex-row sm:items-center">
 
               <div>
 
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-unitor-black">
                   Withdrawal History
                 </h2>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-unitor-gray-dark">
                   Track all of your
                   withdrawal requests.
                 </p>
@@ -1624,15 +1624,15 @@ export default function TutorCardPage() {
 
               <div className="py-16 text-center">
 
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-2xl">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-unitor-background text-2xl">
                   💳
                 </div>
 
-                <h3 className="mt-4 font-bold text-slate-900">
+                <h3 className="mt-4 font-bold text-unitor-black">
                   No withdrawals yet
                 </h3>
 
-                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500">
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-unitor-gray-dark">
                   When you request a
                   withdrawal, its status
                   will appear here.
@@ -1642,7 +1642,7 @@ export default function TutorCardPage() {
 
             ) : (
 
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-unitor-gray-soft">
 
                 {withdrawalRequests.map(
                   (
@@ -1689,7 +1689,7 @@ function WalletMiniCard({
   return (
     <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-md">
 
-      <p className="text-xs text-emerald-100">
+      <p className="text-xs text-unitor-blue-light">
         {label}
       </p>
 
@@ -1732,7 +1732,7 @@ function WithdrawalItem({
                 "approved" ||
               status ===
                 "paid"
-                ? "bg-emerald-100 text-emerald-700"
+                ? "bg-green-100 text-green-700"
                 : status ===
                     "rejected"
                   ? "bg-red-100 text-red-700"
@@ -1756,7 +1756,7 @@ function WithdrawalItem({
 
             <div className="flex flex-wrap items-center gap-2">
 
-              <p className="font-bold text-slate-900">
+              <p className="font-bold text-unitor-black">
                 Withdrawal Request
               </p>
 
@@ -1768,14 +1768,14 @@ function WithdrawalItem({
 
             </div>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               bKash:{" "}
               {maskPhoneNumber(
                 request.bkashNumber
               )}
             </p>
 
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-unitor-gray-dark/70">
               Requested{" "}
               {formatDate(
                 request.createdAt
@@ -1784,7 +1784,7 @@ function WithdrawalItem({
 
             {request.reviewedAt && (
 
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-unitor-gray-dark/70">
                 Reviewed{" "}
                 {formatDate(
                   request.reviewedAt
@@ -1799,14 +1799,14 @@ function WithdrawalItem({
 
         <div className="sm:text-right">
 
-          <p className="text-xl font-bold text-slate-900">
+          <p className="text-xl font-bold text-unitor-black">
             ৳
             {formatMoney(
               request.amount
             )}
           </p>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-unitor-gray-dark">
             bKash withdrawal
           </p>
 
@@ -1834,7 +1834,7 @@ function StatusBadge({
       "paid"
   ) {
     return (
-      <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+      <span className="rounded-full bg-unitor-blue-light px-3 py-1 text-xs font-bold text-unitor-primary-hover">
         Approved
       </span>
     );

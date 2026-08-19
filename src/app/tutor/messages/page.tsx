@@ -137,19 +137,19 @@ export default function TutorMessagesPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Tutor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -158,15 +158,15 @@ export default function TutorMessagesPage() {
 
       <div className="mx-auto max-w-4xl px-6 py-10">
         <div>
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Student conversations
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Messages
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Communicate with students during active
             tutoring sessions.
           </p>
@@ -174,7 +174,7 @@ export default function TutorMessagesPage() {
 
         {loading && (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading conversations...
             </p>
           </section>
@@ -192,18 +192,18 @@ export default function TutorMessagesPage() {
             <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
               <div className="text-5xl">💬</div>
 
-              <h2 className="mt-5 text-2xl font-bold text-slate-900">
+              <h2 className="mt-5 text-2xl font-bold text-unitor-black">
                 No conversations yet
               </h2>
 
-              <p className="mx-auto mt-3 max-w-md text-slate-600">
+              <p className="mx-auto mt-3 max-w-md text-unitor-gray-dark">
                 Conversations will appear after a student
                 selects you and their payment is approved.
               </p>
 
               <Link
                 href="/tutor/proposals"
-                className="mt-7 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                className="mt-7 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
               >
                 Browse proposals
               </Link>
@@ -213,16 +213,16 @@ export default function TutorMessagesPage() {
         {!loading && activeChats.length > 0 && (
           <section className="mt-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-unitor-black">
                 Active Sessions
               </h2>
 
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+              <span className="rounded-full bg-unitor-background px-3 py-1 text-sm font-medium text-unitor-primary-hover">
                 {activeChats.length}
               </span>
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="mt-4 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
               {activeChats.map((chat) => (
                 <TutorChatRow
                   key={chat.id}
@@ -236,16 +236,16 @@ export default function TutorMessagesPage() {
         {!loading && endedChats.length > 0 && (
           <section className="mt-10">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-unitor-black">
                 Previous Sessions
               </h2>
 
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">
+              <span className="rounded-full bg-unitor-gray-soft px-3 py-1 text-sm font-medium text-unitor-gray-dark">
                 {endedChats.length}
               </span>
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="mt-4 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
               {endedChats.map((chat) => (
                 <TutorChatRow
                   key={chat.id}
@@ -274,42 +274,42 @@ function TutorChatRow({
   return (
     <Link
       href={`/tutor/messages/${chat.id}`}
-      className="flex items-center gap-4 border-b border-slate-100 p-5 transition last:border-b-0 hover:bg-slate-50"
+      className="flex items-center gap-4 border-b border-unitor-gray-soft p-5 transition last:border-b-0 hover:bg-unitor-background"
     >
       <div className="relative flex-shrink-0">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-xl font-bold text-emerald-600">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-unitor-blue-light text-xl font-bold text-unitor-primary">
           {studentInitial}
         </div>
 
         <span
           className={`absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white ${
             active
-              ? "bg-emerald-500"
-              : "bg-slate-400"
+              ? "bg-green-500"
+              : "bg-unitor-gray-dark/70"
           }`}
         />
       </div>
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-4">
-          <h2 className="truncate font-bold text-slate-900">
+          <h2 className="truncate font-bold text-unitor-black">
             {chat.studentName}
           </h2>
 
-          <span className="flex-shrink-0 text-xs text-slate-400">
+          <span className="flex-shrink-0 text-xs text-unitor-gray-dark/70">
             {formatChatTime(chat.lastMessageAt)}
           </span>
         </div>
 
-        <p className="mt-1 truncate text-sm text-slate-600">
+        <p className="mt-1 truncate text-sm text-unitor-gray-dark">
           {chat.lastMessage || "No messages yet"}
         </p>
 
         <p
-          className={`mt-2 text-xs font-semibold ${
+          className={`mt-2 text-xs font-medium ${
             active
-              ? "text-emerald-600"
-              : "text-slate-500"
+              ? "text-unitor-primary"
+              : "text-unitor-gray-dark"
           }`}
         >
           {active
@@ -318,7 +318,7 @@ function TutorChatRow({
         </p>
       </div>
 
-      <span className="text-xl text-slate-400">
+      <span className="text-xl text-unitor-gray-dark/70">
         ›
       </span>
     </Link>

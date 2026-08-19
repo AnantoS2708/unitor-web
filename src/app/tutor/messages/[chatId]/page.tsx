@@ -281,8 +281,8 @@ export default function TutorChatPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-600">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+        <p className="text-unitor-gray-dark">
           Loading conversation...
         </p>
       </main>
@@ -291,19 +291,19 @@ export default function TutorChatPage() {
 
   if (error && !chat) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
         <div className="rounded-2xl bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold text-red-600">
             Chat unavailable
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             {error}
           </p>
 
           <Link
             href="/tutor/messages"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white"
+            className="mt-6 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white"
           >
             Return to messages
           </Link>
@@ -313,32 +313,32 @@ export default function TutorChatPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-slate-100">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="flex min-h-screen flex-col bg-unitor-gray-soft">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex w-full max-w-4xl items-center gap-4 px-5 py-4">
           <Link
             href="/tutor/messages"
-            className="text-2xl text-slate-600 hover:text-emerald-600"
+            className="text-2xl text-unitor-gray-dark hover:text-unitor-primary"
           >
             ←
           </Link>
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-600">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary">
             {chat?.studentName
               .charAt(0)
               .toUpperCase() || "S"}
           </div>
 
           <div className="min-w-0 flex-1">
-            <h1 className="truncate font-bold text-slate-900">
+            <h1 className="truncate font-bold text-unitor-black">
               {chat?.studentName}
             </h1>
 
             <p
               className={`text-sm ${
                 canSend
-                  ? "text-emerald-600"
-                  : "text-slate-500"
+                  ? "text-unitor-primary"
+                  : "text-unitor-gray-dark"
               }`}
             >
               {canSend
@@ -352,7 +352,7 @@ export default function TutorChatPage() {
           {chat?.proposalId && (
             <Link
               href={`/tutor/proposals/${chat.proposalId}`}
-              className="hidden rounded-lg border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-50 sm:block"
+              className="hidden rounded-lg border border-unitor-primary px-4 py-2 text-sm font-medium text-unitor-primary hover:bg-unitor-background sm:block"
             >
               Proposal
             </Link>
@@ -372,11 +372,11 @@ export default function TutorChatPage() {
             <div>
               <div className="text-5xl">💬</div>
 
-              <h2 className="mt-4 text-xl font-bold text-slate-900">
+              <h2 className="mt-4 text-xl font-bold text-unitor-black">
                 Start the conversation
               </h2>
 
-              <p className="mt-2 text-slate-500">
+              <p className="mt-2 text-unitor-gray-dark">
                 Send a message to the student.
               </p>
             </div>
@@ -429,8 +429,8 @@ function MessageBubble({
       <div
         className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm sm:max-w-[65%] ${
           sentByCurrentUser
-            ? "rounded-br-md bg-emerald-600 text-white"
-            : "rounded-bl-md bg-white text-slate-900"
+            ? "rounded-br-md bg-unitor-primary text-white"
+            : "rounded-bl-md bg-white text-unitor-black"
         }`}
       >
         <p className="whitespace-pre-wrap break-words">
@@ -440,8 +440,8 @@ function MessageBubble({
         <p
           className={`mt-1 text-right text-xs ${
             sentByCurrentUser
-              ? "text-emerald-100"
-              : "text-slate-400"
+              ? "text-unitor-blue-light"
+              : "text-unitor-gray-dark/70"
           }`}
         >
           {formatMessageTime(message.sentAt)}
@@ -469,7 +469,7 @@ function MessageComposer({
   ) => void;
 }) {
   return (
-    <footer className="sticky bottom-0 border-t border-slate-200 bg-white">
+    <footer className="sticky bottom-0 border-t border-unitor-gray-light bg-white">
       <div className="mx-auto max-w-4xl px-5 py-4">
         {canSend ? (
           <form
@@ -493,7 +493,7 @@ function MessageComposer({
               rows={1}
               maxLength={1000}
               placeholder="Type a message..."
-              className="max-h-32 min-h-12 flex-1 resize-none rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              className="max-h-32 min-h-12 flex-1 resize-none rounded-2xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
             />
 
             <button
@@ -501,13 +501,13 @@ function MessageComposer({
               disabled={
                 sending || !messageText.trim()
               }
-              className="h-12 rounded-xl bg-emerald-600 px-5 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-12 rounded-xl bg-unitor-primary px-5 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {sending ? "Sending..." : "Send"}
             </button>
           </form>
         ) : (
-          <div className="rounded-lg bg-slate-100 p-4 text-center text-sm font-medium text-slate-600">
+          <div className="rounded-lg bg-unitor-gray-soft p-4 text-center text-sm font-medium text-unitor-gray-dark">
             {sessionExpired
               ? "This session has expired. New messages are disabled."
               : "This session has ended. New messages are disabled."}

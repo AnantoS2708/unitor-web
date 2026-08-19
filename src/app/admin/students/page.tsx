@@ -184,19 +184,19 @@ export default function AdminStudentsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+    <main className="min-h-screen bg-unitor-gray-soft">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link
             href="/admin/dashboard"
-            className="text-2xl font-bold text-emerald-400"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Admin
           </Link>
 
           <Link
             href="/admin/dashboard"
-            className="font-medium text-slate-300 hover:text-white"
+            className="font-medium text-unitor-gray-light hover:text-white"
           >
             ← Dashboard
           </Link>
@@ -204,15 +204,15 @@ export default function AdminStudentsPage() {
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <p className="font-semibold text-emerald-600">
+        <p className="font-medium text-unitor-primary">
           User management
         </p>
 
-        <h1 className="mt-2 text-3xl font-bold text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold text-unitor-black">
           Students
         </h1>
 
-        <p className="mt-3 text-slate-600">
+        <p className="mt-3 text-unitor-gray-dark">
           View registered students and their account
           information.
         </p>
@@ -246,7 +246,7 @@ export default function AdminStudentsPage() {
         <section className="mt-8 rounded-2xl bg-white p-5 shadow-sm">
           <label
             htmlFor="studentSearch"
-            className="mb-2 block text-sm font-semibold text-slate-700"
+            className="mb-2 block text-sm font-medium text-unitor-gray-dark"
           >
             Search students
           </label>
@@ -259,13 +259,13 @@ export default function AdminStudentsPage() {
               setSearchText(event.target.value)
             }
             placeholder="Search by name, email, university ID or major"
-            className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
           />
         </section>
 
         {loading ? (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading students...
             </p>
           </section>
@@ -273,11 +273,11 @@ export default function AdminStudentsPage() {
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
             <div className="text-5xl">🎓</div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No students found
             </h2>
 
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               Try another search term.
             </p>
           </section>
@@ -285,7 +285,7 @@ export default function AdminStudentsPage() {
           <section className="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[850px]">
-                <thead className="bg-slate-50 text-left">
+                <thead className="bg-unitor-background text-left">
                   <tr>
                     <TableHeading>Student</TableHeading>
                     <TableHeading>University ID</TableHeading>
@@ -296,11 +296,11 @@ export default function AdminStudentsPage() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-unitor-gray-soft">
                   {filteredStudents.map((student) => (
                     <tr
                       key={student.id}
-                      className="hover:bg-slate-50"
+                      className="hover:bg-unitor-background"
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
@@ -311,7 +311,7 @@ export default function AdminStudentsPage() {
                               className="h-11 w-11 rounded-full object-cover"
                             />
                           ) : (
-                            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-unitor-blue-light font-bold text-unitor-primary-hover">
                               {student.fullName
                                 .charAt(0)
                                 .toUpperCase() || "S"}
@@ -319,11 +319,11 @@ export default function AdminStudentsPage() {
                           )}
 
                           <div>
-                            <p className="font-semibold text-slate-900">
+                            <p className="font-medium text-unitor-black">
                               {student.fullName}
                             </p>
 
-                            <p className="mt-1 text-sm text-slate-500">
+                            <p className="mt-1 text-sm text-unitor-gray-dark">
                               {student.universityEmail.toLowerCase()}
                             </p>
                           </div>
@@ -347,9 +347,9 @@ export default function AdminStudentsPage() {
                       <td className="p-4">
                         <div className="flex flex-wrap gap-2">
                           <span
-                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            className={`rounded-full px-3 py-1 text-xs font-medium ${
                               student.emailVerified
-                                ? "bg-emerald-100 text-emerald-700"
+                                ? "bg-green-100 text-green-700"
                                 : "bg-amber-100 text-amber-700"
                             }`}
                           >
@@ -361,7 +361,7 @@ export default function AdminStudentsPage() {
                           {student.roles.includes(
                             "tutor"
                           ) && (
-                            <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
+                            <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700">
                               Tutor
                             </span>
                           )}
@@ -374,7 +374,7 @@ export default function AdminStudentsPage() {
                           onClick={() =>
                             setSelectedStudent(student)
                           }
-                          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-emerald-600 hover:text-emerald-600"
+                          className="rounded-lg border border-unitor-gray-light px-4 py-2 text-sm font-medium text-unitor-gray-dark hover:border-unitor-primary hover:text-unitor-primary"
                         >
                           View details
                         </button>
@@ -388,7 +388,7 @@ export default function AdminStudentsPage() {
         )}
 
         {!loading && filteredStudents.length > 0 && (
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-unitor-gray-dark">
             Showing {filteredStudents.length} of{" "}
             {students.length} students
           </p>
@@ -415,15 +415,15 @@ function StudentDetailsModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-5 py-10">
       <div className="max-h-full w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6">
-          <h2 className="text-2xl font-bold text-slate-900">
+        <div className="sticky top-0 flex items-center justify-between border-b border-unitor-gray-light bg-white p-6">
+          <h2 className="text-2xl font-bold text-unitor-black">
             Student details
           </h2>
 
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-600 hover:bg-slate-200"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-gray-soft text-2xl text-unitor-gray-dark hover:bg-unitor-gray-light"
           >
             ×
           </button>
@@ -438,7 +438,7 @@ function StudentDetailsModal({
                 className="h-20 w-20 rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-3xl font-bold text-blue-700">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-unitor-blue-light text-3xl font-bold text-unitor-primary-hover">
                 {student.fullName
                   .charAt(0)
                   .toUpperCase() || "S"}
@@ -446,11 +446,11 @@ function StudentDetailsModal({
             )}
 
             <div>
-              <h3 className="text-2xl font-bold text-slate-900">
+              <h3 className="text-2xl font-bold text-unitor-black">
                 {student.fullName}
               </h3>
 
-              <p className="mt-1 text-slate-600">
+              <p className="mt-1 text-unitor-gray-dark">
                 {student.universityEmail.toLowerCase()}
               </p>
             </div>
@@ -503,17 +503,17 @@ function StudentDetailsModal({
           </div>
 
           <div className="mt-8">
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Bio
             </h3>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {student.bio || "No bio provided."}
             </p>
           </div>
 
           <div className="mt-8">
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Account roles
             </h3>
 
@@ -521,7 +521,7 @@ function StudentDetailsModal({
               {student.roles.map((role) => (
                 <span
                   key={role}
-                  className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold capitalize text-slate-700"
+                  className="rounded-full bg-unitor-gray-soft px-4 py-2 text-sm font-medium capitalize text-unitor-gray-dark"
                 >
                   {role}
                 </span>
@@ -529,11 +529,11 @@ function StudentDetailsModal({
             </div>
           </div>
 
-          <div className="mt-8 border-t border-slate-200 pt-6">
+          <div className="mt-8 border-t border-unitor-gray-light pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800"
+              className="rounded-lg bg-unitor-black px-6 py-3 font-medium text-white hover:bg-unitor-black"
             >
               Close
             </button>
@@ -554,20 +554,20 @@ function SummaryCard({
   color: "blue" | "emerald" | "purple";
 }) {
   const styles = {
-    blue: "bg-blue-50 text-blue-700",
-    emerald: "bg-emerald-50 text-emerald-700",
+    blue: "bg-unitor-background text-unitor-primary-hover",
+    emerald: "bg-green-50 text-green-700",
     purple: "bg-purple-50 text-purple-700",
   };
 
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm">
       <span
-        className={`rounded-lg px-3 py-1 text-sm font-semibold ${styles[color]}`}
+        className={`rounded-lg px-3 py-1 text-sm font-medium ${styles[color]}`}
       >
         {title}
       </span>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {value}
       </p>
     </article>
@@ -580,7 +580,7 @@ function TableHeading({
   children: React.ReactNode;
 }) {
   return (
-    <th className="p-4 text-sm font-semibold text-slate-600">
+    <th className="p-4 text-sm font-medium text-unitor-gray-dark">
       {children}
     </th>
   );
@@ -592,7 +592,7 @@ function TableData({
   children: React.ReactNode;
 }) {
   return (
-    <td className="p-4 text-sm text-slate-700">
+    <td className="p-4 text-sm text-unitor-gray-dark">
       {children}
     </td>
   );
@@ -606,12 +606,12 @@ function InformationItem({
   value?: string;
 }) {
   return (
-    <div className="border-b border-slate-100 pb-4">
-      <p className="text-sm font-medium text-slate-500">
+    <div className="border-b border-unitor-gray-soft pb-4">
+      <p className="text-sm font-medium text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-medium text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value || "Not provided"}
       </p>
     </div>

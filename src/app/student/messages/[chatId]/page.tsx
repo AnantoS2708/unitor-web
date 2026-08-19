@@ -830,9 +830,9 @@ export default function StudentChatPage() {
         chatLoading
     ) {
         return (
-            <main className="min-h-screen bg-slate-50 px-6 py-8">
+            <main className="min-h-screen bg-unitor-background px-6 py-8">
 
-                <div className="mx-auto max-w-4xl text-slate-600">
+                <div className="mx-auto max-w-4xl text-unitor-gray-dark">
                     Loading chat...
                 </div>
 
@@ -847,7 +847,7 @@ export default function StudentChatPage() {
      */
     if (!chat) {
         return (
-            <main className="min-h-screen bg-slate-50 px-6 py-8">
+            <main className="min-h-screen bg-unitor-background px-6 py-8">
 
                 <div className="mx-auto max-w-4xl rounded-2xl bg-white p-8 shadow-sm">
 
@@ -858,7 +858,7 @@ export default function StudentChatPage() {
 
                     <Link
                         href="/student/messages"
-                        className="mt-5 inline-block font-semibold text-emerald-600 hover:underline"
+                        className="mt-5 inline-block font-medium text-unitor-primary hover:underline"
                     >
                         Back to messages
                     </Link>
@@ -870,7 +870,7 @@ export default function StudentChatPage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
+        <main className="min-h-screen bg-unitor-background px-4 py-6 sm:px-6 sm:py-8">
 
             <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-4xl flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
 
@@ -878,7 +878,7 @@ export default function StudentChatPage() {
                     HEADER
                 ====================================== */}
 
-                <header className="border-b border-slate-200 px-5 py-4 sm:px-6">
+                <header className="border-b border-unitor-gray-light px-5 py-4 sm:px-6">
 
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -886,16 +886,16 @@ export default function StudentChatPage() {
 
                             <Link
                                 href="/student/messages"
-                                className="text-sm font-semibold text-emerald-600 hover:underline"
+                                className="text-sm font-medium text-unitor-primary hover:underline"
                             >
                                 ← Back to messages
                             </Link>
 
-                            <h1 className="mt-2 text-xl font-bold text-slate-900">
+                            <h1 className="mt-2 text-xl font-bold text-unitor-black">
                                 {chat.tutorName}
                             </h1>
 
-                            <p className="mt-1 text-sm text-slate-500">
+                            <p className="mt-1 text-sm text-unitor-gray-dark">
 
                                 {sessionEnded
                                     ? "This tutoring session has ended."
@@ -912,10 +912,10 @@ export default function StudentChatPage() {
                             {/* SESSION STATUS */}
 
                             <span
-                                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                                className={`rounded-full px-3 py-1 text-xs font-medium ${
                                     sessionEnded
-                                        ? "bg-slate-200 text-slate-700"
-                                        : "bg-emerald-100 text-emerald-700"
+                                        ? "bg-unitor-gray-light text-unitor-gray-dark"
+                                        : "bg-green-100 text-green-700"
                                 }`}
                             >
                                 {sessionEnded
@@ -935,7 +935,7 @@ export default function StudentChatPage() {
                                     disabled={
                                         endingSession
                                     }
-                                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {endingSession
                                         ? "Ending..."
@@ -951,7 +951,7 @@ export default function StudentChatPage() {
 
                                 <Link
                                     href={`/student/reviews/${chat.jobProposalId}`}
-                                    className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                                    className="rounded-lg bg-unitor-primary px-4 py-2 text-sm font-medium text-white hover:bg-unitor-primary-hover"
                                 >
                                     ★ Rate Tutor
                                 </Link>
@@ -982,17 +982,17 @@ export default function StudentChatPage() {
                                         ✓
                                     </span>
 
-                                    <h2 className="text-lg font-bold text-slate-900">
+                                    <h2 className="text-lg font-bold text-unitor-black">
                                         Session ended
                                     </h2>
 
                                 </div>
 
-                                <p className="mt-2 text-sm leading-6 text-slate-600">
+                                <p className="mt-2 text-sm leading-6 text-unitor-gray-dark">
 
                                     Your tutoring session with{" "}
 
-                                    <span className="font-semibold text-slate-800">
+                                    <span className="font-medium text-unitor-black">
                                         {chat.tutorName}
                                     </span>{" "}
 
@@ -1000,7 +1000,7 @@ export default function StudentChatPage() {
 
                                 </p>
 
-                                <p className="mt-1 text-sm text-slate-600">
+                                <p className="mt-1 text-sm text-unitor-gray-dark">
                                     Please rate your tutor from 1 to 5 stars.
                                 </p>
 
@@ -1010,7 +1010,7 @@ export default function StudentChatPage() {
 
                                 <Link
                                     href={`/student/reviews/${chat.jobProposalId}`}
-                                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white transition hover:bg-unitor-primary-hover"
                                 >
 
                                     <span>
@@ -1050,12 +1050,12 @@ export default function StudentChatPage() {
                     MESSAGES
                 ====================================== */}
 
-                <section className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-5 sm:p-6">
+                <section className="flex-1 space-y-3 overflow-y-auto bg-unitor-background p-5 sm:p-6">
 
                     {messages.length ===
                     0 ? (
 
-                        <div className="py-16 text-center text-sm text-slate-500">
+                        <div className="py-16 text-center text-sm text-unitor-gray-dark">
                             No messages yet.
                         </div>
 
@@ -1084,8 +1084,8 @@ export default function StudentChatPage() {
                                         <div
                                             className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                                                 mine
-                                                    ? "rounded-br-md bg-emerald-600 text-white"
-                                                    : "rounded-bl-md bg-white text-slate-800 shadow-sm"
+                                                    ? "rounded-br-md bg-unitor-primary text-white"
+                                                    : "rounded-bl-md bg-white text-unitor-black shadow-sm"
                                             }`}
                                         >
 
@@ -1096,8 +1096,8 @@ export default function StudentChatPage() {
                                             <p
                                                 className={`mt-1 text-right text-[11px] ${
                                                     mine
-                                                        ? "text-emerald-100"
-                                                        : "text-slate-400"
+                                                        ? "text-unitor-blue-light"
+                                                        : "text-unitor-gray-dark/70"
                                                 }`}
                                             >
                                                 {formatTime(
@@ -1130,12 +1130,12 @@ export default function StudentChatPage() {
                     onSubmit={
                         handleSend
                     }
-                    className="border-t border-slate-200 bg-white p-4 sm:p-5"
+                    className="border-t border-unitor-gray-light bg-white p-4 sm:p-5"
                 >
 
                     {sessionEnded && (
 
-                        <p className="mb-3 text-center text-sm font-medium text-slate-500">
+                        <p className="mb-3 text-center text-sm font-medium text-unitor-gray-dark">
                             Messaging is disabled because this session has ended.
                         </p>
 
@@ -1164,7 +1164,7 @@ export default function StudentChatPage() {
                                     ? "This session has ended"
                                     : "Write a message..."
                             }
-                            className="min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+                            className="min-w-0 flex-1 rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black placeholder:text-unitor-gray-dark/70 outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light disabled:cursor-not-allowed disabled:bg-unitor-gray-soft"
                         />
 
                         <button
@@ -1174,7 +1174,7 @@ export default function StudentChatPage() {
                                 sending ||
                                 !message.trim()
                             }
-                            className="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                         >
 
                             {sending

@@ -175,21 +175,21 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-12">
+    <main className="min-h-screen bg-unitor-background px-6 py-12">
       <div className="mx-auto w-full max-w-3xl">
         <div className="rounded-2xl bg-white p-8 shadow-lg md:p-10">
           <Link
             href="/login"
-            className="font-medium text-emerald-600 hover:underline"
+            className="font-medium text-unitor-primary hover:underline"
           >
             ← Back to login
           </Link>
 
-          <h1 className="mt-8 text-3xl font-bold text-slate-900">
+          <h1 className="mt-8 text-3xl font-bold text-unitor-black">
             Create your Unitor account
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Register as a student. You can apply to become a tutor
             after completing your profile.
           </p>
@@ -272,7 +272,7 @@ export default function SignupPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block font-medium text-slate-700"
+                  className="mb-2 block font-medium text-unitor-gray-dark"
                 >
                   Password
                 </label>
@@ -294,7 +294,7 @@ export default function SignupPage() {
                     autoComplete="new-password"
                     required
                     minLength={6}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 pr-20 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 pr-20 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                   />
 
                   <button
@@ -302,7 +302,7 @@ export default function SignupPage() {
                     onClick={() =>
                       setShowPassword(!showPassword)
                     }
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-emerald-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-unitor-primary"
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
@@ -322,7 +322,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <p className="mt-6 text-sm leading-6 text-slate-500">
+            <p className="mt-6 text-sm leading-6 text-unitor-gray-dark">
               By creating an account, you agree to use Unitor only
               for legitimate academic guidance and peer-learning
               support.
@@ -331,7 +331,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={creating}
-              className="mt-8 w-full rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-8 w-full rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {creating
                 ? "Creating account..."
@@ -339,11 +339,11 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <p className="mt-7 text-center text-slate-600">
+          <p className="mt-7 text-center text-unitor-gray-dark">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-emerald-600 hover:underline"
+              className="font-medium text-unitor-primary hover:underline"
             >
               Log in
             </Link>
@@ -373,7 +373,7 @@ function SignupInput({
 }) {
   return (
     <div>
-      <label className="mb-2 block font-medium text-slate-700">
+      <label className="mb-2 block font-medium text-unitor-gray-dark">
         {label}
       </label>
 
@@ -386,7 +386,7 @@ function SignupInput({
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
-        className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+        className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
       />
     </div>
   );

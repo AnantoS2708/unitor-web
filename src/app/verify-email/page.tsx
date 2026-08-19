@@ -115,48 +115,48 @@ export default function VerifyEmailPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft px-4">
         <div className="rounded-2xl bg-white px-8 py-6 shadow-sm">
-          <p className="text-sm text-slate-600">Loading...</p>
+          <p className="text-sm text-unitor-gray-dark">Loading...</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft px-4 py-10">
       <div className="w-full max-w-md rounded-2xl bg-white p-7 shadow-sm">
         {/* Logo / Title */}
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600 text-2xl font-bold text-white">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-unitor-primary text-2xl font-bold text-white">
             U
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-unitor-black">
             Verify your email
           </h1>
 
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-unitor-gray-dark">
             We sent a verification link to your email address.
           </p>
         </div>
 
         {/* Email */}
-        <div className="mb-5 rounded-xl bg-slate-50 p-4">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        <div className="mb-5 rounded-xl bg-unitor-background p-4">
+          <p className="text-xs font-medium uppercase tracking-wide text-unitor-gray-dark">
             Verification email sent to
           </p>
 
-          <p className="mt-1 break-words font-medium text-slate-800">
+          <p className="mt-1 break-words font-medium text-unitor-black">
             {user?.email}
           </p>
         </div>
 
         {/* Instructions */}
-        <div className="mb-5 rounded-xl border border-emerald-100 bg-emerald-50 p-4">
-          <p className="font-semibold text-emerald-800">What to do</p>
+        <div className="mb-5 rounded-xl border border-unitor-blue-light bg-unitor-background p-4">
+          <p className="font-medium text-unitor-black">What to do</p>
 
-          <ol className="mt-2 space-y-2 text-sm text-emerald-900">
+          <ol className="mt-2 space-y-2 text-sm text-unitor-black">
             <li>1. Open your email inbox.</li>
             <li>2. Find the Firebase verification email.</li>
             <li>3. Click the verification link.</li>
@@ -174,7 +174,7 @@ export default function VerifyEmailPage() {
 
         {/* Success */}
         {message && (
-          <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+          <div className="mb-4 rounded-xl border border-unitor-blue-light bg-unitor-background p-3 text-sm text-unitor-primary-hover">
             {message}
           </div>
         )}
@@ -184,7 +184,7 @@ export default function VerifyEmailPage() {
           type="button"
           onClick={handleCheckVerification}
           disabled={checking}
-          className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-xl bg-unitor-primary px-4 py-3 font-medium text-white transition hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {checking ? "Checking..." : "I verified my email"}
         </button>
@@ -194,12 +194,12 @@ export default function VerifyEmailPage() {
           type="button"
           onClick={handleResendVerification}
           disabled={resending}
-          className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-3 w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 font-medium text-unitor-gray-dark transition hover:bg-unitor-background disabled:cursor-not-allowed disabled:opacity-60"
         >
           {resending ? "Sending..." : "Resend verification email"}
         </button>
 
-        <p className="mt-5 text-center text-xs leading-5 text-slate-500">
+        <p className="mt-5 text-center text-xs leading-5 text-unitor-gray-dark">
           If you cannot find the email, check your spam or junk folder.
         </p>
       </div>

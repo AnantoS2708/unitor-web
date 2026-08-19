@@ -732,9 +732,9 @@ export default function AdminDashboardPage() {
     checkingAdmin
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-100">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-gray-soft">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Checking administrator
           access...
         </p>
@@ -748,13 +748,13 @@ export default function AdminDashboardPage() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-unitor-gray-soft">
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
@@ -762,12 +762,12 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/dashboard"
-              className="text-2xl font-bold text-emerald-400"
+              className="text-2xl font-bold text-unitor-primary"
             >
               Unitor Admin
             </Link>
 
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-unitor-gray-dark/70">
               Platform management
             </p>
 
@@ -778,7 +778,7 @@ export default function AdminDashboardPage() {
             onClick={
               handleLogout
             }
-            className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+            className="rounded-lg border border-unitor-gray-dark px-4 py-2 text-sm font-medium text-white transition hover:bg-unitor-black"
           >
             Log out
           </button>
@@ -797,15 +797,15 @@ export default function AdminDashboardPage() {
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Administration
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Dashboard
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Monitor and manage the
             Unitor platform.
           </p>
@@ -830,7 +830,7 @@ export default function AdminDashboardPage() {
 
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
 
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading dashboard
               information...
             </p>
@@ -967,20 +967,20 @@ export default function AdminDashboardPage() {
 
               {/* SUCCESSFUL PAYMENTS */}
 
-              <article className="rounded-2xl bg-slate-900 p-7 text-white shadow-sm">
+              <article className="rounded-2xl bg-unitor-black p-7 text-white shadow-sm">
 
-                <p className="text-sm font-semibold text-slate-300">
+                <p className="text-sm font-medium text-unitor-gray-light">
                   Successful payment
                   volume
                 </p>
 
-                <p className="mt-4 text-3xl font-bold text-emerald-400">
+                <p className="mt-4 text-3xl font-bold text-unitor-primary">
                   {formatMoney(
                     totalPaymentAmount
                   )}
                 </p>
 
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-unitor-gray-dark/70">
 
                   {
                     successfulPayments.length
@@ -1000,17 +1000,17 @@ export default function AdminDashboardPage() {
 
               <article className="rounded-2xl bg-white p-7 shadow-sm">
 
-                <p className="text-sm font-semibold text-slate-500">
+                <p className="text-sm font-medium text-unitor-gray-dark">
                   Platform earnings
                 </p>
 
-                <p className="mt-4 text-3xl font-bold text-emerald-600">
+                <p className="mt-4 text-3xl font-bold text-unitor-primary">
                   {formatMoney(
                     totalPlatformFees
                   )}
                 </p>
 
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mt-2 text-sm text-unitor-gray-dark">
                   Commission collected
                   by Unitor
                 </p>
@@ -1021,15 +1021,15 @@ export default function AdminDashboardPage() {
 
               <article className="rounded-2xl bg-white p-7 shadow-sm">
 
-                <p className="text-sm font-semibold text-slate-500">
+                <p className="text-sm font-medium text-unitor-gray-dark">
                   Total users
                 </p>
 
-                <p className="mt-4 text-3xl font-bold text-blue-600">
+                <p className="mt-4 text-3xl font-bold text-unitor-primary">
                   {users.length}
                 </p>
 
-                <p className="mt-2 text-sm text-slate-500">
+                <p className="mt-2 text-sm text-unitor-gray-dark">
                   All registered user
                   documents
                 </p>
@@ -1044,7 +1044,7 @@ export default function AdminDashboardPage() {
 
             <section className="mt-8 rounded-2xl bg-white p-7 shadow-sm">
 
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-unitor-black">
                 Required actions
               </h2>
 
@@ -1135,7 +1135,7 @@ function DashboardCard({
           className={`flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${
             attention
               ? "bg-amber-100"
-              : "bg-slate-100"
+              : "bg-unitor-gray-soft"
           }`}
         >
           {icon}
@@ -1151,15 +1151,15 @@ function DashboardCard({
 
       </div>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {value}
       </p>
 
-      <h2 className="mt-2 font-bold text-slate-900">
+      <h2 className="mt-2 font-bold text-unitor-black">
         {title}
       </h2>
 
-      <p className="mt-1 text-sm text-slate-500">
+      <p className="mt-1 text-sm text-unitor-gray-dark">
         {description}
       </p>
 
@@ -1183,16 +1183,16 @@ function ActionItem({
   return (
     <Link
       href={href}
-      className="flex items-center justify-between rounded-xl border border-slate-200 p-4 transition hover:border-emerald-500 hover:bg-emerald-50"
+      className="flex items-center justify-between rounded-xl border border-unitor-gray-light p-4 transition hover:border-unitor-primary hover:bg-unitor-background"
     >
 
       <div>
 
-        <p className="font-semibold text-slate-900">
+        <p className="font-medium text-unitor-black">
           {title}
         </p>
 
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-unitor-gray-dark">
 
           {count === 0
             ? "No pending actions"
@@ -1206,7 +1206,7 @@ function ActionItem({
         className={`flex h-9 w-9 items-center justify-center rounded-full font-bold ${
           count > 0
             ? "bg-amber-100 text-amber-700"
-            : "bg-emerald-100 text-emerald-700"
+            : "bg-unitor-blue-light text-unitor-primary-hover"
         }`}
       >
         {count}

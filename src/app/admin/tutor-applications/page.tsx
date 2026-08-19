@@ -401,21 +401,21 @@ export default function AdminTutorApplicationsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-unitor-gray-soft">
 
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
           <Link
             href="/admin/dashboard"
-            className="text-2xl font-bold text-emerald-400"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Admin
           </Link>
 
           <Link
             href="/admin/dashboard"
-            className="font-medium text-slate-300 hover:text-white"
+            className="font-medium text-unitor-gray-light hover:text-white"
           >
             ← Dashboard
           </Link>
@@ -426,15 +426,15 @@ export default function AdminTutorApplicationsPage() {
       <div className="mx-auto max-w-7xl px-6 py-10">
 
         <div>
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Account management
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Tutor applications
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Review tutor applications and choose the exact
             courses each tutor is allowed to teach.
           </p>
@@ -469,7 +469,7 @@ export default function AdminTutorApplicationsPage() {
         )}
 
         {success && (
-          <p className="mt-6 rounded-lg bg-emerald-50 p-4 text-emerald-700">
+          <p className="mt-6 rounded-lg bg-unitor-background p-4 text-unitor-primary-hover">
             {success}
           </p>
         )}
@@ -512,7 +512,7 @@ export default function AdminTutorApplicationsPage() {
 
         {loading ? (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading tutor applications...
             </p>
           </section>
@@ -523,7 +523,7 @@ export default function AdminTutorApplicationsPage() {
               📋
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No{" "}
               {statusFilter === "all"
                 ? ""
@@ -533,9 +533,9 @@ export default function AdminTutorApplicationsPage() {
 
           </section>
         ) : (
-          <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="mt-8 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-unitor-gray-soft">
 
               {filteredApplications.map(
                 (application) => (
@@ -622,7 +622,7 @@ function TutorApplicationRow({
 
   const statusStyle =
     status === "approved"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : status === "rejected"
         ? "bg-red-100 text-red-700"
         : "bg-amber-100 text-amber-700";
@@ -642,7 +642,7 @@ function TutorApplicationRow({
               className="h-14 w-14 flex-shrink-0 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xl font-bold text-emerald-700">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-unitor-blue-light text-xl font-bold text-unitor-primary-hover">
               {application.fullName
                 .charAt(0)
                 .toUpperCase() || "T"}
@@ -653,25 +653,25 @@ function TutorApplicationRow({
 
             <div className="flex flex-wrap items-center gap-3">
 
-              <h2 className="truncate font-bold text-slate-900">
+              <h2 className="truncate font-bold text-unitor-black">
                 {application.fullName}
               </h2>
 
               <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusStyle}`}
+                className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusStyle}`}
               >
                 {status}
               </span>
 
             </div>
 
-            <p className="mt-1 truncate text-sm text-slate-600">
+            <p className="mt-1 truncate text-sm text-unitor-gray-dark">
               {application.universityEmail.toLowerCase()}
             </p>
 
             {application.requestedCourseCodes.length >
               0 && (
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-unitor-gray-dark">
                 Requested:{" "}
                 {application.requestedCourseCodes.join(
                   ", "
@@ -681,7 +681,7 @@ function TutorApplicationRow({
 
             {application.courseCodesToTeach.length >
               0 && (
-              <p className="mt-1 text-sm font-medium text-emerald-700">
+              <p className="mt-1 text-sm font-medium text-unitor-primary-hover">
                 Approved:{" "}
                 {application.courseCodesToTeach.join(
                   ", "
@@ -698,7 +698,7 @@ function TutorApplicationRow({
           <button
             type="button"
             onClick={onView}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-emerald-600 hover:text-emerald-600"
+            className="rounded-lg border border-unitor-gray-light px-4 py-2 text-sm font-medium text-unitor-gray-dark hover:border-unitor-primary hover:text-unitor-primary"
           >
             View / Select courses
           </button>
@@ -708,7 +708,7 @@ function TutorApplicationRow({
               type="button"
               onClick={onReject}
               disabled={updating}
-              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
             >
               Reject
             </button>
@@ -749,14 +749,14 @@ function ApplicationDetailsModal({
 
       <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl">
 
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6">
+        <div className="sticky top-0 flex items-center justify-between border-b border-unitor-gray-light bg-white p-6">
 
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-unitor-black">
               Tutor application
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               Select the courses this tutor is allowed to teach.
             </p>
           </div>
@@ -764,7 +764,7 @@ function ApplicationDetailsModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-600 hover:bg-slate-200"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-gray-soft text-xl text-unitor-gray-dark hover:bg-unitor-gray-light"
           >
             ×
           </button>
@@ -783,7 +783,7 @@ function ApplicationDetailsModal({
                 className="h-20 w-20 rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-700">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-unitor-blue-light text-3xl font-bold text-unitor-primary-hover">
                 {application.fullName
                   .charAt(0)
                   .toUpperCase() || "T"}
@@ -791,11 +791,11 @@ function ApplicationDetailsModal({
             )}
 
             <div>
-              <h3 className="text-2xl font-bold text-slate-900">
+              <h3 className="text-2xl font-bold text-unitor-black">
                 {application.fullName}
               </h3>
 
-              <p className="mt-1 text-slate-600">
+              <p className="mt-1 text-unitor-gray-dark">
                 {application.universityEmail.toLowerCase()}
               </p>
             </div>
@@ -851,11 +851,11 @@ function ApplicationDetailsModal({
 
           <div className="mt-8">
 
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Requested courses
             </h3>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-unitor-gray-dark">
               Check only the courses the tutor is approved to teach.
             </p>
 
@@ -875,8 +875,8 @@ function ApplicationDetailsModal({
                         key={course}
                         className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 ${
                           checked
-                            ? "border-emerald-500 bg-emerald-50"
-                            : "border-slate-200 bg-white"
+                            ? "border-unitor-primary bg-unitor-background"
+                            : "border-unitor-gray-light bg-white"
                         }`}
                       >
 
@@ -888,10 +888,10 @@ function ApplicationDetailsModal({
                               course
                             )
                           }
-                          className="h-5 w-5 accent-emerald-600"
+                          className="h-5 w-5 accent-unitor-primary"
                         />
 
-                        <span className="font-semibold text-slate-800">
+                        <span className="font-medium text-unitor-black">
                           {course}
                         </span>
 
@@ -902,7 +902,7 @@ function ApplicationDetailsModal({
 
               </div>
             ) : (
-              <p className="mt-3 text-slate-500">
+              <p className="mt-3 text-unitor-gray-dark">
                 No requested courses found.
               </p>
             )}
@@ -913,7 +913,7 @@ function ApplicationDetailsModal({
             0 && (
             <div className="mt-8">
 
-              <h3 className="font-bold text-slate-900">
+              <h3 className="font-bold text-unitor-black">
                 Currently approved courses
               </h3>
 
@@ -923,7 +923,7 @@ function ApplicationDetailsModal({
                   (course) => (
                     <span
                       key={course}
-                      className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700"
+                      className="rounded-full bg-unitor-blue-light px-4 py-2 text-sm font-medium text-unitor-primary-hover"
                     >
                       {course}
                     </span>
@@ -937,18 +937,18 @@ function ApplicationDetailsModal({
 
           <div className="mt-8">
 
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Bio
             </h3>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {application.bio ||
                 "No bio provided."}
             </p>
 
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3 border-t border-slate-200 pt-6">
+          <div className="mt-8 flex flex-wrap gap-3 border-t border-unitor-gray-light pt-6">
 
             <button
               type="button"
@@ -957,7 +957,7 @@ function ApplicationDetailsModal({
                 updating ||
                 selectedApprovedCourses.length === 0
               }
-              className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {updating
                 ? "Updating..."
@@ -971,7 +971,7 @@ function ApplicationDetailsModal({
                 type="button"
                 onClick={onReject}
                 disabled={updating}
-                className="rounded-lg bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+                className="rounded-lg bg-red-600 px-6 py-3 font-medium text-white hover:bg-red-700 disabled:opacity-60"
               >
                 Reject application
               </button>
@@ -980,7 +980,7 @@ function ApplicationDetailsModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-unitor-gray-light px-6 py-3 font-medium text-unitor-gray-dark hover:bg-unitor-background"
             >
               Close
             </button>
@@ -1052,7 +1052,7 @@ function StatusCard({
     amber:
       "bg-amber-50 text-amber-700",
     emerald:
-      "bg-emerald-50 text-emerald-700",
+      "bg-green-50 text-green-700",
     red:
       "bg-red-50 text-red-700",
   };
@@ -1061,12 +1061,12 @@ function StatusCard({
     <article className="rounded-2xl bg-white p-6 shadow-sm">
 
       <span
-        className={`rounded-lg px-3 py-1 text-sm font-semibold ${styles[color]}`}
+        className={`rounded-lg px-3 py-1 text-sm font-medium ${styles[color]}`}
       >
         {title}
       </span>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {count}
       </p>
 
@@ -1087,10 +1087,10 @@ function FilterButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg px-4 py-2 text-sm font-semibold ${
+      className={`rounded-lg px-4 py-2 text-sm font-medium ${
         active
-          ? "bg-slate-900 text-white"
-          : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+          ? "bg-unitor-primary text-white"
+          : "border border-unitor-gray-light bg-white text-unitor-gray-dark hover:bg-unitor-background"
       }`}
     >
       {label}
@@ -1106,13 +1106,13 @@ function InformationItem({
   value?: string;
 }) {
   return (
-    <div className="border-b border-slate-100 pb-4">
+    <div className="border-b border-unitor-gray-soft pb-4">
 
-      <p className="text-sm font-medium text-slate-500">
+      <p className="text-sm font-medium text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-medium text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value || "Not provided"}
       </p>
 

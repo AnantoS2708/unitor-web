@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --unitor-primary: #1572d2;
+  --unitor-primary-hover: #115dab;
+  --unitor-black: #000000;
+  --unitor-gray-dark: #525252;
+  --unitor-gray-light: #e5e5e5;
+  --unitor-gray-soft: #f6f6f6;
+  --unitor-white: #ffffff;
+  --unitor-blue-light: #d8e8f8;
+  --unitor-background: #f7faff;
+  --background: var(--unitor-background);
+  --foreground: var(--unitor-black);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-unitor-primary: var(--unitor-primary);
+  --color-unitor-primary-hover: var(--unitor-primary-hover);
+  --color-unitor-black: var(--unitor-black);
+  --color-unitor-gray-dark: var(--unitor-gray-dark);
+  --color-unitor-gray-light: var(--unitor-gray-light);
+  --color-unitor-gray-soft: var(--unitor-gray-soft);
+  --color-unitor-white: var(--unitor-white);
+  --color-unitor-blue-light: var(--unitor-blue-light);
+  --color-unitor-background: var(--unitor-background);
+  --font-sans: var(--font-inter);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+::selection {
+  background: var(--unitor-blue-light);
+  color: var(--unitor-black);
 }

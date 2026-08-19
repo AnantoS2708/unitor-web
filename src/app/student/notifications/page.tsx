@@ -197,19 +197,19 @@ export default function StudentNotificationsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/student/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -219,15 +219,15 @@ export default function StudentNotificationsPage() {
       <div className="mx-auto max-w-4xl px-6 py-10">
         <div className="flex flex-wrap items-end justify-between gap-5">
           <div>
-            <p className="font-semibold text-emerald-600">
+            <p className="font-medium text-unitor-primary">
               Account updates
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold text-unitor-black">
               Notifications
             </h1>
 
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               {unreadCount > 0
                 ? `${unreadCount} unread notification${
                     unreadCount === 1 ? "" : "s"
@@ -241,7 +241,7 @@ export default function StudentNotificationsPage() {
               type="button"
               onClick={handleMarkAllAsRead}
               disabled={markingAll}
-              className="rounded-lg border border-emerald-600 px-4 py-2 font-semibold text-emerald-600 hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-lg border border-unitor-primary px-4 py-2 font-medium text-unitor-primary hover:bg-unitor-background disabled:cursor-not-allowed disabled:opacity-60"
             >
               {markingAll
                 ? "Updating..."
@@ -252,7 +252,7 @@ export default function StudentNotificationsPage() {
 
         {loading && (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading notifications...
             </p>
           </section>
@@ -270,11 +270,11 @@ export default function StudentNotificationsPage() {
             <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
               <div className="text-5xl">🔔</div>
 
-              <h2 className="mt-5 text-2xl font-bold text-slate-900">
+              <h2 className="mt-5 text-2xl font-bold text-unitor-black">
                 No notifications
               </h2>
 
-              <p className="mt-3 text-slate-600">
+              <p className="mt-3 text-unitor-gray-dark">
                 New proposal, payment and session updates
                 will appear here.
               </p>
@@ -282,7 +282,7 @@ export default function StudentNotificationsPage() {
           )}
 
         {!loading && notifications.length > 0 && (
-          <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="mt-8 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
             {notifications.map((notification) => (
               <NotificationRow
                 key={notification.id}
@@ -315,14 +315,14 @@ function NotificationRow({
     <button
       type="button"
       onClick={onClick}
-      className={`relative flex w-full gap-4 border-b border-slate-100 p-5 text-left transition last:border-b-0 hover:bg-slate-50 ${
+      className={`relative flex w-full gap-4 border-b border-unitor-gray-soft p-5 text-left transition last:border-b-0 hover:bg-unitor-background ${
         notification.isRead
           ? "bg-white"
-          : "bg-emerald-50/50"
+          : "bg-unitor-background/50"
       }`}
     >
       {!notification.isRead && (
-        <span className="absolute right-5 top-5 h-2.5 w-2.5 rounded-full bg-emerald-500" />
+        <span className="absolute right-5 top-5 h-2.5 w-2.5 rounded-full bg-unitor-primary" />
       )}
 
       <div
@@ -333,20 +333,20 @@ function NotificationRow({
 
       <div className="min-w-0 flex-1 pr-5">
         <h2
-          className={`text-slate-900 ${
+          className={`text-unitor-black ${
             notification.isRead
-              ? "font-semibold"
+              ? "font-medium"
               : "font-bold"
           }`}
         >
           {notification.title}
         </h2>
 
-        <p className="mt-1 leading-6 text-slate-600">
+        <p className="mt-1 leading-6 text-unitor-gray-dark">
           {notification.message}
         </p>
 
-        <p className="mt-3 text-xs text-slate-400">
+        <p className="mt-3 text-xs text-unitor-gray-dark/70">
           {formatNotificationDate(
             notification.createdAt
           )}
@@ -361,13 +361,13 @@ function getNotificationAppearance(type: string) {
     case "tutor_application":
       return {
         icon: "🎓",
-        classes: "bg-blue-50 text-blue-600",
+        classes: "bg-unitor-background text-unitor-primary",
       };
 
     case "payment":
       return {
         icon: "💳",
-        classes: "bg-emerald-50 text-emerald-600",
+        classes: "bg-unitor-background text-unitor-primary",
       };
 
     case "chat":
@@ -379,7 +379,7 @@ function getNotificationAppearance(type: string) {
     case "session_completed":
       return {
         icon: "✓",
-        classes: "bg-emerald-50 text-emerald-600",
+        classes: "bg-green-100 text-green-700",
       };
 
     case "rating":
@@ -391,13 +391,13 @@ function getNotificationAppearance(type: string) {
     case "admin":
       return {
         icon: "⚙",
-        classes: "bg-slate-100 text-slate-600",
+        classes: "bg-unitor-gray-soft text-unitor-gray-dark",
       };
 
     default:
       return {
         icon: "🔔",
-        classes: "bg-slate-100 text-slate-600",
+        classes: "bg-unitor-gray-soft text-unitor-gray-dark",
       };
   }
 }

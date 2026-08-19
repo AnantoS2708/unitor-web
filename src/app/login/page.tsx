@@ -82,20 +82,20 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+        <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
             <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
                 <Link
                     href="/"
-                    className="text-2xl font-bold text-emerald-600"
+                    className="text-2xl font-bold text-unitor-primary"
                 >
                     Unitor
                 </Link>
 
-                <h1 className="mt-8 text-3xl font-bold text-slate-900">
+                <h1 className="mt-8 text-3xl font-bold text-unitor-black">
                     Welcome back
                 </h1>
 
-                <p className="mt-2 text-slate-600">
+                <p className="mt-2 text-unitor-gray-dark">
                     Log in using your existing Unitor account.
                 </p>
 
@@ -103,7 +103,7 @@ export default function LoginPage() {
                     <div>
                         <label
                             htmlFor="email"
-                            className="mb-2 block font-medium text-slate-700"
+                            className="mb-2 block font-medium text-unitor-gray-dark"
                         >
                             Email address
                         </label>
@@ -118,14 +118,14 @@ export default function LoginPage() {
                             placeholder="Enter your email"
                             autoComplete="email"
                             required
-                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-500 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black placeholder:text-unitor-gray-dark outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                         />
                     </div>
 
                     <div>
                         <label
                             htmlFor="password"
-                            className="mb-2 block font-medium text-slate-700"
+                            className="mb-2 block font-medium text-unitor-gray-dark"
                         >
                             Password
                         </label>
@@ -141,7 +141,7 @@ export default function LoginPage() {
                                 placeholder="Enter your password"
                                 autoComplete="current-password"
                                 required
-                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 pr-20 text-slate-900 placeholder:text-slate-500 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                                className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 pr-20 text-unitor-black placeholder:text-unitor-gray-dark outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                             />
 
                             <button
@@ -149,7 +149,7 @@ export default function LoginPage() {
                                 onClick={() =>
                                     setShowPassword(!showPassword)
                                 }
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-emerald-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-unitor-primary"
                             >
                                 {showPassword ? "Hide" : "Show"}
                             </button>
@@ -165,7 +165,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full rounded-lg bg-emerald-600 px-4 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="w-full rounded-lg bg-unitor-primary px-4 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {loading ? "Logging in..." : "Log in"}
                     </button>
@@ -174,17 +174,17 @@ export default function LoginPage() {
                 <div className="mt-6 text-center">
                     <Link
                         href="/forgot-password"
-                        className="font-medium text-emerald-600 hover:underline"
+                        className="font-medium text-unitor-primary hover:underline"
                     >
                         Forgot password?
                     </Link>
                 </div>
 
-                <p className="mt-6 text-center text-slate-600">
+                <p className="mt-6 text-center text-unitor-gray-dark">
                     Don&apos;t have an account?{" "}
                     <Link
                         href="/signup"
-                        className="font-semibold text-emerald-600 hover:underline"
+                        className="font-medium text-unitor-primary hover:underline"
                     >
                         Sign up
                     </Link>

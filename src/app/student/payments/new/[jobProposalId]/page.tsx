@@ -318,8 +318,8 @@ export default function NewPaymentPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-600">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+        <p className="text-unitor-gray-dark">
           Preparing payment...
         </p>
       </main>
@@ -328,19 +328,19 @@ export default function NewPaymentPage() {
 
   if (error && !details) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold text-red-600">
             Payment unavailable
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             {error}
           </p>
 
           <Link
             href="/student/proposals"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white"
+            className="mt-6 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white"
           >
             Return to proposals
           </Link>
@@ -352,19 +352,19 @@ export default function NewPaymentPage() {
   if (!details) return null;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link
             href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href={`/student/proposals/${details.proposalId}/applications`}
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Tutor applications
           </Link>
@@ -373,15 +373,15 @@ export default function NewPaymentPage() {
 
       <div className="mx-auto max-w-3xl px-6 py-10">
         <div>
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Manual payment verification
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Complete bKash Payment
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             Send the exact amount using bKash Send Money,
             then submit the transaction ID.
           </p>
@@ -397,7 +397,7 @@ export default function NewPaymentPage() {
                 className="h-16 w-16 rounded-full object-cover"
               />
             ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-600">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-unitor-blue-light text-2xl font-bold text-unitor-primary">
                 {details.tutorName
                   .charAt(0)
                   .toUpperCase() || "T"}
@@ -405,21 +405,21 @@ export default function NewPaymentPage() {
             )}
 
             <div>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-unitor-gray-dark">
                 Selected tutor
               </p>
 
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-unitor-black">
                 {details.tutorName}
               </h2>
 
-              <p className="mt-1 text-slate-600">
+              <p className="mt-1 text-unitor-gray-dark">
                 {details.courseCode}
               </p>
             </div>
           </div>
 
-          <div className="mt-6 grid gap-5 border-t border-slate-100 pt-6 sm:grid-cols-2">
+          <div className="mt-6 grid gap-5 border-t border-unitor-gray-soft pt-6 sm:grid-cols-2">
             <InformationItem
               label="Proposal"
               value={details.proposalTitle}
@@ -472,7 +472,7 @@ export default function NewPaymentPage() {
               <button
                 type="button"
                 onClick={handleCopyNumber}
-                className="rounded-lg bg-white px-4 py-2 font-semibold text-[#E2136E]"
+                className="rounded-lg bg-white px-4 py-2 font-medium text-[#E2136E]"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
@@ -481,27 +481,27 @@ export default function NewPaymentPage() {
         </section>
 
         <section className="mt-6 rounded-2xl bg-white p-7 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-unitor-black">
             Instructions
           </h2>
 
-          <ol className="mt-5 space-y-4 text-slate-600">
+          <ol className="mt-5 space-y-4 text-unitor-gray-dark">
             <li>
-              <strong className="text-slate-900">
+              <strong className="text-unitor-black">
                 1.
               </strong>{" "}
               Open the bKash application.
             </li>
 
             <li>
-              <strong className="text-slate-900">
+              <strong className="text-unitor-black">
                 2.
               </strong>{" "}
               Select <strong>Send Money</strong>.
             </li>
 
             <li>
-              <strong className="text-slate-900">
+              <strong className="text-unitor-black">
                 3.
               </strong>{" "}
               Send exactly{" "}
@@ -510,7 +510,7 @@ export default function NewPaymentPage() {
             </li>
 
             <li>
-              <strong className="text-slate-900">
+              <strong className="text-unitor-black">
                 4.
               </strong>{" "}
               Copy the transaction ID from the confirmation
@@ -530,7 +530,7 @@ export default function NewPaymentPage() {
           >
             <label
               htmlFor="transactionId"
-              className="mb-2 block font-medium text-slate-700"
+              className="mb-2 block font-medium text-unitor-gray-dark"
             >
               bKash Transaction ID
             </label>
@@ -547,13 +547,13 @@ export default function NewPaymentPage() {
               placeholder="Example: CGP7XYZ123"
               required
               maxLength={30}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 font-mono uppercase text-slate-900 outline-none placeholder:font-sans placeholder:normal-case placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 font-sans uppercase text-unitor-black outline-none placeholder:font-sans placeholder:normal-case placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
             />
 
             <button
               type="submit"
               disabled={submitting}
-              className="mt-6 w-full rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-6 w-full rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitting
                 ? "Submitting payment..."
@@ -575,11 +575,11 @@ function InformationItem({
 }) {
   return (
     <div>
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value || "Not provided"}
       </p>
     </div>

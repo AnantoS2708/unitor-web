@@ -423,8 +423,8 @@ export default function TutorApplyPage() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50">
-                <p className="text-slate-600">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+                <p className="text-unitor-gray-dark">
                     Loading application...
                 </p>
             </main>
@@ -437,21 +437,21 @@ export default function TutorApplyPage() {
         "pending"
     ) {
         return (
-            <main className="min-h-screen bg-slate-50">
+            <main className="min-h-screen bg-unitor-background">
 
-                <header className="border-b border-slate-200 bg-white">
+                <header className="border-b border-unitor-gray-light bg-white">
                     <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
                         <Link
                             href="/student/dashboard"
-                            className="text-2xl font-bold text-emerald-600"
+                            className="text-2xl font-bold text-unitor-primary"
                         >
                             Unitor
                         </Link>
 
                         <Link
                             href="/student/profile"
-                            className="font-medium text-slate-600 hover:text-emerald-600"
+                            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
                         >
                             Back to profile
                         </Link>
@@ -467,11 +467,11 @@ export default function TutorApplyPage() {
                             ⏳
                         </div>
 
-                        <h1 className="mt-5 text-3xl font-bold text-slate-900">
+                        <h1 className="mt-5 text-3xl font-bold text-unitor-black">
                             Application pending
                         </h1>
 
-                        <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-600">
+                        <p className="mx-auto mt-4 max-w-xl leading-7 text-unitor-gray-dark">
                             Your tutor application has already been submitted.
                             An admin will review your information and select the
                             courses you are approved to teach.
@@ -479,7 +479,7 @@ export default function TutorApplyPage() {
 
                         <Link
                             href="/student/profile"
-                            className="mt-8 inline-flex rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                            className="mt-8 inline-flex rounded-xl bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                         >
                             Back to profile
                         </Link>
@@ -493,21 +493,21 @@ export default function TutorApplyPage() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50">
+        <main className="min-h-screen bg-unitor-background">
 
-            <header className="border-b border-slate-200 bg-white">
+            <header className="border-b border-unitor-gray-light bg-white">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
                     <Link
                         href="/student/dashboard"
-                        className="text-2xl font-bold text-emerald-600"
+                        className="text-2xl font-bold text-unitor-primary"
                     >
                         Unitor
                     </Link>
 
                     <Link
                         href="/student/profile"
-                        className="font-medium text-slate-600 hover:text-emerald-600"
+                        className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
                     >
                         Back to profile
                     </Link>
@@ -519,15 +519,15 @@ export default function TutorApplyPage() {
 
                 <div className="text-center">
 
-                    <p className="font-semibold text-emerald-600">
+                    <p className="font-medium text-unitor-primary">
                         Tutor application
                     </p>
 
-                    <h1 className="mt-2 text-4xl font-bold text-slate-900">
+                    <h1 className="mt-2 text-4xl font-bold text-unitor-black">
                         Apply as Tutor
                     </h1>
 
-                    <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-600">
+                    <p className="mx-auto mt-4 max-w-2xl leading-7 text-unitor-gray-dark">
                         Submit your academic information for admin verification
                         before becoming a tutor.
                     </p>
@@ -541,9 +541,9 @@ export default function TutorApplyPage() {
                 )}
 
                 {success && (
-                    <div className="mt-7 rounded-xl bg-emerald-50 p-5 text-emerald-700">
+                    <div className="mt-7 rounded-xl bg-unitor-background p-5 text-unitor-primary-hover">
 
-                        <p className="font-semibold">
+                        <p className="font-medium">
                             {success}
                         </p>
 
@@ -684,7 +684,7 @@ export default function TutorApplyPage() {
 
                         <label
                             htmlFor="courseCodes"
-                            className="mb-2 block font-semibold text-slate-700"
+                            className="mb-2 block font-medium text-unitor-gray-dark"
                         >
                             Course codes you want to teach
                         </label>
@@ -705,15 +705,15 @@ export default function TutorApplyPage() {
                             }
                             placeholder="CSE115, ECO101, MAT116"
                             required
-                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                            className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                         />
 
-                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                        <p className="mt-2 text-sm leading-6 text-unitor-gray-dark">
                             <span className="font-bold text-red-500">
                                 N.B.:
                             </span>{" "}
                             Add only courses where you received{" "}
-                            <span className="font-bold text-emerald-600">
+                            <span className="font-bold text-unitor-primary">
                                 A, A-, or B+
                             </span>
                             . Admin will verify these courses before approval.
@@ -750,7 +750,7 @@ export default function TutorApplyPage() {
                             disabled={
                                 submitting
                             }
-                            className="rounded-lg bg-emerald-600 px-8 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="rounded-lg bg-unitor-primary px-8 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {submitting
                                 ? "Submitting..."
@@ -794,7 +794,7 @@ function ApplicationInput({
     return (
         <div>
 
-            <label className="mb-2 block font-semibold text-slate-700">
+            <label className="mb-2 block font-medium text-unitor-gray-dark">
                 {label}
             </label>
 
@@ -810,7 +810,7 @@ function ApplicationInput({
                         event.target.value
                     )
                 }
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:bg-slate-100 disabled:text-slate-500"
+                className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light disabled:bg-unitor-gray-soft disabled:text-unitor-gray-dark"
             />
 
         </div>

@@ -319,19 +319,19 @@ export default function AdminJobProposalsPage() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-100">
-      <header className="border-b border-slate-800 bg-slate-900 text-white">
+    <main className="min-h-screen bg-unitor-gray-soft">
+      <header className="border-b border-unitor-black bg-unitor-black text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link
             href="/admin/dashboard"
-            className="text-2xl font-bold text-emerald-400"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Admin
           </Link>
 
           <Link
             href="/admin/dashboard"
-            className="font-medium text-slate-300 hover:text-white"
+            className="font-medium text-unitor-gray-light hover:text-white"
           >
             ← Dashboard
           </Link>
@@ -339,15 +339,15 @@ export default function AdminJobProposalsPage() {
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-10">
-        <p className="font-semibold text-emerald-600">
+        <p className="font-medium text-unitor-primary">
           Platform activity
         </p>
 
-        <h1 className="mt-2 text-3xl font-bold text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold text-unitor-black">
           Tutor job applications
         </h1>
 
-        <p className="mt-3 text-slate-600">
+        <p className="mt-3 text-unitor-gray-dark">
           Monitor applications submitted by tutors for student
           proposals.
         </p>
@@ -378,12 +378,12 @@ export default function AdminJobProposalsPage() {
           />
         </section>
 
-        <section className="mt-5 rounded-2xl bg-slate-900 p-6 text-white">
-          <p className="text-sm font-semibold text-slate-300">
+        <section className="mt-5 rounded-2xl bg-unitor-black p-6 text-white">
+          <p className="text-sm font-medium text-unitor-gray-light">
             Combined application value
           </p>
 
-          <p className="mt-3 text-3xl font-bold text-emerald-400">
+          <p className="mt-3 text-3xl font-bold text-unitor-primary">
             {formatMoney(totalApplicationValue)}
           </p>
         </section>
@@ -397,7 +397,7 @@ export default function AdminJobProposalsPage() {
         <section className="mt-8 rounded-2xl bg-white p-5 shadow-sm">
           <label
             htmlFor="applicationSearch"
-            className="mb-2 block text-sm font-semibold text-slate-700"
+            className="mb-2 block text-sm font-medium text-unitor-gray-dark"
           >
             Search applications
           </label>
@@ -410,7 +410,7 @@ export default function AdminJobProposalsPage() {
               setSearchText(event.target.value)
             }
             placeholder="Search by course, tutor, student or proposal ID"
-            className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
           />
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -429,10 +429,10 @@ export default function AdminJobProposalsPage() {
                 onClick={() =>
                   setFilter(filterValue)
                 }
-                className={`rounded-lg px-4 py-2 text-sm font-semibold capitalize ${
+                className={`rounded-lg px-4 py-2 text-sm font-medium capitalize ${
                   filter === filterValue
-                    ? "bg-slate-900 text-white"
-                    : "border border-slate-300 text-slate-700 hover:bg-slate-50"
+                    ? "bg-unitor-primary text-white"
+                    : "border border-unitor-gray-light text-unitor-gray-dark hover:bg-unitor-background"
                 }`}
               >
                 {filterValue}
@@ -443,7 +443,7 @@ export default function AdminJobProposalsPage() {
 
         {loading ? (
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
-            <p className="text-slate-600">
+            <p className="text-unitor-gray-dark">
               Loading tutor applications...
             </p>
           </section>
@@ -451,7 +451,7 @@ export default function AdminJobProposalsPage() {
           <section className="mt-8 rounded-2xl bg-white p-10 text-center shadow-sm">
             <div className="text-5xl">📨</div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No applications found
             </h2>
           </section>
@@ -459,7 +459,7 @@ export default function AdminJobProposalsPage() {
           <section className="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1000px]">
-                <thead className="bg-slate-50 text-left">
+                <thead className="bg-unitor-background text-left">
                   <tr>
                     <TableHeading>Course</TableHeading>
                     <TableHeading>Tutor</TableHeading>
@@ -471,20 +471,20 @@ export default function AdminJobProposalsPage() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-unitor-gray-soft">
                   {filteredApplications.map(
                     (application) => (
                       <tr
                         key={application.id}
-                        className="hover:bg-slate-50"
+                        className="hover:bg-unitor-background"
                       >
                         <td className="p-4">
-                          <p className="font-bold text-blue-600">
+                          <p className="font-bold text-unitor-primary">
                             {application.courseCode ||
                               "No course"}
                           </p>
 
-                          <p className="mt-1 text-xs text-slate-400">
+                          <p className="mt-1 text-xs text-unitor-gray-dark/70">
                             {formatDate(
                               application.appliedAt ??
                                 application.createdAt
@@ -493,13 +493,13 @@ export default function AdminJobProposalsPage() {
                         </td>
 
                         <td className="p-4">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-medium text-unitor-black">
                             {getUserName(
                               application.tutorId
                             )}
                           </p>
 
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-unitor-gray-dark">
                             {getUserEmail(
                               application.tutorId
                             )}
@@ -507,14 +507,14 @@ export default function AdminJobProposalsPage() {
                         </td>
 
                         <td className="p-4">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-medium text-unitor-black">
                             {getUserName(
                               application.studentId
                             )}
                           </p>
                         </td>
 
-                        <td className="p-4 text-sm text-slate-700">
+                        <td className="p-4 text-sm text-unitor-gray-dark">
                           <p>
                             {application.dateFrom ||
                               "No date"}{" "}
@@ -523,14 +523,14 @@ export default function AdminJobProposalsPage() {
                               "No date"}
                           </p>
 
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-unitor-gray-dark">
                             {application.timeFrom} –{" "}
                             {application.timeTo}
                           </p>
                         </td>
 
                         <td className="p-4">
-                          <p className="font-semibold text-slate-900">
+                          <p className="font-medium text-unitor-black">
                             {formatMoney(
                               application.payment
                             )}
@@ -561,7 +561,7 @@ export default function AdminJobProposalsPage() {
                                 application
                               )
                             }
-                            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-emerald-600 hover:text-emerald-600"
+                            className="rounded-lg border border-unitor-gray-light px-4 py-2 text-sm font-medium text-unitor-gray-dark hover:border-unitor-primary hover:text-unitor-primary"
                           >
                             View
                           </button>
@@ -576,7 +576,7 @@ export default function AdminJobProposalsPage() {
         )}
 
         {!loading && (
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-unitor-gray-dark">
             Showing {filteredApplications.length} of{" "}
             {applications.length} applications
           </p>
@@ -620,13 +620,13 @@ function ApplicationModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-5 py-10">
       <div className="max-h-full w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-200 p-6">
+        <div className="flex items-center justify-between border-b border-unitor-gray-light p-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-unitor-black">
               Tutor application
             </h2>
 
-            <p className="mt-1 font-semibold text-blue-600">
+            <p className="mt-1 font-medium text-unitor-primary">
               {application.courseCode}
             </p>
           </div>
@@ -634,7 +634,7 @@ function ApplicationModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-3xl text-slate-500"
+            className="text-3xl text-unitor-gray-dark"
           >
             ×
           </button>
@@ -723,11 +723,11 @@ function ApplicationModal({
           </div>
 
           <div className="mt-8">
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Tutor message
             </h3>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {application.description ||
                 "No description provided."}
             </p>
@@ -736,7 +736,7 @@ function ApplicationModal({
           {application.proposalId && (
             <Link
               href={`/admin/proposals`}
-              className="mt-8 inline-block rounded-lg border border-emerald-600 px-5 py-3 font-semibold text-emerald-600 hover:bg-emerald-50"
+              className="mt-8 inline-block rounded-lg border border-unitor-primary px-5 py-3 font-medium text-unitor-primary hover:bg-unitor-background"
             >
               View proposals
             </Link>
@@ -745,7 +745,7 @@ function ApplicationModal({
           <button
             type="button"
             onClick={onClose}
-            className="ml-3 mt-8 rounded-lg bg-slate-900 px-6 py-3 font-semibold text-white"
+            className="ml-3 mt-8 rounded-lg bg-unitor-black px-6 py-3 font-medium text-white"
           >
             Close
           </button>
@@ -765,17 +765,17 @@ function ApplicationStatus({
 
   const style =
     cleanStatus === "completed"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : cleanStatus === "selected" ||
           cleanStatus === "accepted"
         ? "bg-purple-100 text-purple-700"
         : cleanStatus === "rejected"
           ? "bg-red-100 text-red-700"
-          : "bg-blue-100 text-blue-700";
+          : "bg-unitor-blue-light text-unitor-primary-hover";
 
   return (
     <span
-      className={`inline-block rounded-full px-3 py-1 text-xs font-semibold capitalize ${style}`}
+      className={`inline-block rounded-full px-3 py-1 text-xs font-medium capitalize ${style}`}
     >
       {cleanStatus}
     </span>
@@ -791,14 +791,14 @@ function PaymentStatus({
 
   const style =
     cleanStatus === "successful"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : cleanStatus === "rejected"
         ? "bg-red-100 text-red-700"
         : "bg-amber-100 text-amber-700";
 
   return (
     <span
-      className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-semibold capitalize ${style}`}
+      className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium capitalize ${style}`}
     >
       {cleanStatus}
     </span>
@@ -815,21 +815,21 @@ function SummaryCard({
   color: "blue" | "amber" | "purple" | "emerald";
 }) {
   const styles = {
-    blue: "bg-blue-50 text-blue-700",
+    blue: "bg-unitor-background text-unitor-primary-hover",
     amber: "bg-amber-50 text-amber-700",
     purple: "bg-purple-50 text-purple-700",
-    emerald: "bg-emerald-50 text-emerald-700",
+    emerald: "bg-green-50 text-green-700",
   };
 
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm">
       <span
-        className={`rounded-lg px-3 py-1 text-sm font-semibold ${styles[color]}`}
+        className={`rounded-lg px-3 py-1 text-sm font-medium ${styles[color]}`}
       >
         {title}
       </span>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {value}
       </p>
     </article>
@@ -842,7 +842,7 @@ function TableHeading({
   children: React.ReactNode;
 }) {
   return (
-    <th className="p-4 text-sm font-semibold text-slate-600">
+    <th className="p-4 text-sm font-medium text-unitor-gray-dark">
       {children}
     </th>
   );
@@ -856,12 +856,12 @@ function InformationItem({
   value?: string;
 }) {
   return (
-    <div className="border-b border-slate-100 pb-4">
-      <p className="text-sm text-slate-500">
+    <div className="border-b border-unitor-gray-soft pb-4">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 break-all font-semibold text-slate-900">
+      <p className="mt-1 break-all font-medium text-unitor-black">
         {value || "Not provided"}
       </p>
     </div>

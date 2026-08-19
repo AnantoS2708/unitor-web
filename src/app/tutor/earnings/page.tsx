@@ -865,24 +865,24 @@ export default function TutorEarningsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* HEADER */}
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -897,15 +897,15 @@ export default function TutorEarningsPage() {
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Tutor account
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold text-unitor-black">
             Earnings & Withdrawals
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             View your tutoring income, available balance and withdrawal history.
             Unitor&apos;s 10% platform fee is deducted before your earnings are
             added.
@@ -917,7 +917,7 @@ export default function TutorEarningsPage() {
 
         {success && (
 
-          <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700">
+          <div className="mt-8 rounded-xl border border-unitor-blue-light bg-unitor-background p-4 text-unitor-primary-hover">
             {success}
           </div>
 
@@ -981,24 +981,24 @@ export default function TutorEarningsPage() {
 
         {/* WITHDRAWAL SECTION */}
 
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm">
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
 
-              <p className="text-sm font-semibold text-emerald-600">
+              <p className="text-sm font-medium text-unitor-primary">
                 Tutor wallet
               </p>
 
-              <h2 className="mt-1 text-2xl font-bold text-slate-900">
+              <h2 className="mt-1 text-2xl font-bold text-unitor-black">
                 Withdraw earnings
               </h2>
 
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-unitor-gray-dark">
                 Available balance:
                 {" "}
-                <span className="font-bold text-emerald-700">
+                <span className="font-bold text-unitor-primary-hover">
                   {formatMoney(
                     availableBalance
                   )}
@@ -1030,7 +1030,7 @@ export default function TutorEarningsPage() {
                     setError("");
                     setSuccess("");
                   }}
-                  className="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700"
+                  className="rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                 >
                   Request Withdrawal
                 </button>
@@ -1045,13 +1045,13 @@ export default function TutorEarningsPage() {
             availableBalance <=
               0 && (
 
-              <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <div className="mt-6 rounded-xl border border-unitor-gray-light bg-unitor-background p-4">
 
-                <p className="font-semibold text-slate-700">
+                <p className="font-medium text-unitor-gray-dark">
                   No balance available for withdrawal
                 </p>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-unitor-gray-dark">
                   Your successful tutoring earnings will become available here.
                 </p>
 
@@ -1074,7 +1074,7 @@ export default function TutorEarningsPage() {
                       Withdrawal pending
                     </p>
 
-                    <p className="mt-2 text-2xl font-bold text-slate-900">
+                    <p className="mt-2 text-2xl font-bold text-unitor-black">
                       {formatMoney(
                         currentPendingWithdrawal.amount
                       )}
@@ -1084,7 +1084,7 @@ export default function TutorEarningsPage() {
                       Waiting for admin to send your payment.
                     </p>
 
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm text-unitor-gray-dark">
                       {
                         currentPendingWithdrawal.paymentMethod
                       }{" "}
@@ -1096,7 +1096,7 @@ export default function TutorEarningsPage() {
 
                   </div>
 
-                  <span className="inline-flex w-fit rounded-full bg-amber-200 px-4 py-2 text-sm font-semibold text-amber-900">
+                  <span className="inline-flex w-fit rounded-full bg-amber-200 px-4 py-2 text-sm font-medium text-amber-900">
                     Pending
                   </span>
 
@@ -1115,14 +1115,14 @@ export default function TutorEarningsPage() {
                 onSubmit={
                   handleWithdrawalRequest
                 }
-                className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5"
+                className="mt-6 rounded-xl border border-unitor-gray-light bg-unitor-background p-5"
               >
 
-                <h3 className="text-lg font-bold text-slate-900">
+                <h3 className="text-lg font-bold text-unitor-black">
                   Withdrawal request
                 </h3>
 
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-unitor-gray-dark">
                   Enter where you want the admin to send your money.
                 </p>
 
@@ -1134,7 +1134,7 @@ export default function TutorEarningsPage() {
 
                     <label
                       htmlFor="withdrawalAmount"
-                      className="block text-sm font-semibold text-slate-700"
+                      className="block text-sm font-medium text-unitor-gray-dark"
                     >
                       Amount
                     </label>
@@ -1158,10 +1158,10 @@ export default function TutorEarningsPage() {
                         )
                       }
                       required
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                      className="mt-2 w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                     />
 
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-unitor-gray-dark">
                       Maximum:{" "}
                       {formatMoney(
                         availableBalance
@@ -1176,7 +1176,7 @@ export default function TutorEarningsPage() {
 
                     <label
                       htmlFor="paymentMethod"
-                      className="block text-sm font-semibold text-slate-700"
+                      className="block text-sm font-medium text-unitor-gray-dark"
                     >
                       Payment method
                     </label>
@@ -1193,7 +1193,7 @@ export default function TutorEarningsPage() {
                           event.target.value
                         )
                       }
-                      className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-emerald-600"
+                      className="mt-2 w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none focus:border-unitor-primary"
                     >
                       <option value="bKash">
                         bKash
@@ -1222,7 +1222,7 @@ export default function TutorEarningsPage() {
 
                   <label
                     htmlFor="accountNumber"
-                    className="block text-sm font-semibold text-slate-700"
+                    className="block text-sm font-medium text-unitor-gray-dark"
                   >
                     Account number
                   </label>
@@ -1247,7 +1247,7 @@ export default function TutorEarningsPage() {
                         : `Enter ${paymentMethod} number`
                     }
                     required
-                    className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                    className="mt-2 w-full rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                   />
 
                 </div>
@@ -1264,7 +1264,7 @@ export default function TutorEarningsPage() {
                     disabled={
                       requestingWithdrawal
                     }
-                    className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+                    className="rounded-xl border border-unitor-gray-light bg-white px-5 py-3 font-medium text-unitor-gray-dark hover:bg-unitor-gray-soft"
                   >
                     Cancel
                   </button>
@@ -1274,7 +1274,7 @@ export default function TutorEarningsPage() {
                     disabled={
                       requestingWithdrawal
                     }
-                    className="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {requestingWithdrawal
                       ? "Submitting..."
@@ -1291,15 +1291,15 @@ export default function TutorEarningsPage() {
 
         {/* WITHDRAWAL HISTORY */}
 
-        <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section className="mt-8 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
 
-          <div className="border-b border-slate-200 p-6">
+          <div className="border-b border-unitor-gray-light p-6">
 
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Withdrawal history
             </h2>
 
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               Track your previous withdrawal requests.
             </p>
 
@@ -1308,13 +1308,13 @@ export default function TutorEarningsPage() {
           {withdrawals.length ===
           0 ? (
 
-            <div className="p-8 text-center text-sm text-slate-500">
+            <div className="p-8 text-center text-sm text-unitor-gray-dark">
               No withdrawal requests yet.
             </div>
 
           ) : (
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-unitor-gray-soft">
 
               {withdrawals.map(
                 (
@@ -1379,15 +1379,15 @@ export default function TutorEarningsPage() {
 
         {/* PAYMENT HISTORY */}
 
-        <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section className="mt-8 overflow-hidden rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
 
-          <div className="border-b border-slate-200 p-6">
+          <div className="border-b border-unitor-gray-light p-6">
 
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Payment history
             </h2>
 
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               Payments received from students.
             </p>
 
@@ -1397,7 +1397,7 @@ export default function TutorEarningsPage() {
 
             <div className="p-10 text-center">
 
-              <p className="text-slate-600">
+              <p className="text-unitor-gray-dark">
                 Loading payment history...
               </p>
 
@@ -1416,17 +1416,17 @@ export default function TutorEarningsPage() {
                   💰
                 </div>
 
-                <h3 className="mt-5 text-xl font-bold text-slate-900">
+                <h3 className="mt-5 text-xl font-bold text-unitor-black">
                   No earnings yet
                 </h3>
 
-                <p className="mt-2 text-slate-600">
+                <p className="mt-2 text-unitor-gray-dark">
                   Successful tutoring payments will appear here.
                 </p>
 
                 <Link
                   href="/tutor/proposals"
-                  className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+                  className="mt-6 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                 >
                   Browse proposals
                 </Link>
@@ -1439,7 +1439,7 @@ export default function TutorEarningsPage() {
             payments.length >
               0 && (
 
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-unitor-gray-soft">
 
                 {payments.map(
                   (
@@ -1492,10 +1492,10 @@ function SummaryCard({
 }) {
   const colorClasses = {
     emerald:
-      "bg-emerald-50 text-emerald-700",
+      "bg-green-50 text-green-700",
 
     blue:
-      "bg-blue-50 text-blue-700",
+      "bg-unitor-background text-unitor-primary-hover",
 
     amber:
       "bg-amber-50 text-amber-700",
@@ -1508,16 +1508,16 @@ function SummaryCard({
     <article className="rounded-2xl bg-white p-6 shadow-sm">
 
       <div
-        className={`inline-flex rounded-lg px-3 py-1 text-sm font-semibold ${colorClasses[color]}`}
+        className={`inline-flex rounded-lg px-3 py-1 text-sm font-medium ${colorClasses[color]}`}
       >
         {title}
       </div>
 
-      <p className="mt-5 text-3xl font-bold text-slate-900">
+      <p className="mt-5 text-3xl font-bold text-unitor-black">
         {value}
       </p>
 
-      <p className="mt-2 text-sm text-slate-500">
+      <p className="mt-2 text-sm text-unitor-gray-dark">
         {description}
       </p>
 
@@ -1543,7 +1543,7 @@ function PaymentRow({
   const statusClasses =
     status ===
     "successful"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : status ===
             "rejected" ||
           status ===
@@ -1552,7 +1552,7 @@ function PaymentRow({
         : "bg-amber-100 text-amber-700";
 
   return (
-    <article className="p-5 transition hover:bg-slate-50">
+    <article className="p-5 transition hover:bg-unitor-background">
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
@@ -1560,12 +1560,12 @@ function PaymentRow({
 
           <div className="flex flex-wrap items-center gap-3">
 
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               {payment.studentName}
             </h3>
 
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClasses}`}
+              className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusClasses}`}
             >
               {formatStatus(
                 status
@@ -1574,21 +1574,21 @@ function PaymentRow({
 
           </div>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-unitor-gray-dark">
             Payment ID:{" "}
             {payment.paymentId}
           </p>
 
           {payment.transactionId && (
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-unitor-gray-dark">
               Transaction ID:{" "}
               {payment.transactionId}
             </p>
 
           )}
 
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="mt-1 text-sm text-unitor-gray-dark/70">
 
             {formatPaymentDate(
               payment.approvedAt ??
@@ -1602,21 +1602,21 @@ function PaymentRow({
 
         <div className="text-left sm:text-right">
 
-          <p className="text-xl font-bold text-emerald-600">
+          <p className="text-xl font-bold text-unitor-primary">
             +
             {formatMoney(
               payment.tutorEarning
             )}
           </p>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-unitor-gray-dark">
             Student payment:{" "}
             {formatMoney(
               payment.amount
             )}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-unitor-gray-dark/70">
             Unitor fee:{" "}
             {formatMoney(
               payment.platformFee
@@ -1648,7 +1648,7 @@ function WithdrawalRow({
 
   const statusClass =
     status === "paid"
-      ? "bg-emerald-100 text-emerald-700"
+      ? "bg-green-100 text-green-700"
       : status ===
             "rejected" ||
           status ===
@@ -1665,21 +1665,21 @@ function WithdrawalRow({
 
           <div className="flex flex-wrap items-center gap-3">
 
-            <p className="text-xl font-bold text-slate-900">
+            <p className="text-xl font-bold text-unitor-black">
               {formatMoney(
                 withdrawal.amount
               )}
             </p>
 
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClass}`}
+              className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusClass}`}
             >
               {status}
             </span>
 
           </div>
 
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-unitor-gray-dark">
             {
               withdrawal.paymentMethod
             }{" "}
@@ -1691,7 +1691,7 @@ function WithdrawalRow({
 
         </div>
 
-        <div className="text-sm text-slate-500 sm:text-right">
+        <div className="text-sm text-unitor-gray-dark sm:text-right">
 
           <p>
             Requested:{" "}
@@ -1703,7 +1703,7 @@ function WithdrawalRow({
           {status ===
             "paid" && (
 
-            <p className="mt-1 text-emerald-600">
+            <p className="mt-1 text-unitor-primary">
               Paid:{" "}
               {formatPaymentDate(
                 withdrawal.paidAt

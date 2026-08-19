@@ -649,9 +649,9 @@ export default function TutorProfilePage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Loading tutor profile...
         </p>
 
@@ -665,9 +665,9 @@ export default function TutorProfilePage() {
 
   if (!profile) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <div className="rounded-2xl border border-unitor-gray-light bg-white p-8 text-center shadow-sm">
 
           <p className="text-red-600">
             {error ||
@@ -676,7 +676,7 @@ export default function TutorProfilePage() {
 
           <Link
             href="/tutor/dashboard"
-            className="mt-5 inline-block font-semibold text-emerald-600"
+            className="mt-5 inline-block font-medium text-unitor-primary"
           >
             Return to dashboard
           </Link>
@@ -712,26 +712,26 @@ export default function TutorProfilePage() {
   ========================================================= */
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 transition hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark transition hover:text-unitor-primary"
           >
             ← Dashboard
           </Link>
@@ -750,7 +750,7 @@ export default function TutorProfilePage() {
             PROFILE HEADER
         =================================================== */}
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <section className="rounded-2xl border border-unitor-gray-light bg-white p-8 shadow-sm">
 
           <div className="flex flex-col items-center gap-6 sm:flex-row">
 
@@ -768,12 +768,12 @@ export default function TutorProfilePage() {
                   alt={
                     profile.fullName
                   }
-                  className="h-32 w-32 rounded-full border-4 border-emerald-100 object-cover"
+                  className="h-32 w-32 rounded-full border-4 border-unitor-blue-light object-cover"
                 />
 
               ) : (
 
-                <div className="flex h-32 w-32 items-center justify-center rounded-full bg-emerald-100 text-4xl font-bold text-emerald-700">
+                <div className="flex h-32 w-32 items-center justify-center rounded-full bg-unitor-blue-light text-4xl font-bold text-unitor-primary-hover">
 
                   {profile.fullName
                     ?.charAt(0)
@@ -786,7 +786,7 @@ export default function TutorProfilePage() {
 
               {uploadingPhoto && (
 
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 text-center text-xs font-semibold text-white">
+                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 text-center text-xs font-medium text-white">
                   Uploading...
                 </div>
 
@@ -798,11 +798,11 @@ export default function TutorProfilePage() {
 
             <div className="flex-1 text-center sm:text-left">
 
-              <h1 className="text-3xl font-bold text-slate-900">
+              <h1 className="text-3xl font-bold text-unitor-black">
                 {profile.fullName}
               </h1>
 
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-unitor-gray-dark">
 
                 {profile.universityName ||
                   "University not provided"}
@@ -812,10 +812,10 @@ export default function TutorProfilePage() {
               {/* STATUS */}
 
               <span
-                className={`mt-3 inline-block rounded-full px-3 py-1 text-sm font-semibold ${
+                className={`mt-3 inline-block rounded-full px-3 py-1 text-sm font-medium ${
                   tutorStatus ===
                   "approved"
-                    ? "bg-emerald-100 text-emerald-700"
+                    ? "bg-green-100 text-green-700"
                     : tutorStatus ===
                         "rejected"
                       ? "bg-red-100 text-red-700"
@@ -838,7 +838,7 @@ export default function TutorProfilePage() {
                   disabled={
                     uploadingPhoto
                   }
-                  className="rounded-lg border border-emerald-600 bg-white px-5 py-2.5 font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:opacity-60"
+                  className="rounded-lg border border-unitor-primary bg-white px-5 py-2.5 font-medium text-unitor-primary-hover transition hover:bg-unitor-background disabled:opacity-60"
                 >
                   {uploadingPhoto
                     ? "Uploading..."
@@ -855,7 +855,7 @@ export default function TutorProfilePage() {
                     setError("");
                     setSuccess("");
                   }}
-                  className="rounded-lg bg-emerald-600 px-5 py-2.5 font-semibold text-white transition hover:bg-emerald-700"
+                  className="rounded-lg bg-unitor-primary px-5 py-2.5 font-medium text-white transition hover:bg-unitor-primary-hover"
                 >
                   Edit profile
                 </button>
@@ -898,7 +898,7 @@ export default function TutorProfilePage() {
 
         {success && (
 
-          <div className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-emerald-700">
+          <div className="mt-6 rounded-xl border border-unitor-blue-light bg-unitor-background p-4 text-unitor-primary-hover">
             ✓ {success}
           </div>
 
@@ -910,13 +910,13 @@ export default function TutorProfilePage() {
 
         {editing ? (
 
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-8 shadow-sm">
 
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-unitor-black">
               Edit profile
             </h2>
 
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-unitor-gray-dark">
               Update your personal
               tutor information.
             </p>
@@ -969,7 +969,7 @@ export default function TutorProfilePage() {
 
                 <label
                   htmlFor="bio"
-                  className="mb-2 block font-medium text-slate-700"
+                  className="mb-2 block font-medium text-unitor-gray-dark"
                 >
                   Bio
                 </label>
@@ -988,7 +988,7 @@ export default function TutorProfilePage() {
                     )
                   }
                   placeholder="Tell students about your experience"
-                  className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
                 />
 
               </div>
@@ -1007,7 +1007,7 @@ export default function TutorProfilePage() {
                 disabled={
                   saving
                 }
-                className="rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60"
+                className="rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white transition hover:bg-unitor-primary-hover disabled:opacity-60"
               >
                 {saving
                   ? "Saving..."
@@ -1022,7 +1022,7 @@ export default function TutorProfilePage() {
                 disabled={
                   saving
                 }
-                className="rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="rounded-lg border border-unitor-gray-light px-6 py-3 font-medium text-unitor-gray-dark transition hover:bg-unitor-background"
               >
                 Cancel
               </button>
@@ -1039,9 +1039,9 @@ export default function TutorProfilePage() {
                 TUTOR INFORMATION
             ================================================= */}
 
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-8 shadow-sm">
 
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-unitor-black">
                 Tutor information
               </h2>
 
@@ -1112,13 +1112,13 @@ export default function TutorProfilePage() {
                 ABOUT ME
             ================================================= */}
 
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-8 shadow-sm">
 
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-unitor-black">
                 About me
               </h2>
 
-              <p className="mt-4 leading-7 text-slate-600">
+              <p className="mt-4 leading-7 text-unitor-gray-dark">
 
                 {profile.bio ||
                   "No bio has been added yet."}
@@ -1131,15 +1131,15 @@ export default function TutorProfilePage() {
                 APPROVED COURSES
             ================================================= */}
 
-            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-8 shadow-sm">
 
               <div>
 
-                <p className="text-sm font-semibold text-emerald-600">
+                <p className="text-sm font-medium text-unitor-primary">
                   Approved teaching courses
                 </p>
 
-                <h2 className="mt-1 text-2xl font-bold text-slate-900">
+                <h2 className="mt-1 text-2xl font-bold text-unitor-black">
                   Courses You Can Teach
                 </h2>
 
@@ -1159,7 +1159,7 @@ export default function TutorProfilePage() {
                         key={
                           course
                         }
-                        className="rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 font-semibold text-emerald-700"
+                        className="rounded-full border border-unitor-blue-light bg-unitor-background px-4 py-2 font-medium text-unitor-primary-hover"
                       >
                         {course}
                       </span>
@@ -1171,7 +1171,7 @@ export default function TutorProfilePage() {
 
               ) : (
 
-                <p className="mt-4 text-slate-600">
+                <p className="mt-4 text-unitor-gray-dark">
                   No courses have
                   been approved yet.
                 </p>
@@ -1220,7 +1220,7 @@ function ProfileInput({
         htmlFor={
           inputId
         }
-        className="mb-2 block font-medium text-slate-700"
+        className="mb-2 block font-medium text-unitor-gray-dark"
       >
         {label}
       </label>
@@ -1240,7 +1240,7 @@ function ProfileInput({
             event.target.value
           )
         }
-        className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+        className="w-full rounded-lg border border-unitor-gray-light px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
       />
 
     </div>
@@ -1259,13 +1259,13 @@ function InformationItem({
   value?: string;
 }) {
   return (
-    <div className="border-b border-slate-100 pb-4">
+    <div className="border-b border-unitor-gray-soft pb-4">
 
-      <p className="text-sm font-medium text-slate-500">
+      <p className="text-sm font-medium text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-medium text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value ||
           "Not provided"}
       </p>

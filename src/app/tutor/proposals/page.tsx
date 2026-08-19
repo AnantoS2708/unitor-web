@@ -525,9 +525,9 @@ export default function TutorProposalsPage() {
     loadingProposals
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Loading tutoring proposals...
         </p>
 
@@ -536,24 +536,24 @@ export default function TutorProposalsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* HEADER */}
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/tutor/dashboard"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             Tutor Dashboard
           </Link>
@@ -568,15 +568,15 @@ export default function TutorProposalsPage() {
 
           <div>
 
-            <p className="font-semibold text-emerald-600">
+            <p className="font-medium text-unitor-primary">
               Tutor opportunities
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold text-unitor-black">
               Available Proposals
             </h1>
 
-            <p className="mt-3 max-w-2xl text-slate-600">
+            <p className="mt-3 max-w-2xl text-unitor-gray-dark">
               Only proposals for courses approved by the
               administrator are shown here.
             </p>
@@ -585,13 +585,13 @@ export default function TutorProposalsPage() {
 
           {/* APPROVED COURSES */}
 
-          <div className="rounded-xl bg-emerald-50 px-5 py-3">
+          <div className="rounded-xl bg-unitor-background px-5 py-3">
 
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+            <p className="text-xs font-medium uppercase tracking-wide text-unitor-primary">
               Your approved courses
             </p>
 
-            <p className="mt-1 font-bold text-emerald-800">
+            <p className="mt-1 font-bold text-unitor-black">
               {tutor?.courseCodesToTeach
                 .join(", ") ||
                 "No courses assigned"}
@@ -619,11 +619,11 @@ export default function TutorProposalsPage() {
               📚
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold text-slate-900">
+            <h2 className="mt-5 text-2xl font-bold text-unitor-black">
               No courses assigned
             </h2>
 
-            <p className="mx-auto mt-3 max-w-xl text-slate-600">
+            <p className="mx-auto mt-3 max-w-xl text-unitor-gray-dark">
               You currently have no administrator-approved
               courses to teach.
             </p>
@@ -639,7 +639,7 @@ export default function TutorProposalsPage() {
 
               <label
                 htmlFor="proposalSearch"
-                className="mb-2 block text-sm font-semibold text-slate-700"
+                className="mb-2 block text-sm font-medium text-unitor-gray-dark"
               >
                 Search proposals
               </label>
@@ -654,7 +654,7 @@ export default function TutorProposalsPage() {
                   )
                 }
                 placeholder="Search by course, topic or title"
-                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark/70 focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
               />
 
             </section>
@@ -663,7 +663,7 @@ export default function TutorProposalsPage() {
 
             <div className="mt-6">
 
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-unitor-gray-dark">
                 {filteredProposals.length}{" "}
                 matching{" "}
                 {filteredProposals.length === 1
@@ -682,11 +682,11 @@ export default function TutorProposalsPage() {
                   📝
                 </div>
 
-                <h2 className="mt-5 text-2xl font-bold text-slate-900">
+                <h2 className="mt-5 text-2xl font-bold text-unitor-black">
                   No matching proposals
                 </h2>
 
-                <p className="mx-auto mt-3 max-w-xl text-slate-600">
+                <p className="mx-auto mt-3 max-w-xl text-unitor-gray-dark">
                   There are currently no available proposals
                   for your approved courses.
                 </p>
@@ -702,42 +702,42 @@ export default function TutorProposalsPage() {
 
                     <article
                       key={proposal.id}
-                      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                      className="rounded-2xl border border-unitor-gray-light bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                     >
 
                       <div className="flex items-start justify-between gap-4">
 
                         <div>
 
-                          <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">
+                          <span className="inline-flex rounded-full bg-unitor-background px-3 py-1 text-sm font-bold text-unitor-primary-hover">
                             {proposal.courseCode}
                           </span>
 
-                          <h2 className="mt-4 text-xl font-bold text-slate-900">
+                          <h2 className="mt-4 text-xl font-bold text-unitor-black">
                             {proposal.title}
                           </h2>
 
                         </div>
 
-                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold capitalize text-emerald-700">
+                        <span className="rounded-full bg-unitor-background px-3 py-1 text-xs font-medium capitalize text-unitor-primary-hover">
                           {proposal.status}
                         </span>
 
                       </div>
 
                       {proposal.problemTopics && (
-                        <p className="mt-4 text-sm font-medium text-slate-700">
+                        <p className="mt-4 text-sm font-medium text-unitor-gray-dark">
                           Topic:{" "}
                           {proposal.problemTopics}
                         </p>
                       )}
 
-                      <p className="mt-3 line-clamp-3 leading-6 text-slate-600">
+                      <p className="mt-3 line-clamp-3 leading-6 text-unitor-gray-dark">
                         {proposal.description ||
                           "No description provided."}
                       </p>
 
-                      <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5">
+                      <div className="mt-5 grid grid-cols-2 gap-4 border-t border-unitor-gray-soft pt-5">
 
                         <InfoBox
                           label="Budget"
@@ -776,11 +776,11 @@ export default function TutorProposalsPage() {
 
                         <div>
 
-                          <p className="text-xs text-slate-400">
+                          <p className="text-xs text-unitor-gray-dark/70">
                             Student
                           </p>
 
-                          <p className="mt-1 text-sm font-semibold text-slate-700">
+                          <p className="mt-1 text-sm font-medium text-unitor-gray-dark">
                             {proposal.studentName}
                           </p>
 
@@ -793,7 +793,7 @@ export default function TutorProposalsPage() {
                               proposal
                             )
                           }
-                          className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                          className="rounded-lg bg-unitor-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-unitor-primary-hover"
                         >
                           View details
                         </button>
@@ -838,15 +838,15 @@ function ProposalDetailsModal({
 
       <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl">
 
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6">
+        <div className="sticky top-0 flex items-center justify-between border-b border-unitor-gray-light bg-white p-6">
 
           <div>
 
-            <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700">
+            <span className="inline-flex rounded-full bg-unitor-background px-3 py-1 text-sm font-bold text-unitor-primary-hover">
               {proposal.courseCode}
             </span>
 
-            <h2 className="mt-3 text-2xl font-bold text-slate-900">
+            <h2 className="mt-3 text-2xl font-bold text-unitor-black">
               {proposal.title}
             </h2>
 
@@ -855,7 +855,7 @@ function ProposalDetailsModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl text-slate-600 hover:bg-slate-200"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-unitor-gray-soft text-2xl text-unitor-gray-dark hover:bg-unitor-gray-light"
           >
             ×
           </button>
@@ -928,11 +928,11 @@ function ProposalDetailsModal({
 
           <div className="mt-8">
 
-            <h3 className="font-bold text-slate-900">
+            <h3 className="font-bold text-unitor-black">
               Description
             </h3>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {proposal.description ||
                 "No description provided."}
             </p>
@@ -943,7 +943,7 @@ function ProposalDetailsModal({
 
             <div className="mt-8">
 
-              <h3 className="font-bold text-slate-900">
+              <h3 className="font-bold text-unitor-black">
                 Tags
               </h3>
 
@@ -954,7 +954,7 @@ function ProposalDetailsModal({
 
                     <span
                       key={`${tag}-${index}`}
-                      className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700"
+                      className="rounded-full bg-unitor-gray-soft px-4 py-2 text-sm font-medium text-unitor-gray-dark"
                     >
                       {tag}
                     </span>
@@ -968,12 +968,12 @@ function ProposalDetailsModal({
 
           )}
 
-          <div className="mt-8 border-t border-slate-200 pt-6">
+          <div className="mt-8 border-t border-unitor-gray-light pt-6">
 
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-unitor-gray-light px-6 py-3 font-medium text-unitor-gray-dark hover:bg-unitor-background"
             >
               Close
             </button>
@@ -998,11 +998,11 @@ function InfoBox({
   return (
     <div>
 
-      <p className="text-xs font-medium text-slate-400">
+      <p className="text-xs font-medium text-unitor-gray-dark/70">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-slate-800">
+      <p className="mt-1 font-medium text-unitor-black">
         {value}
       </p>
 
@@ -1018,13 +1018,13 @@ function InformationItem({
   value?: string;
 }) {
   return (
-    <div className="border-b border-slate-100 pb-4">
+    <div className="border-b border-unitor-gray-soft pb-4">
 
-      <p className="text-sm font-medium text-slate-500">
+      <p className="text-sm font-medium text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-slate-900">
+      <p className="mt-1 font-medium text-unitor-black">
         {value ||
           "Not provided"}
       </p>

@@ -126,8 +126,8 @@ export default function ProposalDetailsPage() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-600">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
+        <p className="text-unitor-gray-dark">
           Loading proposal...
         </p>
       </main>
@@ -136,19 +136,19 @@ export default function ProposalDetailsPage() {
 
   if (error || !proposal) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
         <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold text-red-600">
             Proposal unavailable
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             {error}
           </p>
 
           <Link
             href="/student/proposals"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white"
+            className="mt-6 inline-block rounded-lg bg-unitor-primary px-5 py-3 font-medium text-white"
           >
             Return to proposals
           </Link>
@@ -158,19 +158,19 @@ export default function ProposalDetailsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-unitor-background">
+      <header className="border-b border-unitor-gray-light bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link
             href="/student/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor
           </Link>
 
           <Link
             href="/student/proposals"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← My Proposals
           </Link>
@@ -181,15 +181,15 @@ export default function ProposalDetailsPage() {
         <section className="rounded-2xl bg-white p-8 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-5">
             <div>
-              <p className="font-semibold text-emerald-600">
+              <p className="font-medium text-unitor-primary">
                 {proposal.courseCode}
               </p>
 
-              <h1 className="mt-2 text-3xl font-bold text-slate-900">
+              <h1 className="mt-2 text-3xl font-bold text-unitor-black">
                 {proposal.title || "Untitled proposal"}
               </h1>
 
-              <p className="mt-3 text-slate-500">
+              <p className="mt-3 text-unitor-gray-dark">
                 Created by {proposal.studentName}
               </p>
             </div>
@@ -197,23 +197,23 @@ export default function ProposalDetailsPage() {
             <StatusBadge status={proposal.status} />
           </div>
 
-          <div className="mt-8 border-t border-slate-100 pt-8">
-            <h2 className="text-xl font-bold text-slate-900">
+          <div className="mt-8 border-t border-unitor-gray-soft pt-8">
+            <h2 className="text-xl font-bold text-unitor-black">
               Description
             </h2>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {proposal.description ||
                 "No description was provided."}
             </p>
           </div>
 
-          <div className="mt-8 rounded-xl bg-slate-50 p-6">
-            <h2 className="text-lg font-bold text-slate-900">
+          <div className="mt-8 rounded-xl bg-unitor-background p-6">
+            <h2 className="text-lg font-bold text-unitor-black">
               Problem topics
             </h2>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-unitor-gray-dark">
               {proposal.problemTopics || "Not provided"}
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function ProposalDetailsPage() {
 
         <section className="mt-8 grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl bg-white p-7 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Academic information
             </h2>
 
@@ -244,7 +244,7 @@ export default function ProposalDetailsPage() {
           </div>
 
           <div className="rounded-2xl bg-white p-7 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Schedule and budget
             </h2>
 
@@ -277,7 +277,7 @@ export default function ProposalDetailsPage() {
         </section>
 
         <section className="mt-8 rounded-2xl bg-white p-7 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-unitor-black">
             Proposal progress
           </h2>
 
@@ -305,12 +305,12 @@ export default function ProposalDetailsPage() {
 
         <Link
         href={`/student/proposals/${proposal.id}/applications`}
-        className="mt-8 block w-full rounded-lg bg-emerald-600 px-6 py-3 text-center font-semibold text-white hover:bg-emerald-700">
+        className="mt-8 block w-full rounded-lg bg-unitor-primary px-6 py-3 text-center font-medium text-white hover:bg-unitor-primary-hover">
         View Tutor Applications ({proposal.willingToTeach})
         </Link>
 
         {(proposal.createdAt || proposal.updatedAt) && (
-          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
+          <section className="mt-8 rounded-2xl border border-unitor-gray-light bg-white p-6 text-sm text-unitor-gray-dark">
             {proposal.createdAt && (
               <p>
                 Created:{" "}
@@ -339,10 +339,10 @@ function InformationRow({
   value: string;
 }) {
   return (
-    <div className="flex items-center justify-between gap-5 border-b border-slate-100 pb-3">
-      <span className="text-slate-500">{label}</span>
+    <div className="flex items-center justify-between gap-5 border-b border-unitor-gray-soft pb-3">
+      <span className="text-unitor-gray-dark">{label}</span>
 
-      <span className="text-right font-semibold text-slate-900">
+      <span className="text-right font-medium text-unitor-black">
         {value || "Not provided"}
       </span>
     </div>
@@ -357,10 +357,10 @@ function ProgressItem({
   value: string;
 }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-5">
-      <p className="text-sm text-slate-500">{label}</p>
+    <div className="rounded-xl bg-unitor-background p-5">
+      <p className="text-sm text-unitor-gray-dark">{label}</p>
 
-      <p className="mt-2 font-bold capitalize text-slate-900">
+      <p className="mt-2 font-bold capitalize text-unitor-black">
         {value}
       </p>
     </div>
@@ -374,20 +374,20 @@ function StatusBadge({
 }) {
   const normalizedStatus = status.toLowerCase();
 
-  let classes = "bg-slate-100 text-slate-700";
+  let classes = "bg-unitor-gray-soft text-unitor-gray-dark";
 
   if (
     normalizedStatus === "open" ||
     normalizedStatus === "active"
   ) {
-    classes = "bg-emerald-50 text-emerald-700";
+    classes = "bg-unitor-background text-unitor-primary-hover";
   } else if (
     normalizedStatus === "pending" ||
     normalizedStatus === "in progress"
   ) {
     classes = "bg-amber-50 text-amber-700";
   } else if (normalizedStatus === "completed") {
-    classes = "bg-blue-50 text-blue-700";
+    classes = "bg-unitor-background text-unitor-primary-hover";
   } else if (
     normalizedStatus === "cancelled" ||
     normalizedStatus === "rejected"
@@ -397,7 +397,7 @@ function StatusBadge({
 
   return (
     <span
-      className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${classes}`}
+      className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${classes}`}
     >
       {status}
     </span>

@@ -227,18 +227,18 @@ export default function AdminCourseRequestsPage() {
   }
 
   if (checkingAdmin) {
-    return <main className="min-h-screen bg-slate-100 p-8 text-slate-600">Checking admin access…</main>;
+    return <main className="min-h-screen bg-unitor-gray-soft p-8 text-unitor-gray-dark">Checking admin access…</main>;
   }
 
   return (
-    <main className="min-h-screen bg-slate-100">
-      <header className="bg-slate-950 text-white shadow-lg">
+    <main className="min-h-screen bg-unitor-gray-soft">
+      <header className="bg-unitor-black text-white shadow-lg">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-400">Unitor Admin</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-unitor-primary">Unitor Admin</p>
             <h1 className="mt-1 text-xl font-bold">Course Requests</h1>
           </div>
-          <Link href="/admin/dashboard" className="text-sm font-semibold text-slate-300 transition hover:text-white">
+          <Link href="/admin/dashboard" className="text-sm font-medium text-unitor-gray-light transition hover:text-white">
             ← Dashboard
           </Link>
         </div>
@@ -252,20 +252,20 @@ export default function AdminCourseRequestsPage() {
               type="button"
               onClick={() => setFilter(status)}
               className={`rounded-2xl border bg-white p-5 text-left shadow-sm transition ${
-                filter === status ? "border-emerald-500 ring-2 ring-emerald-100" : "border-slate-200 hover:border-emerald-300"
+                filter === status ? "border-unitor-primary ring-2 ring-unitor-blue-light" : "border-unitor-gray-light hover:border-unitor-blue-light"
               }`}
             >
-              <p className="text-sm font-semibold capitalize text-slate-500">{status}</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">{counts[status]}</p>
+              <p className="text-sm font-medium capitalize text-unitor-gray-dark">{status}</p>
+              <p className="mt-2 text-3xl font-bold text-unitor-black">{counts[status]}</p>
             </button>
           ))}
         </section>
 
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <section className="mt-6 rounded-2xl border border-unitor-gray-light bg-white shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-unitor-gray-light p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">Tutor course requests</h2>
-              <p className="mt-1 text-sm text-slate-500">Approve a request to add its course to the tutor’s teaching list.</p>
+              <h2 className="text-lg font-bold text-unitor-black">Tutor course requests</h2>
+              <p className="mt-1 text-sm text-unitor-gray-dark">Approve a request to add its course to the tutor’s teaching list.</p>
             </div>
             <div className="flex flex-wrap gap-2">
               {(["pending", "approved", "rejected", "all"] as Filter[]).map((value) => (
@@ -273,8 +273,8 @@ export default function AdminCourseRequestsPage() {
                   key={value}
                   type="button"
                   onClick={() => setFilter(value)}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold capitalize ${
-                    filter === value ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  className={`rounded-lg px-3 py-2 text-sm font-medium capitalize ${
+                    filter === value ? "bg-unitor-primary text-white" : "bg-unitor-gray-soft text-unitor-gray-dark hover:bg-unitor-gray-light"
                   }`}
                 >
                   {value}
@@ -284,33 +284,33 @@ export default function AdminCourseRequestsPage() {
           </div>
 
           {(error || success) && (
-            <div className={`mx-5 mt-5 rounded-xl px-4 py-3 text-sm font-medium ${error ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"}`}>
+            <div className={`mx-5 mt-5 rounded-xl px-4 py-3 text-sm font-medium ${error ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
               {error || success}
             </div>
           )}
 
           <div className="space-y-4 p-5">
             {loading ? (
-              <p className="py-10 text-center text-slate-500">Loading course requests…</p>
+              <p className="py-10 text-center text-unitor-gray-dark">Loading course requests…</p>
             ) : displayedRequests.length === 0 ? (
-              <p className="py-10 text-center text-slate-500">No {filter === "all" ? "course" : filter} requests found.</p>
+              <p className="py-10 text-center text-unitor-gray-dark">No {filter === "all" ? "course" : filter} requests found.</p>
             ) : (
               displayedRequests.map((request) => (
-                <article key={request.id} className="rounded-2xl border border-slate-200 p-5">
+                <article key={request.id} className="rounded-2xl border border-unitor-gray-light p-5">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-lg font-bold text-slate-900">{request.courseCode || "Unknown course"}</h3>
+                        <h3 className="text-lg font-bold text-unitor-black">{request.courseCode || "Unknown course"}</h3>
                         <span className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
-                          request.status === "pending" ? "bg-amber-100 text-amber-700" : request.status === "approved" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                          request.status === "pending" ? "bg-amber-100 text-amber-700" : request.status === "approved" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                         }`}>
                           {request.status}
                         </span>
                       </div>
-                      <p className="mt-2 font-semibold text-slate-700">{request.tutorName}</p>
-                      <p className="text-sm text-slate-500">{request.tutorEmail}</p>
-                      {request.reason && <p className="mt-3 max-w-2xl rounded-xl bg-slate-50 p-3 text-sm text-slate-600">{request.reason}</p>}
-                      <p className="mt-3 text-xs text-slate-400">Requested {formatDate(request.createdAt)}</p>
+                      <p className="mt-2 font-medium text-unitor-gray-dark">{request.tutorName}</p>
+                      <p className="text-sm text-unitor-gray-dark">{request.tutorEmail}</p>
+                      {request.reason && <p className="mt-3 max-w-2xl rounded-xl bg-unitor-background p-3 text-sm text-unitor-gray-dark">{request.reason}</p>}
+                      <p className="mt-3 text-xs text-unitor-gray-dark/70">Requested {formatDate(request.createdAt)}</p>
                     </div>
 
                     {request.status === "pending" && (
@@ -327,7 +327,7 @@ export default function AdminCourseRequestsPage() {
                           type="button"
                           disabled={Boolean(processingId)}
                           onClick={() => approveRequest(request)}
-                          className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-xl bg-unitor-primary px-4 py-2.5 text-sm font-bold text-white transition hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           {processingId === request.id ? "Working…" : "Approve"}
                         </button>

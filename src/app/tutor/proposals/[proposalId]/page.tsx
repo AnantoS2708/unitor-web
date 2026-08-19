@@ -1215,9 +1215,9 @@ export default function TutorProposalDetailsPage() {
    */
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background">
 
-        <p className="text-slate-600">
+        <p className="text-unitor-gray-dark">
           Loading proposal...
         </p>
 
@@ -1235,7 +1235,7 @@ export default function TutorProposalDetailsPage() {
     !proposal
   ) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6">
+      <main className="flex min-h-screen items-center justify-center bg-unitor-background px-6">
 
         <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm">
 
@@ -1243,13 +1243,13 @@ export default function TutorProposalDetailsPage() {
             Proposal unavailable
           </h1>
 
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-unitor-gray-dark">
             {error}
           </p>
 
           <Link
             href="/tutor/proposals"
-            className="mt-6 inline-block rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white"
+            className="mt-6 inline-block rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white"
           >
             Return to proposals
           </Link>
@@ -1271,22 +1271,22 @@ export default function TutorProposalDetailsPage() {
    */
   if (!courseAllowed) {
     return (
-      <main className="min-h-screen bg-slate-50">
+      <main className="min-h-screen bg-unitor-background">
 
-        <header className="border-b border-slate-200 bg-white">
+        <header className="border-b border-unitor-gray-light bg-white">
 
           <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
             <Link
               href="/tutor/dashboard"
-              className="text-2xl font-bold text-emerald-600"
+              className="text-2xl font-bold text-unitor-primary"
             >
               Unitor Tutor
             </Link>
 
             <Link
               href="/tutor/proposals"
-              className="font-medium text-slate-600 hover:text-emerald-600"
+              className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
             >
               ← Available proposals
             </Link>
@@ -1303,26 +1303,26 @@ export default function TutorProposalDetailsPage() {
               🔒
             </div>
 
-            <h1 className="mt-5 text-2xl font-bold text-slate-900">
+            <h1 className="mt-5 text-2xl font-bold text-unitor-black">
               Proposal not available
             </h1>
 
-            <p className="mt-4 leading-7 text-slate-600">
+            <p className="mt-4 leading-7 text-unitor-gray-dark">
               This proposal is for{" "}
-              <span className="font-bold text-slate-900">
+              <span className="font-bold text-unitor-black">
                 {proposal.courseCode}
               </span>
               , but this course is not included in your
               approved teaching courses.
             </p>
 
-            <div className="mt-5 rounded-xl bg-emerald-50 p-4">
+            <div className="mt-5 rounded-xl bg-unitor-background p-4">
 
-              <p className="text-sm font-semibold text-emerald-700">
+              <p className="text-sm font-medium text-unitor-primary-hover">
                 Your approved courses
               </p>
 
-              <p className="mt-2 font-bold text-emerald-800">
+              <p className="mt-2 font-bold text-unitor-black">
                 {approvedCourseCodes.length > 0
                   ? approvedCourseCodes.join(
                       ", "
@@ -1334,7 +1334,7 @@ export default function TutorProposalDetailsPage() {
 
             <Link
               href="/tutor/proposals"
-              className="mt-7 inline-flex rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700"
+              className="mt-7 inline-flex rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover"
             >
               View my available proposals
             </Link>
@@ -1363,24 +1363,24 @@ export default function TutorProposalDetailsPage() {
       "pending";
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-unitor-background">
 
       {/* HEADER */}
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-unitor-gray-light bg-white">
 
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
 
           <Link
             href="/tutor/dashboard"
-            className="text-2xl font-bold text-emerald-600"
+            className="text-2xl font-bold text-unitor-primary"
           >
             Unitor Tutor
           </Link>
 
           <Link
             href="/tutor/proposals"
-            className="font-medium text-slate-600 hover:text-emerald-600"
+            className="font-medium text-unitor-gray-dark hover:text-unitor-primary"
           >
             ← Available proposals
           </Link>
@@ -1399,15 +1399,15 @@ export default function TutorProposalDetailsPage() {
 
             <div>
 
-              <p className="font-semibold text-emerald-600">
+              <p className="font-medium text-unitor-primary">
                 {proposal.courseCode}
               </p>
 
-              <h1 className="mt-2 text-3xl font-bold text-slate-900">
+              <h1 className="mt-2 text-3xl font-bold text-unitor-black">
                 {proposal.title}
               </h1>
 
-              <p className="mt-3 text-slate-500">
+              <p className="mt-3 text-unitor-gray-dark">
                 Posted by{" "}
                 {proposal.studentName}
               </p>
@@ -1415,10 +1415,10 @@ export default function TutorProposalDetailsPage() {
             </div>
 
             <span
-              className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${
+              className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
                 proposalAvailable
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-slate-100 text-slate-600"
+                  ? "bg-unitor-background text-unitor-primary-hover"
+                  : "bg-unitor-gray-soft text-unitor-gray-dark"
               }`}
             >
               {proposal.status}
@@ -1426,26 +1426,26 @@ export default function TutorProposalDetailsPage() {
 
           </div>
 
-          <div className="mt-8 border-t border-slate-100 pt-8">
+          <div className="mt-8 border-t border-unitor-gray-soft pt-8">
 
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Description
             </h2>
 
-            <p className="mt-3 whitespace-pre-wrap leading-7 text-slate-600">
+            <p className="mt-3 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
               {proposal.description ||
                 "No description provided."}
             </p>
 
           </div>
 
-          <div className="mt-7 rounded-xl bg-slate-50 p-6">
+          <div className="mt-7 rounded-xl bg-unitor-background p-6">
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-unitor-gray-dark">
               Problem topics
             </p>
 
-            <p className="mt-2 font-semibold text-slate-900">
+            <p className="mt-2 font-medium text-unitor-black">
               {proposal.problemTopics ||
                 "Not provided"}
             </p>
@@ -1521,15 +1521,15 @@ export default function TutorProposalDetailsPage() {
 
                 <div>
 
-                  <p className="font-semibold text-emerald-600">
+                  <p className="font-medium text-unitor-primary">
                     Application submitted
                   </p>
 
-                  <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                  <h2 className="mt-2 text-2xl font-bold text-unitor-black">
                     Edit Application
                   </h2>
 
-                  <p className="mt-2 text-slate-600">
+                  <p className="mt-2 text-unitor-gray-dark">
                     You can update your offer until the student
                     selects you.
                   </p>
@@ -1545,24 +1545,24 @@ export default function TutorProposalDetailsPage() {
 
                     setError("");
                   }}
-                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-600 hover:bg-slate-50"
+                  className="rounded-lg border border-unitor-gray-light px-4 py-2 font-medium text-unitor-gray-dark hover:bg-unitor-background"
                 >
                   Cancel
                 </button>
 
               </div>
 
-              <div className="mt-6 rounded-xl bg-blue-50 p-5">
+              <div className="mt-6 rounded-xl bg-unitor-background p-5">
 
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-unitor-primary-hover">
                   Student&apos;s original budget
                 </p>
 
-                <p className="mt-1 text-2xl font-bold text-blue-900">
+                <p className="mt-1 text-2xl font-bold text-unitor-black">
                   ৳{proposal.budget}
                 </p>
 
-                <p className="mt-2 text-sm leading-6 text-blue-700">
+                <p className="mt-2 text-sm leading-6 text-unitor-primary-hover">
                   You may request a lower or higher amount.
                   The student will decide whether to accept
                   your offer.
@@ -1595,7 +1595,7 @@ export default function TutorProposalDetailsPage() {
                   disabled={
                     submitting
                   }
-                  className="mt-8 w-full rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-8 w-full rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {submitting
                     ? "Saving changes..."
@@ -1625,28 +1625,28 @@ export default function TutorProposalDetailsPage() {
 
           <section className="mt-8 rounded-2xl bg-white p-8 shadow-sm">
 
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-unitor-black">
               {invitationDocumentId
                 ? "Respond to invitation"
                 : "Apply to this proposal"}
             </h2>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-unitor-gray-dark">
               Explain how you can help and confirm your proposed
               schedule and payment.
             </p>
 
-            <div className="mt-6 rounded-xl bg-blue-50 p-5">
+            <div className="mt-6 rounded-xl bg-unitor-background p-5">
 
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-unitor-primary-hover">
                 Student&apos;s budget
               </p>
 
-              <p className="mt-1 text-2xl font-bold text-blue-900">
+              <p className="mt-1 text-2xl font-bold text-unitor-black">
                 ৳{proposal.budget}
               </p>
 
-              <p className="mt-2 text-sm leading-6 text-blue-700">
+              <p className="mt-2 text-sm leading-6 text-unitor-primary-hover">
                 You can request a different amount, including
                 more than the student&apos;s original budget.
                 The student can then decide whether to accept.
@@ -1679,7 +1679,7 @@ export default function TutorProposalDetailsPage() {
                 disabled={
                   submitting
                 }
-                className="mt-8 w-full rounded-lg bg-emerald-600 px-6 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-8 w-full rounded-lg bg-unitor-primary px-6 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting
                   ? "Submitting application..."
@@ -1696,11 +1696,11 @@ export default function TutorProposalDetailsPage() {
 
           <section className="mt-8 rounded-2xl bg-white p-8 text-center shadow-sm">
 
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-unitor-black">
               Applications are closed
             </h2>
 
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-unitor-gray-dark">
               This proposal is no longer accepting tutor
               applications.
             </p>
@@ -1732,7 +1732,7 @@ function ApplicationFormFields({
 
         <label
           htmlFor="description"
-          className="mb-2 block font-medium text-slate-700"
+          className="mb-2 block font-medium text-unitor-gray-dark"
         >
           Application message
         </label>
@@ -1751,7 +1751,7 @@ function ApplicationFormFields({
           rows={5}
           required
           placeholder="Explain your experience with this course and how you can help."
-          className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+          className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
         />
 
       </div>
@@ -1872,21 +1872,21 @@ function ExistingApplicationCard({
 
         <div>
 
-          <p className="font-semibold text-emerald-600">
+          <p className="font-medium text-unitor-primary">
             Application submitted
           </p>
 
-          <h2 className="mt-2 text-2xl font-bold text-slate-900">
+          <h2 className="mt-2 text-2xl font-bold text-unitor-black">
             Your Application
           </h2>
 
         </div>
 
         <span
-          className={`rounded-full px-4 py-2 text-sm font-semibold capitalize ${
+          className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
             canEdit
               ? "bg-amber-50 text-amber-700"
-              : "bg-emerald-50 text-emerald-700"
+              : "bg-unitor-background text-unitor-primary-hover"
           }`}
         >
           {application.status}
@@ -1894,7 +1894,7 @@ function ExistingApplicationCard({
 
       </div>
 
-      <p className="mt-6 whitespace-pre-wrap leading-7 text-slate-600">
+      <p className="mt-6 whitespace-pre-wrap leading-7 text-unitor-gray-dark">
         {application.description ||
           "No application message."}
       </p>
@@ -1934,7 +1934,7 @@ function ExistingApplicationCard({
 
         <div className="mt-7 rounded-xl border border-amber-200 bg-amber-50 p-4">
 
-          <p className="font-semibold text-amber-800">
+          <p className="font-medium text-amber-800">
             Waiting for student selection
           </p>
 
@@ -1956,7 +1956,7 @@ function ExistingApplicationCard({
             onClick={
               onEdit
             }
-            className="flex-1 rounded-lg bg-emerald-600 px-5 py-3 text-center font-semibold text-white hover:bg-emerald-700"
+            className="flex-1 rounded-lg bg-unitor-primary px-5 py-3 text-center font-medium text-white hover:bg-unitor-primary-hover"
           >
             Edit Application
           </button>
@@ -1965,7 +1965,7 @@ function ExistingApplicationCard({
 
         <Link
           href="/tutor/applications"
-          className="flex-1 rounded-lg border border-emerald-600 px-5 py-3 text-center font-semibold text-emerald-600 hover:bg-emerald-50"
+          className="flex-1 rounded-lg border border-unitor-primary px-5 py-3 text-center font-medium text-unitor-primary hover:bg-unitor-background"
         >
           View All Applications
         </Link>
@@ -1994,7 +1994,7 @@ function FormInput({
   return (
     <div>
 
-      <label className="mb-2 block font-medium text-slate-700">
+      <label className="mb-2 block font-medium text-unitor-gray-dark">
         {label}
       </label>
 
@@ -2016,7 +2016,7 @@ function FormInput({
             event.target.value
           )
         }
-        className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-500 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+        className="w-full rounded-lg border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black outline-none placeholder:text-unitor-gray-dark focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light"
       />
 
     </div>
@@ -2033,11 +2033,11 @@ function InformationItem({
   return (
     <div>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-unitor-gray-dark">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold capitalize text-slate-900">
+      <p className="mt-1 font-medium capitalize text-unitor-black">
         {value ||
           "Not provided"}
       </p>

@@ -685,9 +685,9 @@ export default function StudentReviewPage() {
         loading
     ) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background px-4">
 
-                <p className="text-slate-600">
+                <p className="text-unitor-gray-dark">
                     Loading review...
                 </p>
 
@@ -702,11 +702,11 @@ export default function StudentReviewPage() {
      */
     if (!context) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+            <main className="flex min-h-screen items-center justify-center bg-unitor-background px-4 py-10">
 
                 <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm">
 
-                    <h1 className="text-2xl font-bold text-slate-900">
+                    <h1 className="text-2xl font-bold text-unitor-black">
                         Review unavailable
                     </h1>
 
@@ -717,7 +717,7 @@ export default function StudentReviewPage() {
 
                     <Link
                         href="/student/messages"
-                        className="mt-6 inline-block font-semibold text-emerald-600 hover:underline"
+                        className="mt-6 inline-block font-medium text-unitor-primary hover:underline"
                     >
                         ← Back to messages
                     </Link>
@@ -734,13 +734,13 @@ export default function StudentReviewPage() {
      * ==========================================
      */
     return (
-        <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+        <main className="flex min-h-screen items-center justify-center bg-unitor-background px-4 py-10">
 
             <div className="w-full max-w-lg rounded-2xl bg-white p-7 shadow-sm sm:p-8">
 
                 <Link
                     href={`/student/messages/${context.chatId}`}
-                    className="text-sm font-semibold text-emerald-600 hover:underline"
+                    className="text-sm font-medium text-unitor-primary hover:underline"
                 >
                     ← Back to session
                 </Link>
@@ -749,11 +749,11 @@ export default function StudentReviewPage() {
 
                     <div className="py-8 text-center">
 
-                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
+                        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-unitor-blue-light text-3xl text-unitor-primary-hover">
                             ✓
                         </div>
 
-                        <h1 className="mt-5 text-2xl font-bold text-slate-900">
+                        <h1 className="mt-5 text-2xl font-bold text-unitor-black">
                             Thank you for your review
                         </h1>
 
@@ -771,7 +771,7 @@ export default function StudentReviewPage() {
                                             star <=
                                             rating
                                                 ? "text-amber-400"
-                                                : "text-slate-300"
+                                                : "text-unitor-gray-light"
                                         }`}
                                     >
                                         ★
@@ -781,11 +781,11 @@ export default function StudentReviewPage() {
 
                         </div>
 
-                        <p className="mt-3 text-slate-600">
+                        <p className="mt-3 text-unitor-gray-dark">
 
                             You rated{" "}
 
-                            <span className="font-semibold">
+                            <span className="font-medium">
                                 {
                                     context.tutorName
                                 }
@@ -798,7 +798,7 @@ export default function StudentReviewPage() {
 
                         <Link
                             href="/student/messages"
-                            className="mt-7 inline-flex rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700"
+                            className="mt-7 inline-flex rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white hover:bg-unitor-primary-hover"
                         >
                             Return to messages
                         </Link>
@@ -808,19 +808,19 @@ export default function StudentReviewPage() {
                 ) : (
                     <>
 
-                        <p className="mt-7 text-sm font-semibold text-emerald-600">
+                        <p className="mt-7 text-sm font-medium text-unitor-primary">
                             Session ended
                         </p>
 
-                        <h1 className="mt-1 text-3xl font-bold text-slate-900">
+                        <h1 className="mt-1 text-3xl font-bold text-unitor-black">
                             Rate your tutor
                         </h1>
 
-                        <p className="mt-2 text-slate-600">
+                        <p className="mt-2 text-unitor-gray-dark">
 
                             How was your tutoring session with{" "}
 
-                            <span className="font-semibold text-slate-800">
+                            <span className="font-medium text-unitor-black">
                                 {
                                     context.tutorName
                                 }
@@ -846,7 +846,7 @@ export default function StudentReviewPage() {
                                 }
                             >
 
-                                <legend className="font-semibold text-slate-800">
+                                <legend className="font-medium text-unitor-black">
                                     Your rating
                                 </legend>
 
@@ -900,8 +900,8 @@ export default function StudentReviewPage() {
                                                     className={`text-4xl leading-none transition ${
                                                         filled
                                                             ? "text-amber-400"
-                                                            : "text-slate-300"
-                                                    } hover:scale-110 focus:outline-none focus:ring-2 focus:ring-emerald-500`}
+                                                            : "text-unitor-gray-light"
+                                                    } hover:scale-110 focus:outline-none focus:ring-2 focus:ring-unitor-primary`}
                                                 >
                                                     ★
                                                 </button>
@@ -911,7 +911,7 @@ export default function StudentReviewPage() {
 
                                 </div>
 
-                                <p className="mt-3 text-sm font-medium text-slate-600">
+                                <p className="mt-3 text-sm font-medium text-unitor-gray-dark">
 
                                     {rating >
                                     0
@@ -928,11 +928,11 @@ export default function StudentReviewPage() {
 
                                 <label
                                     htmlFor="feedback"
-                                    className="block font-semibold text-slate-800"
+                                    className="block font-medium text-unitor-black"
                                 >
                                     Feedback{" "}
 
-                                    <span className="font-normal text-slate-500">
+                                    <span className="font-normal text-unitor-gray-dark">
                                         (optional)
                                     </span>
 
@@ -961,10 +961,10 @@ export default function StudentReviewPage() {
                                         5
                                     }
                                     placeholder="Tell us what went well and what could be improved."
-                                    className="mt-3 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+                                    className="mt-3 w-full resize-none rounded-xl border border-unitor-gray-light bg-white px-4 py-3 text-unitor-black placeholder:text-unitor-gray-dark/70 outline-none focus:border-unitor-primary focus:ring-2 focus:ring-unitor-blue-light disabled:cursor-not-allowed disabled:bg-unitor-gray-soft"
                                 />
 
-                                <p className="mt-1 text-right text-xs text-slate-400">
+                                <p className="mt-1 text-right text-xs text-unitor-gray-dark/70">
                                     {
                                         feedback.length
                                     }
@@ -988,9 +988,9 @@ export default function StudentReviewPage() {
                             {alreadyReviewed &&
                                 !error && (
 
-                                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                                <div className="rounded-xl border border-unitor-blue-light bg-unitor-background p-4">
 
-                                    <p className="font-semibold text-emerald-800">
+                                    <p className="font-medium text-unitor-black">
                                         Review already submitted
                                     </p>
 
@@ -1008,7 +1008,7 @@ export default function StudentReviewPage() {
                                                         star <=
                                                         rating
                                                             ? "text-amber-400"
-                                                            : "text-slate-300"
+                                                            : "text-unitor-gray-light"
                                                     }`}
                                                 >
                                                     ★
@@ -1018,7 +1018,7 @@ export default function StudentReviewPage() {
 
                                     </div>
 
-                                    <p className="mt-2 text-sm text-emerald-700">
+                                    <p className="mt-2 text-sm text-unitor-primary-hover">
                                         Your rating:{" "}
                                         {rating} out
                                         of 5 stars
@@ -1038,7 +1038,7 @@ export default function StudentReviewPage() {
                                     rating ===
                                         0
                                 }
-                                className="w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="w-full rounded-xl bg-unitor-primary px-5 py-3 font-medium text-white hover:bg-unitor-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                             >
 
                                 {submitting
